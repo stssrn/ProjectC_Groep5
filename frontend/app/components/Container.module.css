@@ -1,0 +1,19 @@
+.container {
+  background-color: var(--bg500);
+  border-radius: 32px;
+  border: 2px solid var(--g500);
+}
+
+.header {
+  border-bottom: inherit;
+  padding: 12px 32px;
+}
+
+.title {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.childrenWrapper {
+  padding: 32px;
+}
