@@ -1,0 +1,65 @@
+.body {
+  background-color: --bg300;
+  min-height: 100vh;
+  overflow-y: hidden;
+  color: var(--b700);
+}
+
+.container {
+  margin: 16px auto;
+}
+
+.nav {
+  background-color: var(--bg500);
+  width: 40px;
+  height: calc(100vh - 40px);
+}
+
+.header {
+  display: flex;
+  background-color: var(--bg500);
+  height: 40px;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 40px;
+}
+
+.cornerSquare {
+  background-color: var(--p600);
+  height: 100%;
+  aspect-ratio: 1;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  font-size: 24px;
+  background-color: var(--bg300);
+  gap: 2px;
+}
+
+.listItem {
+  aspect-ratio: 1;
+  width: 40px;
+}
+
+.listItem {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--p500);
+  background-color: var(--bg500);
+}
+
+.listItem a {
+  color: inherit;
+  display: flex;
+  text-decoration: none;
+  height: 24px;
+}

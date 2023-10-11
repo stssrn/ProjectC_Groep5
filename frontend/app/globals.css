@@ -1,0 +1,42 @@
+:root {
+  --b700: #123c69;
+  --g200: #f2f2f2;
+  --g100: #fff;
+  --bg500: #edc7b7;
+  --bg300: #eee2dc;
+  --p500: #ac3b61;
+  --p600: #a2102c;
+  --b500: #0036a0;
+  --g500: #707070;
+  --g600: #3e3e3e;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* https://github.com/vercel/next.js/discussions/42881#discussioncomment-5952355 */
+i.symbol {
+  font-family: var(--font-family-symbols);
+  font-weight: normal;
+  font-style: normal;
+  /* font-size: 24px; */
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-feature-settings: "liga";
+  font-variation-settings: "FILL" 1;
+}
