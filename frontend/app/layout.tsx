@@ -39,7 +39,10 @@ export default function RootLayout({
           <div className={styles.cornerSquare}></div>
         </header>
         <div className={styles.wrapper}>
-          <div className={styles.container}>{children}</div>
+          <div className={styles.containerWrapper}>
+            <div className={styles.container}>{children}</div>
+            <div className={styles.containerSpacer}></div>
+          </div>
           <nav className={styles.nav}>
             <ul className={styles.list}>
               <li className={styles.listItem}>
