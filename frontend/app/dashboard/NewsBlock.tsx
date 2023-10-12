@@ -13,7 +13,7 @@ const NewsBlock: React.FC<{
 }> = ({ className }) => {
   return (
     <section className={className}>
-      <Container title="Recente Nieuws">
+      <Container padding={12} title="Recente Nieuws">
         <article className={styles.article}>
           <div className={styles.articleImage}></div>
           <h2 className={styles.articleTitle}>

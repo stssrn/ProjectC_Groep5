@@ -19,6 +19,7 @@
 
 .left {
   width: 256px;
+  max-width: 100%;
   flex-shrink: 0;
 }
 

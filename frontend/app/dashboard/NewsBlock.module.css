@@ -1,10 +1,11 @@
 .articles {
   margin: 16px 32px;
+  height: 100%;
 }
 
 .articleImage {
   width: 100%;
-  height: 200px;
+  height: 100px;
   background-color: #BCE0FD;
   margin-bottom: 16px;
 }

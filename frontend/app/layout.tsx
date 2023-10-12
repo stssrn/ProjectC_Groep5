@@ -57,7 +57,7 @@ export default function RootLayout({
         </div>
         <nav className={styles.nav}>
           <ul className={styles.list}>
-            {navItems.map((p) => (
+            {seg !== "login" && navItems.map((p) => (
               <li
                 key={p.path}
                 className={clsx(

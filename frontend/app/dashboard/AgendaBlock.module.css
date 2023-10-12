@@ -1,3 +1,31 @@
+.wrapper {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+}
+
+.bar {
+  width: 16px;
+  border: 1px solid var(--g500);
+  border-radius: 8px;
+}
+
+.info {
+  display: flex;
+  gap: 8px;
+  font-weight: 600;
+  margin: 8px 0px;
+}
+
+.month {
+  font-size: 16px;
+  text-transform: capitalize;
+}
+
+.day {
+  font-variant-numeric: tabular-nums;
+}
+
 .bar.januari {
   background-color: #BAB2B5;
 }

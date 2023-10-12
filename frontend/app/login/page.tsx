@@ -12,37 +12,13 @@ const Page = () => {
       <div className={styles.left}>
         <h1 className={styles.loginTitle}>Inloggen</h1>
         <div className={styles.form}>
-          <input
-            className={styles.textbox}
-            placeholder="email"
-            type="email"
-            name=""
-            id=""
-          />
-          <input
-            className={styles.textbox}
-            placeholder="wachtwoord"
-            type="password"
-            name=""
-            id=""
-          />
+          <input className={styles.textbox} placeholder="email" type="email" name="" id="" />
+          <input className={styles.textbox} placeholder="wachtwoord" type="password" name="" id="" />
           <div className={styles.checkboxWrapper}>
-            <label className={styles.label} htmlFor={checkboxId}>
-              Blijf ingelogd
-            </label>
-            <input
-              className={styles.checkbox}
-              type="checkbox"
-              name=""
-              id={checkboxId}
-            />
+            <label className={styles.label} htmlFor={checkboxId}>Blijf ingelogd</label>
+            <input className={styles.checkbox} type="checkbox" name="" id={checkboxId} />
           </div>
-          <Link
-            className={styles.forgotPassword}
-            href="/login/wachtwoord-vergeten"
-          >
-            Wachtwoord vergeten?
-          </Link>
+          <Link className={styles.forgotPassword} href="/login/wachtwoord-vergeten">Wachtwoord vergeten?</Link>
           <Link href="/dashboard" className={styles.loginButton}>
             Inloggen
           </Link>

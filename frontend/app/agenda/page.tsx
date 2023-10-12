@@ -13,7 +13,11 @@ const Page = () => {
         <h2 className={styles.monthName}>{month}</h2>
         <div className={styles.eventsWrapper}>
           <div className={clsx(styles.bar, styles[month])}></div>
-          <div className={styles.events}>{events.map(e => <Event key={e.date.getDate()} event={e}/>)}</div>
+          <div className={styles.events}>
+            {events.map((e) => (
+              <Event key={e.date.getDate()} event={e} />
+            ))}
+          </div>
         </div>
       </div>
     ));
