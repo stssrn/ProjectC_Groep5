@@ -1,0 +1,62 @@
+.months {
+  width: 512px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.monthName {
+  text-transform: capitalize;
+  font-size: 16px;
+  margin-bottom: 12px;
+}
+
+.eventsWrapper {
+  display: flex;
+  gap: 12px;
+}
+
+.events {
+  padding: 8px 0px;
+  width: 100%;
+  font-weight: 600;
+}
+
+.event {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0px;
+}
+
+.info {
+  display: flex;
+}
+
+.eventDay {
+  display: block;
+  font-variant-numeric: tabular-nums;
+  width: 32px;
+}
+
+.eventName {
+  display: block;
+}
+
+.bar {
+  width: 16px;
+  background-color: var(--g500);
+  border-radius: 8px;
+  border: 1px solid var(--g500)
+}
+
+.bar.januari {
+  background-color: #BAB2B5;
+}
+
+.bar.februari {
+  background-color: #C09898;
+}
+
+.bar.maart {
+  background-color: #CB688D;
+}
