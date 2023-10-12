@@ -1,0 +1,27 @@
+.bar.januari {
+  background-color: #BAB2B5;
+}
+
+.bar.februari, .bar.december {
+  background-color: #BDA5A7;
+}
+
+.bar.maart, .bar.november {
+  background-color: #BF9FA0;
+}
+
+.bar.april, .bar.oktober {
+  background-color: #C09898;
+}
+
+.bar.mei, .bar.september {
+  background-color: #C38C96;
+}
+
+.bar.juni, .bar.augustus {
+  background-color: #C68093;
+}
+
+.bar.juli {
+  background-color: #CB688D;
+}

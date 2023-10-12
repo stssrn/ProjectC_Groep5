@@ -1,12 +1,14 @@
 import styles from "./page.module.css";
 import NewsBlock from "./NewsBlock";
+import AgendaBlock from "./AgendaBlock";
 
-const page = () => {
+const Page: React.FC = () => {
   return (
     <main className={styles.blocks}>
-      <NewsBlock></NewsBlock>
+      <NewsBlock className={styles.news}/>
+      <AgendaBlock className={styles.quiz}/>
     </main>
   );
 };
 
-export default page;
+export default Page;

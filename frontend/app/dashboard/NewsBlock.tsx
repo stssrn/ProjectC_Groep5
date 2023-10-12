@@ -8,9 +8,11 @@ interface Article {
   url: URL;
 }
 
-const NewsBlock = () => {
+const NewsBlock: React.FC<{
+  className?: string;
+}> = ({ className }) => {
   return (
-    <section>
+    <section className={className}>
       <Container title="Recente Nieuws">
         <article className={styles.article}>
           <div className={styles.articleImage}></div>

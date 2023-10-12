@@ -1,3 +1,17 @@
 .blocks {
   display: grid;
+  grid-template: repeat(4, 200px) / repeat(4, 1fr);
+  grid-template-areas:
+    "news  news  quiz     agenda"
+    "news  news  educatie educatie"
+    "forum forum educatie educatie";
+}
+
+.news {
+  grid-area: news;
+  overflow: hidden;
+}
+
+.quiz {
+  grid-area: agenda;
 }

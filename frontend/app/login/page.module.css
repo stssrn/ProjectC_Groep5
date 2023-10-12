@@ -6,6 +6,8 @@
   display: flex;
   padding: 40px 64px 64px 64px;
   width: 700px;
+  max-width: 100%;
+  margin: auto;
   margin-top: 64px;
   gap: 32px;
   align-items: end;
@@ -17,6 +19,7 @@
 
 .left {
   width: 256px;
+  flex-shrink: 0;
 }
 
 .form {
@@ -28,7 +31,7 @@
 
 .image {
   width: 100%;
-  object-position: center bottom;
+  object-position: right bottom;
   object-fit: contain;
 }
 

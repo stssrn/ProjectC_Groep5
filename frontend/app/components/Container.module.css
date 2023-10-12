@@ -2,6 +2,7 @@
   background-color: var(--bg500);
   border-radius: 32px;
   border: 2px solid var(--g500);
+  height: 100%;
 }
 
 .header {
