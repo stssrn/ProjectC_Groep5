@@ -1,12 +1,14 @@
 import styles from "./page.module.css";
-import NewsBlock from "./NewsBlock";
+import NewsSection from "./NewsSection";
+import AgendaSection from "./AgendaSection";
 
-const page = () => {
+const Page: React.FC = () => {
   return (
     <main className={styles.blocks}>
-      <NewsBlock></NewsBlock>
+      <NewsSection className={styles.news}/>
+      <AgendaSection className={styles.quiz}/>
     </main>
   );
 };
 
-export default page;
+export default Page;

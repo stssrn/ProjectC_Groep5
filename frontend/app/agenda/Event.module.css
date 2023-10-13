@@ -1,0 +1,19 @@
+.event {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0px;
+}
+
+.info {
+  display: flex;
+}
+
+.eventDay {
+  display: block;
+  font-variant-numeric: tabular-nums;
+  width: 32px;
+}
+
+.eventName {
+  display: block;
+}

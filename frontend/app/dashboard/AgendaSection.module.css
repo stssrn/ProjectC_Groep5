@@ -1,0 +1,64 @@
+.wrapper {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+}
+
+.bar {
+  width: 16px;
+  border: 1px solid var(--g500);
+  border-radius: 8px;
+}
+
+.info {
+  display: flex;
+  gap: 8px;
+  font-weight: 600;
+  margin: 8px 0px;
+}
+
+.month {
+  font-size: 16px;
+  text-transform: capitalize;
+}
+
+.day {
+  font-variant-numeric: tabular-nums;
+}
+
+.noEvents {
+  line-height: 1.5em;
+}
+
+.bar.januari {
+  background-color: #bab2b5;
+}
+
+.bar.februari,
+.bar.december {
+  background-color: #bda5a7;
+}
+
+.bar.maart,
+.bar.november {
+  background-color: #bf9fa0;
+}
+
+.bar.april,
+.bar.oktober {
+  background-color: #c09898;
+}
+
+.bar.mei,
+.bar.september {
+  background-color: #c38c96;
+}
+
+.bar.juni,
+.bar.augustus {
+  background-color: #c68093;
+}
+
+.bar.juli {
+  background-color: #cb688d;
+}

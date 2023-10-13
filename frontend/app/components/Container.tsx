@@ -1,16 +1,19 @@
 import styles from "./Container.module.css";
+import clsx from "clsx";
 
 const Container: React.FC<{
   title: string;
+  padding?: number;
+  className?: string;
   children?: React.ReactNode;
-}> = (props) => {
+}> = ({ children, title, className, padding}) => {
   return (
-    <section className={styles.container}>
+    <section className={clsx(styles.container, className)}>
       <div className={styles.header}>
-        <h1 className={styles.title}>{props.title}</h1>
+        <h1 className={styles.title}>{title}</h1>
       </div>
-      <div className={styles.childrenWrapper}>
-        {props.children}
+      <div className={styles.childrenWrapper} style={{padding}}>
+        {children}
       </div>
     </section>
   );

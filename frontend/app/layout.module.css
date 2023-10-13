@@ -7,12 +7,17 @@
 
 .container {
   margin: 16px auto;
+  width: fit-content;
+  max-width: calc(100% - 40px - 32px);
 }
 
 .nav {
   background-color: var(--bg500);
   width: 40px;
   height: calc(100vh - 40px);
+  position: fixed;
+  right: 0;
+  top: 40px;
 }
 
 .header {
@@ -26,13 +31,22 @@
 
 .cornerSquare {
   background-color: var(--p600);
-  height: 100%;
+  height: 40px;
+  right: 0;
   aspect-ratio: 1;
+  position: fixed;
 }
 
 .wrapper {
-  display: flex;
+  /* display: flex; */
   justify-content: space-between;
+  width: calc(100% - 40px);
+  overflow-y: scroll;
+  height: 100vh;
+}
+
+.containerSpacer {
+  width: 40px;
 }
 
 .list {
@@ -47,14 +61,21 @@
 .listItem {
   aspect-ratio: 1;
   width: 40px;
-}
-
-.listItem {
   display: flex;
   justify-content: center;
   align-items: center;
   color: var(--p500);
   background-color: var(--bg500);
+  transition: all 75ms ease-out;
+}
+
+.list:hover .listItem {
+  transform: scale(1);
+}
+
+.list:hover .listItem.active {
+  box-shadow: 0px 1px 6px var(--p500);
+  transform: scale(1.1);
 }
 
 .listItem a {
@@ -62,4 +83,11 @@
   display: flex;
   text-decoration: none;
   height: 24px;
+}
+
+.listItem.active {
+  transform: scale(1.2);
+  transform-origin: center right;
+  box-shadow: 0px 3px 10px var(--p500);
+  z-index: 2;
 }

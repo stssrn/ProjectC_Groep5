@@ -1,0 +1,76 @@
+/* DISCLAIMER: bad css */
+
+.articles {
+  display: grid;
+  overflow: hidden;
+  gap: 24px;
+  margin: 0px 12px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  grid-template-rows: 100%;
+  grid-auto-columns: 0px;
+  grid-auto-rows: 1fr;
+  height: 100%;
+}
+
+.article {
+  height: calc(400px - 24px - 48px);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.top {
+  overflow: hidden;
+  position: relative;
+}
+
+.topOverlay {
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    #0000 calc(100% - 3em),
+    var(--bg500) 100%
+  );
+  z-index: 2;
+}
+
+.articleImage {
+  width: 100%;
+  aspect-ratio: 1.618;
+  background-color: #bce0fd;
+  margin-bottom: 16px;
+}
+
+.articleTitle {
+  margin-bottom: 16px;
+  font-size: 20px;
+}
+
+.articleSummary,
+.articleTitle {
+  line-height: 1.5em;
+}
+
+.articleSummary {
+  text-overflow: ellipsis;
+}
+
+.bottom {
+  margin-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+.bottomSection {
+  text-wrap: nowrap;
+  white-space: nowrap;
+}
+
+.symbol {
+  vertical-align: bottom;
+  margin-right: 4px;
+}
