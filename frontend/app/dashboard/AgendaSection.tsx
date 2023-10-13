@@ -1,4 +1,4 @@
-import styles from "./AgendaBlock.module.css";
+import styles from "./AgendaSection.module.css";
 import Container from "../components/Container";
 import agendaData from "@/lib/agenda";
 import { clsx } from "clsx";

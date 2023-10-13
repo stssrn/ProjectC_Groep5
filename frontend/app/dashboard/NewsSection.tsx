@@ -1,4 +1,4 @@
-import styles from "./NewsBlock.module.css";
+import styles from "./NewsSection.module.css";
 import Container from "../components/Container";
 import clsx from "clsx";
 
