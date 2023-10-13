@@ -1,4 +1,5 @@
 .blocks {
+  /* width: calc(100vw - 40px - 40px); */
   display: grid;
   grid-template: repeat(4, 200px) / repeat(4, 1fr);
   grid-template-areas:
@@ -14,4 +15,20 @@
 
 .quiz {
   grid-area: agenda;
+}
+
+.noEvents {
+  line-height: 1.5em;
+}
+
+@media screen and (max-width: 420px) {
+  .blocks {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .news {
+    height: 400px;
+  }
 }

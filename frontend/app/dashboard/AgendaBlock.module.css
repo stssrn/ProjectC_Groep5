@@ -26,30 +26,39 @@
   font-variant-numeric: tabular-nums;
 }
 
+.noEvents {
+  line-height: 1.5em;
+}
+
 .bar.januari {
-  background-color: #BAB2B5;
+  background-color: #bab2b5;
 }
 
-.bar.februari, .bar.december {
-  background-color: #BDA5A7;
+.bar.februari,
+.bar.december {
+  background-color: #bda5a7;
 }
 
-.bar.maart, .bar.november {
-  background-color: #BF9FA0;
+.bar.maart,
+.bar.november {
+  background-color: #bf9fa0;
 }
 
-.bar.april, .bar.oktober {
-  background-color: #C09898;
+.bar.april,
+.bar.oktober {
+  background-color: #c09898;
 }
 
-.bar.mei, .bar.september {
-  background-color: #C38C96;
+.bar.mei,
+.bar.september {
+  background-color: #c38c96;
 }
 
-.bar.juni, .bar.augustus {
-  background-color: #C68093;
+.bar.juni,
+.bar.augustus {
+  background-color: #c68093;
 }
 
 .bar.juli {
-  background-color: #CB688D;
+  background-color: #cb688d;
 }

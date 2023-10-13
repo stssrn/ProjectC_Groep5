@@ -42,7 +42,6 @@
   height: 32px;
   border: 2px solid var(--b500);
   padding: 4px 12px;
-  /* color: var(--b700); */
 }
 
 .textbox::placeholder {

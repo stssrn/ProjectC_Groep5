@@ -33,7 +33,9 @@ const AgendaBlock: React.FC<{
             </div>
           </>
         ) : (
-          <p>Er zijn geen agenda-items deze maand.</p>
+          <p className={styles.noEvents}>
+            Er zijn geen agenda-items deze maand.
+          </p>
         )}
       </Container>
     </section>
