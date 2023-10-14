@@ -28,7 +28,7 @@ const Page = () => {
                 <td>Email:</td>
               </tr>
               <tr>
-                <td>Bio:</td>{" "}
+                <td>Bio:</td>
               </tr>
               <tr>
                 <td>Punten:</td>
