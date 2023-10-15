@@ -1,21 +1,33 @@
 .parentContainer {
   display: flex;
+  flex-direction: column;
+  gap: 20px;
   align-items: center;
-  width: 600px;
-  height: 250px;
-  padding: 10px 90px;
+  justify-content: center;
+}
+
+.circularProfilePhotoContainer {
+  flex-shrink: 0;
+  margin-right: 20px;
 }
 
 .circularProfilePhoto {
-  width: 193.964px;
-  height: 193.968px;
+  width: 150px;
   object-fit: cover;
-  border-radius: 50%;
+  border-radius: 100%;
   border: 2px solid #2f2e41;
 }
 
 .userInfo {
-  margin-left: 20%;
+  display: flex;
+  flex-direction: column;
+}
+
+.userInfo > div {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 .saveButton {
@@ -25,5 +37,4 @@
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-top: 20px;
 }
