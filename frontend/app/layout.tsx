@@ -30,6 +30,7 @@ const navItems = [
   { path: "quiz", symbol: "quiz" },
   { path: "winkel", symbol: "shopping_cart" },
   { path: "instellingen", symbol: "settings" },
+  { path: "faq", symbol: "help"}
 ];
 
 export default function RootLayout({
