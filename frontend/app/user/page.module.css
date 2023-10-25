@@ -1,0 +1,40 @@
+.parentContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.circularProfilePhotoContainer {
+    flex-shrink: 0;
+    margin-right: 20px;
+}
+
+.circularProfilePhoto {
+    width: 150px;
+    object-fit: cover;
+    border-radius: 100%;
+    border: 2px solid #2f2e41;
+}
+
+.userInfo {
+    display: flex;
+    flex-direction: column;
+}
+
+.userInfo>div {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.saveButton {
+    background-color: #ac3b61;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}

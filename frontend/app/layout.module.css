@@ -1,5 +1,5 @@
 .body {
-  background-color: --bg300;
+  background-color: #eee2dc;
   min-height: 100vh;
   overflow-y: hidden;
   color: var(--b700);

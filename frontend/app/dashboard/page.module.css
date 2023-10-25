@@ -2,10 +2,13 @@
   /* width: calc(100vw - 40px - 40px); */
   display: grid;
   grid-template: repeat(4, 200px) / repeat(4, 1fr);
+  column-gap: 1rem;
+  row-gap: 1rem;
   grid-template-areas:
-    "news  news  quiz     agenda"
-    "news  news  educatie educatie"
-    "forum forum educatie educatie";
+    "news  news  quiz         agenda"
+    "news  news  education education"
+    "forum forum education education"
+    "forum forum education education";
 }
 
 .news {
@@ -13,8 +16,21 @@
   overflow: hidden;
 }
 
+.forum {
+  grid-area: forum;
+  overflow: hidden;
+}
+
 .quiz {
+  grid-area: quiz;
+}
+
+.agenda {
   grid-area: agenda;
+}
+
+.education {
+  grid-area: education;
 }
 
 .noEvents {

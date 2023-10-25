@@ -17,7 +17,7 @@ const article: Article = {
   url: new URL("https://anteszorg.nl/"),
 };
 
-const articles: Article[] = new Array(4).fill(article);
+const articles: Article[] = new Array(3).fill(article);
 const getDateString = Intl.DateTimeFormat("nl", {
   month: "short",
   day: "numeric",
