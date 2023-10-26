@@ -1,0 +1,86 @@
+/* DISCLAIMER: bad css */
+
+.quizes {
+    display: grid;
+    overflow: hidden;
+    gap: 24px;
+    margin: 0px 12px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-rows: 100%;
+    grid-auto-columns: 0px;
+    grid-auto-rows: 1fr;
+    height: 100%;
+}
+
+.quiz {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.top {
+    overflow: hidden;
+    position: relative;
+}
+
+
+
+.quizProgressBar {
+    height: 24px;
+    width: 100%;
+    border-radius: 1rem;
+    background: red;
+}
+
+.quizProgress {
+    height: 24px;
+    width: 50%;
+    border-radius: 1rem;
+    background: green;
+}
+
+.topOverlay {
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+.quizImage {
+    width: 100%;
+    aspect-ratio: 1.618;
+    background-color: #bce0fd;
+    margin-bottom: 16px;
+}
+
+.quizTitle {
+    margin-bottom: 16px;
+    font-size: 20px;
+}
+
+.quizTopic,
+.quizTitle {
+    line-height: 1.5em;
+}
+
+.quizTopic {
+    text-overflow: ellipsis;
+}
+
+.bottom {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+
+.bottomSection {
+    text-wrap: nowrap;
+    white-space: nowrap;
+}
+
+.symbol {
+    vertical-align: bottom;
+    margin-right: 4px;
+}

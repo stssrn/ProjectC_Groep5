@@ -39,4 +39,5 @@ i.symbol {
   text-rendering: optimizeLegibility;
   font-feature-settings: "liga";
   font-variation-settings: "FILL" 1;
+  user-select: none;
 }

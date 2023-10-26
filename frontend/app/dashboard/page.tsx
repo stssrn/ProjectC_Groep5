@@ -1,12 +1,20 @@
 import styles from "./page.module.css";
-import NewsBlock from "./NewsBlock";
+import NewsSection from "./NewsSection";
+import AgendaSection from "./AgendaSection";
+import ForumSection from "./ForumSection";
+import QuizSection from "./QuizSection";
+import EducationSection from "./EducationSection";
 
-const page = () => {
+const Page: React.FC = () => {
   return (
     <main className={styles.blocks}>
-      <NewsBlock></NewsBlock>
+      <NewsSection className={styles.news} />
+      <ForumSection className={styles.forum} />
+      <QuizSection className={styles.quiz} />
+      <EducationSection className={styles.education} />
+      {/* <AgendaSection className={styles.quiz} /> */}
     </main>
   );
 };
 
-export default page;
+export default Page;
