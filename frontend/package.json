@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "clsx": "^2.0.0",
     "material-symbols": "^0.13.0",
     "next": "13.5.4",
