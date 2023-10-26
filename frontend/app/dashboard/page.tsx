@@ -12,7 +12,7 @@ const Page: React.FC = () => {
       <ForumSection className={styles.forum} />
       <QuizSection className={styles.quiz} />
       <EducationSection className={styles.education} />
-      {/* <AgendaSection className={styles.quiz} /> */}
+      <AgendaSection className={styles.agenda} />
     </main>
   );
 };
