@@ -1,0 +1,26 @@
+.button {
+  background-color: var(--p500);
+  display: block;
+  color: #fff;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+.symbol {
+  vertical-align: bottom;
+  font-size: 20px;
+}
+
+.buttonText {
+  color: inherit;
+  margin-left: 8px;
+}
+
+.actions {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+}
+

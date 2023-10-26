@@ -29,6 +29,7 @@ const navItems = [
   { path: "forum", symbol: "forum" },
   { path: "quiz", symbol: "quiz" },
   { path: "winkel", symbol: "shopping_cart" },
+  { path: "admin", symbol: "shield" },
   { path: "instellingen", symbol: "settings" },
 ];
 
@@ -60,7 +61,7 @@ export default function RootLayout({
                   p.path === seg && styles.active
                 )}
               >
-                <Link href={p.path} title={p.path}>
+                <Link href={`/${p.path}`} title={p.path}>
                   <i className="symbol">{p.symbol}</i>
                 </Link>
               </li>
