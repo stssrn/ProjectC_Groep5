@@ -34,11 +34,12 @@ const CasusButton = styled.button`
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.2s ease;
   &:hover {
-    background-color: #eaeaea;
+    background-color: rgba(0, 0, 0, 0.05);
   }
   &:active {
     transform: scale(0.98);
   }
+  animation: ${fadeIn} 0.5s ease;
 `;
 
 const CasusContentDiv = styled.div`
