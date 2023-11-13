@@ -1,7 +1,7 @@
 // NotificationSettings.jsx
 "use client";
 import React from "react";
-import { SettingOption, Switch } from "./page";
+import { SettingOption, Switch } from "../components/SettingsComponents";
 
 const NotificationSettings = () => {
   return (
