@@ -8,9 +8,14 @@ import NotificationSettings from "./NotificationSettings";
 
 const Tabs = styled.div`
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   background: var(--bg300);
   border-bottom: 2px solid var(--g500);
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+  }
 `;
 
 const Tab = styled.button`
@@ -46,7 +51,6 @@ const Page = () => {
         return <AccountSettings />;
       case "Notifications":
         return <NotificationSettings />;
-      // Add cases for other tabs
       default:
         return <div>Select a tab</div>;
     }

@@ -4,16 +4,22 @@ import styled from "@emotion/styled";
 export const SettingOption = styled.div`
   margin: 10px 0;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
 `;
 
 export const Switch = styled.label`
   position: relative;
   display: inline-block;
-  width: 40px; // Reduced width
-  height: 20px; // Reduced height
-  margin-left: 10px; // Added margin
+  width: 40px;
+  height: 20px;
+  margin-left: 10px;
 
   & input {
     opacity: 0;
@@ -30,16 +36,16 @@ export const Switch = styled.label`
     bottom: 0;
     background-color: #ccc;
     transition: 0.4s;
-    border-radius: 20px; // Adjusted for new height
+    border-radius: 20px;
   }
 
   & .slider:before {
     position: absolute;
     content: "";
-    height: 18px; // Slightly smaller than the slider's height
-    width: 18px; // Square shape
-    left: 1px; // Adjusted for new dimensions
-    bottom: 1px; // Adjusted for new dimensions
+    height: 18px;
+    width: 18px;
+    left: 1px;
+    bottom: 1px;
     background-color: white;
     transition: 0.4s;
     border-radius: 50%;
@@ -54,6 +60,6 @@ export const Switch = styled.label`
   }
 
   input:checked + .slider:before {
-    transform: translateX(20px); // Adjusted for new width
+    transform: translateX(20px);
   }
 `;
