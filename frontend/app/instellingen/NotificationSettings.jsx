@@ -5,22 +5,28 @@ import { SettingOption, Switch } from "../components/SettingsComponents";
 
 const NotificationSettings = () => {
   const [emailNotifications, setEmailNotifications] = useState(
-    localStorage.getItem("emailNotifications") === "true"
+    typeof window !== "undefined" &&
+      localStorage.getItem("emailNotifications") === "true"
   );
   const [pushNotifications, setPushNotifications] = useState(
-    localStorage.getItem("pushNotifications") === "true"
+    typeof window !== "undefined" &&
+      localStorage.getItem("pushNotifications") === "true"
   );
 
   const toggleEmailNotifications = () => {
     const newValue = !emailNotifications;
     setEmailNotifications(newValue);
-    localStorage.setItem("emailNotifications", newValue);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("emailNotifications", newValue);
+    }
   };
 
   const togglePushNotifications = () => {
     const newValue = !pushNotifications;
     setPushNotifications(newValue);
-    localStorage.setItem("pushNotifications", newValue);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("pushNotifications", newValue);
+    }
   };
 
   return (
