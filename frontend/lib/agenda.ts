@@ -20,6 +20,8 @@ const agendaData: Calendar = {
   december: [],
 };
 
+export const monthNames = Object.keys(agendaData);
+
 const monthFromDate = Intl.DateTimeFormat("nl", { month: "long" }).format;
 
 const events: AgendaEvent[] = Array.from({ length: 30 }, Math.random)
