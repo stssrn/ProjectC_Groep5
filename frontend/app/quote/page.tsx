@@ -1,12 +1,11 @@
 "use client";
 import styles from "./page.module.css";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { redirect } from "next/navigation";
 
 
 
 const Quote = () => {
-    const router = useRouter();
 
     const quotes: string[] = [
         "De zorg is geweldig!",
@@ -22,7 +21,7 @@ const Quote = () => {
         setCurrentQuote(randomQuote);
 
         setTimeout(() => {
-            router.push("/login");
+            redirect("/login");
         }, 3000);
 
     };
