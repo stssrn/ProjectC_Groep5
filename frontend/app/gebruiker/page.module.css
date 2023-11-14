@@ -38,3 +38,7 @@
   border-radius: 5px;
   cursor: pointer;
 }
+
+.saveButton:hover {
+  background-color: #9b2c50;
+}

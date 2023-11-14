@@ -26,6 +26,10 @@ const QuestionButton = styled.button`
   &:hover {
     background-color: rgba(0, 0, 0, 0.05);
   }
+  &:active {
+    transform: scale(0.98);
+  }
+  animation: ${fadeIn} 0.3s ease;
 `;
 
 const Answer = styled.div`

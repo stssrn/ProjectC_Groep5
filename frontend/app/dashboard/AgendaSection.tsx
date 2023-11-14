@@ -8,7 +8,8 @@ const upcomingEvents = Object.entries(agendaData)
     .flatMap(([month, events]) => events.map((e) => ({ month, ...e })))
     .filter((x) => x.date.getMonth() === today.getMonth())
     .slice(0, 2)
-    .toSorted((a, b) => a.date.getTime() - b.date.getTime());
+
+upcomingEvents.sort((a, b) => a.date.getTime() - b.date.getTime());
 const month = upcomingEvents.at(0)?.month;
 
 const AgendaBlock: React.FC<{
