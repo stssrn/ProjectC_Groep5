@@ -46,32 +46,37 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={clsx(inter.className, styles.body, materialSymbols.variable)}
-      >
+          >
+
         <div className={styles.wrapper}>
-          <header className={styles.header}>
-            <Image src={logo} alt="Antes Logo" height={24}></Image>
-            <div className={styles.cornerSquare}></div>
-          </header>
+                  {seg !== "quote" &&
+                      <header className={styles.header}>
+                          <Image src={logo} alt="Antes Logo" height={24}></Image>
+                          <div className={styles.cornerSquare}></div>
+                      </header>
+                  }
           <div className={styles.container}>{children}</div>
-        </div>
-        <nav className={styles.nav}>
-          <ul className={styles.list}>
-            {seg !== "login" && navItems.map((p) => (
-              <li
-                key={p.path}
-                className={clsx(
-                  styles.listItem,
-                  p.path === seg && styles.active
-                )}
-              >
-                <Link href={`/${p.path}`} title={p.path}>
-                  <i className="symbol">{p.symbol}</i>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </body>
+              </div>
+              {seg !== "quote" &&
+                  <nav className={styles.nav}>
+                      <ul className={styles.list}>
+                          {seg !== "login" && navItems.map((p) => (
+                              <li
+                                  key={p.path}
+                                  className={clsx(
+                                      styles.listItem,
+                                      p.path === seg && styles.active
+                                  )}
+                              >
+                                  <Link href={`/${p.path}`} title={p.path}>
+                                      <i className="symbol">{p.symbol}</i>
+                                  </Link>
+                              </li>
+                          ))}
+                      </ul>
+                  </nav>
+              }
+          </body>
     </html>
   );
 }

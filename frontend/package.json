@@ -14,13 +14,14 @@
     "clsx": "^2.0.0",
     "material-symbols": "^0.13.0",
     "next": "13.5.4",
-    "react": "^18",
-    "react-dom": "^18"
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.18.0"
   },
   "devDependencies": {
     "@types/node": "^20",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
     "eslint": "^8",
     "eslint-config-next": "13.5.4",
     "typescript": "^5"
