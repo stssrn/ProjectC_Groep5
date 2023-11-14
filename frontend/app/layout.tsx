@@ -31,8 +31,8 @@ const navItems = [
   { path: "winkel", symbol: "shopping_cart" },
   { path: "admin", symbol: "shield" },
   { path: "instellingen", symbol: "settings" },
-  { path: "faq", symbol: "help"},
-  {path: "contact", symbol: "call"}
+  { path: "faq", symbol: "help" },
+  { path: "contact", symbol: "call" }
 ];
 
 export default function RootLayout({
