@@ -1,0 +1,59 @@
+.post {
+  width: 320px;
+}
+
+.top {
+  display:  flex;
+}
+
+.profilePicture {
+  background-color: var(--b700);
+  color: #fff;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  font-size: 20px;
+  border-radius: 50%;
+  margin-right: 16px;
+}
+
+.name {
+  font-weight: 600;
+}
+
+.date {
+  font-size: 12px;
+}
+
+.content {
+  margin: 16px 0;
+}
+
+.likes {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.likeButton {
+  font-size: 24px;
+  font-variation-settings: 'FILL' 0 !important;
+}
+
+.likeButton:hover {
+  cursor: pointer;
+}
+
+.likeButton.liked {
+  font-variation-settings: 'FILL' 1 !important;
+}
+
+/* .profilePicture > .symbol {
+  display: block;
+  height: 100%;
+  margin: auto;
+} */
