@@ -8,9 +8,9 @@ import { useRouter } from "next/navigation";
 const Quote = () => {
 
     const quotes: string[] = [
-        "De zorg is geweldig!",
-        "Leuk dat je erbij bent!",
-        "Coole quote numero 3"
+        '"De zorg is super tof!"',
+        '"Leuk dat je erbij bent!"',
+        '"Coole quote nummer 3"'
     ];
 
     const [currentQuote, setCurrentQuote] = useState<string | null>(null);
@@ -26,13 +26,12 @@ const Quote = () => {
       displayRandomQuote();
       const timer = setTimeout(() => {
         router.replace("/login")
-      }, 3000);
+      }, 30000000);
       return () => clearTimeout(timer);
     }, []);
 
     return (
-        <div>
-            <p>Random Quote:</p>
+        <div className={ styles.quoteText }>
             {currentQuote && <p>{currentQuote}</p>}
         </div>
     );
