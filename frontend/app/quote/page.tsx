@@ -1,7 +1,7 @@
 "use client";
 import styles from "./page.module.css";
 import { useEffect, useState } from "react";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 
 
@@ -14,20 +14,20 @@ const Quote = () => {
     ];
 
     const [currentQuote, setCurrentQuote] = useState<string | null>(null);
+    const router = useRouter();
 
     const displayRandomQuote = () => {
-        const randomIndex: number = Math.floor(Math.random() * quotes.length);
-        const randomQuote: string = quotes[randomIndex];
-        setCurrentQuote(randomQuote);
-
-        setTimeout(() => {
-            redirect("/login");
-        }, 3000);
-
+      const randomIndex: number = Math.floor(Math.random() * quotes.length);
+      const randomQuote: string = quotes[randomIndex];
+      setCurrentQuote(randomQuote);
     };
 
     useEffect(() => {
-        displayRandomQuote();
+      displayRandomQuote();
+      const timer = setTimeout(() => {
+        router.replace("/login")
+      }, 3000);
+      return () => clearTimeout(timer);
     }, []);
 
     return (
