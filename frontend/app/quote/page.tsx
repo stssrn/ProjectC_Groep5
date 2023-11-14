@@ -26,7 +26,7 @@ const Quote = () => {
       displayRandomQuote();
       const timer = setTimeout(() => {
         router.replace("/login")
-      }, 30000000);
+      }, 3000);
       return () => clearTimeout(timer);
     }, []);
 

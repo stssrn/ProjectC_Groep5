@@ -1,28 +1,15 @@
 .quoteText {
-    postion: absolute;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 50px;
+    font-size: 70px;
 }
 
 @media (max-width: 450px) {
     .quoteText {
-        padding: 350px 0px 50px;
-        font-size: 50px;
+        font-size: 45px;
+        letter-spacing: -4px;
     }
 }
-
-@media (min-width: 1280px) {
-    .quoteText {
-        padding: 300px 0px 50px;
-        font-size: 50px;
-    }
-}
-
-@media (min-width: 1280px) {
-    .quoteText {
-        padding: 300px 0px 50px;
-        font-size: 50px;
-    }
-}
+    
