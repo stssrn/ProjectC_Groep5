@@ -5,12 +5,13 @@ import styles from "./Post.module.css";
 import clsx from "clsx";
 
 const Post: React.FC<{
-  postedBy: string;
+  fullName: string;
+  username: string;
   content: string;
   likes: number;
+  commentCount: number;
   date: Date;
-}> = ({ postedBy, content, likes, date }) => {
-  const username = postedBy.split(" ").join("");
+}> = ({ fullName, username, content, likes, commentCount, date }) => {
   const [isLiked, setIsLiked] = useState(false);
   return (
     <div className={styles.post}>
@@ -20,25 +21,45 @@ const Post: React.FC<{
             <i className="symbol">person</i>
           </div>
         </div>
-        <div className={styles.right}>
-          <div className={styles.name}>{postedBy}</div>
-          <div className={styles.date}>
+        <div className={styles.userInfo}>
+          <div className={styles.name}>{fullName}</div>
+          <div className={styles.subtext}>
             @{username} <b>·</b> {date.toDateString()}
           </div>
         </div>
-        <div className={styles.right}></div>
+        <div className={styles.right}>
+          <i className="symbol">more_vert</i>
+        </div>
       </div>
       <p className={styles.content}>{content}</p>
       <div className={styles.bottom}>
-        <div className={styles.likes}>
+        <div className={styles.bottomItem}>
           <i
-            className={clsx("symbol", styles.likeButton, isLiked && styles.liked)}
+            className={clsx(
+              "symbol",
+              styles.bottomItemButton,
+              styles.likeButton,
+              isLiked && styles.liked
+            )}
             onClick={() => setIsLiked((prev) => !prev)}
             title="Like"
           >
             favorite
           </i>
-          <div>{likes}</div>
+          <div>{likes + (isLiked ? 1 : 0)}</div>
+        </div>
+        <div className={styles.bottomItem}>
+          <i
+            className={clsx(
+              "symbol",
+              styles.bottomItemButton,
+              styles.commentButton
+            )}
+            title="Like"
+          >
+            comment
+          </i>
+          <div>{commentCount}</div>
         </div>
       </div>
     </div>

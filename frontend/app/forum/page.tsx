@@ -3,18 +3,30 @@ import Container from "../components/Container";
 import styles from "./page.module.css";
 import Post from "./Post";
 
-const Page = () => {
-  const [poster] = getRandomAccounts(1);
+const posts = getRandomAccounts(10).map(({ firstName, lastName}) => ({
+  name: `${firstName} ${lastName}`,
+  username: `${firstName}${lastName}`,
+  content: "hello world",
+  likes: (Math.random() * 20) | 0,
+  commentCount: (Math.random() * 20) | 0,
+  date: new Date(),
+}))
 
+const Page = () => {
   return (
     <Container title="Forum">
       <div className={styles.column}>
+        {posts.map(({name, username, content, commentCount, likes, date}, i) => (
         <Post
-          postedBy={`${poster.firstName} ${poster.lastName}`}
-          content="hello world"
-          likes={3}
-          date={new Date()}
+          key={i}
+          fullName={name}
+          username={username}
+          content={content}
+          commentCount={commentCount}
+          likes={likes}
+          date={date}
         />
+        ))}
       </div>
     </Container>
   );

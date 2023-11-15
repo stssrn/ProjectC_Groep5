@@ -1,9 +1,11 @@
 .post {
   width: 320px;
+  max-width: 400px;
 }
 
 .top {
-  display:  flex;
+  display: flex;
+  align-items: center;
 }
 
 .profilePicture {
@@ -23,7 +25,7 @@
   font-weight: 600;
 }
 
-.date {
+.subtext {
   font-size: 12px;
 }
 
@@ -31,7 +33,12 @@
   margin: 16px 0;
 }
 
-.likes {
+.bottom {
+  display: flex;
+  gap: 24px;
+}
+
+.bottomItem {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -39,21 +46,26 @@
   font-size: 16px;
 }
 
-.likeButton {
+.bottomItemButton {
   font-size: 24px;
-  font-variation-settings: 'FILL' 0 !important;
 }
 
-.likeButton:hover {
+.bottomItemButton:hover {
   cursor: pointer;
 }
 
-.likeButton.liked {
+.likeButton {
+  font-variation-settings: 'FILL' 0 !important;
+}
+
+.userInfo {
+  flex-grow: 1;
+}
+
+.bottomItemButton.liked {
   font-variation-settings: 'FILL' 1 !important;
 }
 
-/* .profilePicture > .symbol {
-  display: block;
-  height: 100%;
-  margin: auto;
-} */
+.options {
+  justify-self: flex-end;
+}
