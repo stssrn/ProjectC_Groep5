@@ -17,7 +17,7 @@ const NotificationSettings = () => {
     const newValue = !emailNotifications;
     setEmailNotifications(newValue);
     if (typeof window !== "undefined") {
-      localStorage.setItem("emailNotifications", newValue);
+      localStorage.setItem("emailNotifications", newValue.toString());
     }
   };
 
@@ -25,7 +25,7 @@ const NotificationSettings = () => {
     const newValue = !pushNotifications;
     setPushNotifications(newValue);
     if (typeof window !== "undefined") {
-      localStorage.setItem("pushNotifications", newValue);
+      localStorage.setItem("pushNotifications", newValue.toString());
     }
   };
 
