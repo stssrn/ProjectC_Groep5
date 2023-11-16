@@ -1,0 +1,27 @@
+.ggzText {
+    align-content: center;
+    width: 500px;
+    padding-top: 5px;
+    border-style: hidden;
+    border-width: 1px;
+    padding-left: 3px;
+    padding-bottom: 10px;
+    word-wrap: break-word;
+    vertical-align: bottom;
+    font-size: xx-large;
+}
+.ggzTitel {
+    text-align: center;
+    font-size: 50px;
+}
+.image {
+    width: 300px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+.middle {
+    height: 800px;
+    position: relative;
+}
