@@ -1,0 +1,93 @@
+.container {
+  background-color: var(--bg500);
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 50%);
+  margin-top: 32px;
+}
+
+.container, .dialog {
+  border: 1px solid var(--g500);
+}
+
+.header {
+  border-bottom: inherit;
+  padding: 8px;
+  position: relative;
+}
+
+.title {
+  text-transform: uppercase;
+  text-align: center;
+  font-size: 24px;
+}
+
+.columns {
+  padding: 12px 32px;
+  display: flex;
+  gap: 48px;
+}
+
+.createPostButton {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translate(calc(-25%), -50%);
+  padding: 4px;
+  background-color: var(--p500);
+  color: var(--bg300);
+}
+
+.createPostButton:hover {
+  cursor: pointer;
+  background-color: #972B4F;
+}
+
+.createPost {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #4104;
+}
+
+.dialog {
+  background-color: var(--bg500);
+  width: fit-content;
+  position: absolute;
+  left: 50%;
+  top: 128px;
+  transform: translateX(-50%);
+  padding: 24px;
+}
+
+.dialogButtons {
+  display: flex;
+  gap: 16px;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.button, .secondaryButton {
+  display: block;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.button {
+  background-color: var(--p500);
+  border: none;
+  color: #fff;
+}
+
+.secondaryButton {
+  background-color: var(--bg300);
+  color: inherit;
+}
+
+.input {
+  font-size: 16px;
+  font-family: inherit;
+  resize: vertical;
+  padding: 8px;
+}

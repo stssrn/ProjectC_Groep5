@@ -4,6 +4,8 @@
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 70px;
+    opacity: 0;
+    transition: opacity 0.5s ease-in;
 }
 
 @media (max-width: 450px) {
@@ -12,4 +14,13 @@
         letter-spacing: -4px;
     }
 }
-    
+
+.fadeIn {
+    opacity: 1;
+    transition: opacity 1.5s ease-in; /* Increase the duration to slow down the fade-in */
+}
+
+.fadeOut {
+    opacity: 0;
+    transition: opacity 1s ease-out;
+}
