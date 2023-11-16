@@ -27,7 +27,7 @@ const navItems = [
   { path: "dashboard", symbol: "dashboard" },
   { path: "agenda", symbol: "calendar_month" },
   { path: "forum", symbol: "forum" },
-  { path: "quiz", symbol: "quiz" },
+  // { path: "quiz", symbol: "quiz" },
   { path: "winkel", symbol: "shopping_cart" },
   { path: "admin", symbol: "shield" },
   { path: "instellingen", symbol: "settings" },

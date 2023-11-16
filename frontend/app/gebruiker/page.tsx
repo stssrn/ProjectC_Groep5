@@ -4,7 +4,6 @@ import Container from "../components/Container";
 import styles from "./page.module.css";
 
 const Page = () => {
-  const [buttonText] = useState("Opslaan");
 
   const userData = {
     name: "John Doe",
@@ -45,7 +44,6 @@ const Page = () => {
             <label>Punten:</label>
             <p>{userData.points}</p>
           </div>
-          <button className={styles.saveButton}>{buttonText}</button>
         </div>
       </div>
     </Container>
