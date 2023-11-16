@@ -14,24 +14,33 @@ const Quote = () => {
     ];
 
     const [currentQuote, setCurrentQuote] = useState<string | null>(null);
+    const [fadeState, setFadeState] = useState<'fadeIn' | 'fadeOut' | ''>(''); 
     const router = useRouter();
 
     const displayRandomQuote = () => {
       const randomIndex: number = Math.floor(Math.random() * quotes.length);
       const randomQuote: string = quotes[randomIndex];
-      setCurrentQuote(randomQuote);
+        setCurrentQuote(randomQuote);
+
+        setTimeout(() => {
+            setFadeState('fadeIn');
+        }, 250);
+
+        setTimeout(() => {
+            setFadeState('fadeOut');
+        }, 2500);
     };
 
     useEffect(() => {
       displayRandomQuote();
       const timer = setTimeout(() => {
         router.replace("/login")
-      }, 3000);
+      }, 3500);
       return () => clearTimeout(timer);
     }, []);
 
     return (
-        <div className={ styles.quoteText }>
+        <div className={`${styles.quoteText} ${styles[fadeState]}`}>
             {currentQuote && <p>{currentQuote}</p>}
         </div>
     );
