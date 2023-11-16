@@ -1,18 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import styles from "./Post.module.css";
+import styles from "./Reply.module.css";
 import clsx from "clsx";
 import Link from "next/link";
-import { Post } from "@/lib/posts";
+import { Reply } from "@/lib/posts";
 
-const Post: React.FC<{
-  post: Post;
-}> = ({ post }) => {
+const Reply: React.FC<{
+  reply: Reply;
+}> = ({ reply }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
-  const { poster } = post;
-  const postUrl = `/forum/post/${post.id}`;
+  const { poster } = reply;
 
   const formatDate = Intl.DateTimeFormat("nl", {
     day: "numeric",
@@ -29,7 +28,7 @@ const Post: React.FC<{
     return () => window.removeEventListener("click", handler);
   }, [showDropdown]);
 
-  const formattedDate = formatDate(post.date);
+  const formattedDate = formatDate(reply.date);
   return (
     <div className={styles.post}>
       <div className={styles.top}>
@@ -42,15 +41,7 @@ const Post: React.FC<{
           <div className={styles.name}>
             {poster.firstName} {poster.lastName}
           </div>
-          <div className={styles.subtext}>
-            <Link
-              className={styles.subtextUrl}
-              title="Bekijk post"
-              href={postUrl}
-            >
-              {formattedDate}
-            </Link>
-          </div>
+          <div className={styles.subtext}>{formattedDate}</div>
         </div>
         <div className={styles.options}>
           <i
@@ -77,7 +68,7 @@ const Post: React.FC<{
           )}
         </div>
       </div>
-      <p className={styles.content}>{post.content}</p>
+      <p className={styles.content}>{reply.content}</p>
       <div className={styles.bottom}>
         <div className={styles.bottomItem}>
           <i
@@ -92,26 +83,11 @@ const Post: React.FC<{
           >
             favorite
           </i>
-          <div>{post.likes + Number(isLiked)}</div>
-        </div>
-        <div>
-          <Link className={styles.bottomItem} href={postUrl}>
-            <i
-              className={clsx(
-                "symbol",
-                styles.bottomItemButton,
-                styles.commentButton,
-              )}
-              title="Reacties"
-            >
-              comment
-            </i>
-            <div>{post.replies.length}</div>
-          </Link>
+          <div>{reply.likes + Number(isLiked)}</div>
         </div>
       </div>
     </div>
   );
 };
 
-export default Post;
+export default Reply;

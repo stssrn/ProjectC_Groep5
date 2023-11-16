@@ -1,0 +1,22 @@
+.container {
+  background-color: var(--bg300);
+  display: flex;
+  flex-direction: column;
+  width: 420px;
+  border: 1px solid var(--g500);
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 50%);
+  height: 75vh;
+}
+
+.children {
+  overflow-y: scroll;
+}
+
+.header {
+  border-bottom: inherit;
+  padding: 12px;
+}
+
+.title {
+  text-align: center;
+}

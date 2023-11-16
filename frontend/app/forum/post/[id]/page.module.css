@@ -1,0 +1,41 @@
+.container {
+  width: 480px;
+  background-color: var(--bg500);
+  border: 1px solid var(--g500);
+  padding: 16px 0px;
+  max-width: 100%;
+}
+
+.button, .secondaryButton {
+  display: block;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  width: fit-content;
+  margin-left: auto;
+}
+
+.button {
+  background-color: var(--p500);
+  border: none;
+  color: #fff;
+  user-select: none;
+}
+
+.input {
+  width: 100%;
+  margin-bottom: 8px;
+  margin-top: 4px;
+  resize: vertical;
+  font-family: inherit;
+  padding: 8px;
+}
+
+.replyContainer {
+  margin: 0px 32px;
+  margin-top: 16px;
+}
+
+.replySubtitle {
+  font-size: 14px;
+}
