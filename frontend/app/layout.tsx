@@ -49,7 +49,7 @@ export default function RootLayout({
           >
 
         <div className={styles.wrapper}>
-                  {seg !== "quote" &&
+                  {seg !== "quote" && seg !== "ggzinfo" &&
                       <header className={styles.header}>
                           <Image src={logo} alt="Antes Logo" height={24}></Image>
                           <div className={styles.cornerSquare}></div>
@@ -57,7 +57,7 @@ export default function RootLayout({
                   }
           <div className={styles.container}>{children}</div>
               </div>
-              {seg !== "quote" &&
+              {seg !== "quote" && seg !== "ggzinfo" &&
                   <nav className={styles.nav}>
                       <ul className={styles.list}>
                           {seg !== "login" && navItems.map((p) => (
