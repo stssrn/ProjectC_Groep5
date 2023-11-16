@@ -17,8 +17,8 @@ const AgendaBlock: React.FC<{
 }> = ({ className }) => {
     return (
         <section className={className}>
-            <div className={styles.Agenda}>
-                <Container padding={12} title="Agenda">
+            <Container padding={12} title="Agenda">
+                <div className={styles.agenda}>
                     {upcomingEvents.length ? (
                         <>
                             <h2 className={styles.month}>{month}</h2>
@@ -39,8 +39,8 @@ const AgendaBlock: React.FC<{
                             Er zijn geen agenda-items deze maand.
                         </p>
                     )}
-                </Container>
-            </div>
+                </div>
+            </Container>
         </section>
     );
 };

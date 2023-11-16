@@ -4,6 +4,10 @@
   gap: 8px;
 }
 
+.agenda {
+  max-height: 100%;
+}
+
 .bar {
   width: 16px;
   border: 1px solid var(--g500);

@@ -32,8 +32,6 @@ const navItems = [
   { path: "admin", symbol: "shield" },
   { path: "instellingen", symbol: "settings" },
   { path: "faq", symbol: "help" },
-  { path: "contact", symbol: "call" }
-  { path: "faq", symbol: "help" },
   { path: "contact", symbol: "call" },
   { path: "casussen", symbol: "book" }
 ];

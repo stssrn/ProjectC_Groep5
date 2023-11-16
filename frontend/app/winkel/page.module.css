@@ -34,10 +34,6 @@
     line-height: 1.5em;
 }
 
-.rewardInfo {
-    text-overflow: ellipsis;
-}
-
 .rewardRight {
     grid-column-start: middle;
     grid-row-start: middle-start;
@@ -84,7 +80,6 @@
         width: 54vw;
         row-gap: 5px;
         display: flex;
-        overflow-x: hidden;
         overflow-y: scroll;
         flex-wrap: wrap;
         justify-content: center;
