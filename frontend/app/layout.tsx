@@ -23,17 +23,17 @@ const materialSymbols = localFont({
 });
 
 const navItems = [
-  { path: "gebruiker", symbol: "person" },
-  { path: "dashboard", symbol: "dashboard" },
-  { path: "agenda", symbol: "calendar_month" },
-  { path: "forum", symbol: "forum" },
-  // { path: "quiz", symbol: "quiz" },
-  { path: "winkel", symbol: "shopping_cart" },
-  { path: "admin", symbol: "shield" },
-  { path: "instellingen", symbol: "settings" },
-  { path: "faq", symbol: "help" },
-  { path: "contact", symbol: "call" },
-  { path: "casussen", symbol: "book" }
+  { path: "gebruiker", symbol: "person", name: "Profiel" },
+  { path: "dashboard", symbol: "dashboard", name: "Dashboard" },
+  { path: "agenda", symbol: "calendar_month", name: "Agenda" },
+  { path: "forum", symbol: "forum", name: "Forum" },
+  { path: "quiz", symbol: "quiz", name: "Quiz" },
+  { path: "winkel", symbol: "shopping_cart", name: "Winkel" },
+  { path: "admin", symbol: "shield", name: "admin" },
+  { path: "instellingen", symbol: "settings", name: "Instellingen" },
+  { path: "faq", symbol: "help", name: "FAQ" },
+  { path: "contact", symbol: "call", name: "Contact" },
+  { path: "casussen", symbol: "book", name: "Casus" }
 ];
 
 export default function RootLayout({
@@ -44,39 +44,34 @@ export default function RootLayout({
   const seg = useSelectedLayoutSegment();
   return (
     <html lang="en">
-      <body
-        className={clsx(inter.className, styles.body, materialSymbols.variable)}
-          >
-
+      <body className={clsx(inter.className, styles.body, materialSymbols.variable)}>
         <div className={styles.wrapper}>
-                  {seg !== "quote" &&
-                      <header className={styles.header}>
-                          <Image src={logo} alt="Antes Logo" height={24}></Image>
-                          <div className={styles.cornerSquare}></div>
-                      </header>
-                  }
+          {seg !== "quote" && (
+            <header className={styles.header}>
+              <Image src={logo} alt="Antes Logo" height={24} />
+              <div className={styles.cornerSquare}></div>
+            </header>
+          )}
           <div className={styles.container}>{children}</div>
-              </div>
-              {seg !== "quote" &&
-                  <nav className={styles.nav}>
-                      <ul className={styles.list}>
-                          {seg !== "login" && navItems.map((p) => (
-                              <li
-                                  key={p.path}
-                                  className={clsx(
-                                      styles.listItem,
-                                      p.path === seg && styles.active
-                                  )}
-                              >
-                                  <Link href={`/${p.path}`} title={p.path}>
-                                      <i className="symbol">{p.symbol}</i>
-                                  </Link>
-                              </li>
-                          ))}
-                      </ul>
-                  </nav>
-              }
-          </body>
+        </div>
+        {seg !== "quote" && (
+          <nav className={styles.nav}>
+            <ul className={styles.list}>
+              {seg !== "login" &&
+                navItems.map((p) => (
+                  <Link key={p.path} href={`/${p.path}`} title={p.path}>
+                    <li className={clsx(styles.listItem, p.path === seg && styles.active)}>
+                      <div className={styles.navItem}>
+                        <span className={styles.hoverText}>{p.name}</span>
+                        <i className="symbol">{p.symbol}</i>
+                      </div>
+                    </li>
+                  </Link>
+                ))}
+            </ul>
+          </nav>
+        )}
+      </body>
     </html>
   );
 }

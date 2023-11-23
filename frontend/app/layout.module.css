@@ -38,7 +38,6 @@
 }
 
 .wrapper {
-    /* display: flex; */
     justify-content: space-between;
     width: calc(100% - 40px);
     overflow-y: scroll;
@@ -67,15 +66,27 @@
     color: var(--p500);
     background-color: var(--bg500);
     transition: all 75ms ease-out;
+    position: relative;
+    z-index: 3;
+    /* Set a default z-index value */
 }
 
-.list:hover .listItem {
+.list:hover .listItem:not(.active) {
     transform: scale(1);
+}
+
+.list:hover .listItem:not(.active):hover {
+    transform-origin: top center;
+    transform: scale(1.1);
+    box-shadow: 0px 1px 6px var(--p500);
+    z-index: 4;
 }
 
 .list:hover .listItem.active {
     box-shadow: 0px 1px 6px var(--p500);
     transform: scale(1.1);
+    z-index: 5;
+    /* Set a higher z-index for the active item */
 }
 
 .listItem a {
@@ -83,11 +94,41 @@
     display: flex;
     text-decoration: none;
     height: 24px;
+    z-index: 2;
+    /* Set a lower z-index for links within the item */
 }
 
 .listItem.active {
     transform: scale(1.2);
     transform-origin: center right;
     box-shadow: 0px 3px 10px var(--p500);
-    z-index: 2;
+    z-index: 6;
+}
+
+.listItem.active:hover {
+    transform: scale(1.2);
+    box-shadow: 0px 3px 10px var(--p500);
+    z-index: 6;
+}
+
+.navItem {
+    position: relative;
+    display: inline-block;
+}
+
+.hoverText {
+    display: none;
+    position: absolute;
+    top: -5px;
+    right: 32px;
+    background-color: var(--bg500);
+    padding: 5px;
+    box-shadow: 0px 3px 10px var(--p500);
+    border-radius: 10px 0 0 10px;
+    z-index: 4;
+}
+
+.listItem:hover .hoverText {
+    display: inline;
+    /* Show the text when the parent .navItem is hovered */
 }
