@@ -1,22 +1,58 @@
 .ggzText {
-    align-content: center;
-    width: 500px;
-    padding-top: 5px;
-    border-style: hidden;
-    border-width: 1px;
-    padding-left: 3px;
-    padding-bottom: 10px;
-    word-wrap: break-word;
-    vertical-align: bottom;
-    font-size: xx-large;
+    position: relative;
+    top: -50px;
+    font-size: 35px;
+    text-align: center;
 }
 .ggzTitel {
+    position: relative;
+    font-size: 35px;
     text-align: center;
-    font-size: 50px;
+    top: -70px;
 }
+
 .image {
-    object-fit: contain;
-    width: 100%;
-    height: auto;
-    object-position: center;
+    width: 60%;
+    height: 400px;
+}
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 600px;
+}
+
+.skipButton {
+    display: block;
+    color: var(--p500);
+    text-align: center;
+    padding: 12px; /* Increase padding for additional size */
+    width: 150px; /* Adjust width as needed */
+    height: 40px; /* Adjust height as needed */
+    font-size: 30px; /* Adjust font size for text */
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    position: fixed;
+    top: 45px; /* Adjust the top distance as needed */
+    right: 100px; /* Adjust the right distance as needed */
+    margin-top: 55px; /* Adjust the margin-top for additional space */
+    margin-right: 115px; /* Adjust the margin-right for additional space */
+}
+.continueButton {
+    display: block;
+    color: var(--g100);
+    background-color: var(--p500);
+    text-align: center;
+    padding: 16px; /* Increase padding for additional size */
+    width: 200px; /* Adjust width as needed */
+    height: 60px; /* Adjust height as needed */
+    font-size: 20px; /* Adjust font size for text */
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    position: fixed;
+    top: 800px; /* Keep the same vertical position */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%); /* Adjust for horizontal centering */
 }
