@@ -20,6 +20,8 @@ const agendaData: Calendar = {
   december: [],
 };
 
+export const monthNames = Object.keys(agendaData);
+
 const monthFromDate = Intl.DateTimeFormat("nl", { month: "long" }).format;
 
 const events: AgendaEvent[] = Array.from({ length: 30 }, Math.random)
@@ -27,7 +29,8 @@ const events: AgendaEvent[] = Array.from({ length: 30 }, Math.random)
     name: Math.round(Math.random()) ? "Meeting" : "Cursus",
     date: new Date(Date.now() + x * (330 * 24 * 60 * 60 * 1000)),
   }))
-  .toSorted((a, b) => a.date.getTime() - b.date.getTime());
+
+events.sort((a, b) => a.date.getTime() - b.date.getTime());
 
 for (const date of events) {
   const month = monthFromDate(date.date);

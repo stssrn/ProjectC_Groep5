@@ -1,34 +1,53 @@
 .blocks {
-  /* width: calc(100vw - 40px - 40px); */
-  display: grid;
-  grid-template: repeat(4, 200px) / repeat(4, 1fr);
-  grid-template-areas:
-    "news  news  quiz     agenda"
-    "news  news  educatie educatie"
-    "forum forum educatie educatie";
+    /* width: calc(100vw - 40px - 40px); */
+    display: grid;
+    grid-template: repeat(4, 20.5vh) / repeat(4, 1fr);
+    column-gap: 1rem;
+    row-gap: 1rem;
+    grid-template-areas:
+        "news  news  quiz         agenda"
+        "news  news  education education"
+        "forum forum education education"
+        "forum forum education education";
 }
 
 .news {
-  grid-area: news;
-  overflow: hidden;
+    grid-area: news;
+    overflow: hidden;
+}
+
+.forum {
+    grid-area: forum;
+    overflow: hidden;
 }
 
 .quiz {
-  grid-area: agenda;
+    grid-area: quiz;
+}
+
+.agenda {
+    grid-area: agenda;
+}
+
+.education {
+    grid-area: education;
 }
 
 .noEvents {
-  line-height: 1.5em;
+    line-height: 1.5em;
 }
 
 @media screen and (max-width: 420px) {
-  .blocks {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
+    .blocks {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
 
-  .news {
-    height: 400px;
-  }
+    .news,
+    .education,
+    .forum {
+        height: 400px;
+    }
+
 }

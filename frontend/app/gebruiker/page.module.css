@@ -1,0 +1,111 @@
+.parentContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  justify-content: center;
+}
+
+.profileContainer {
+  display: flex;
+  align-items: start;
+  gap: 20px;
+  width: 100%;
+}
+
+.circularProfilePhotoContainer {
+  flex-shrink: 0;
+}
+
+.circularProfilePhoto {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 100%;
+  border: 2px solid #2f2e41;
+}
+
+.userInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.userInfo > div {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.userInfo > div > p,
+.userInfo > div > label {
+  text-align: left;
+  margin: 0;
+}
+
+.editButton,
+.saveButton,
+.cancelButton {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.editButton {
+  background-color: lightblue;
+}
+
+.saveButton {
+  background-color: lightgreen;
+}
+
+.cancelButton {
+  background-color: lightcoral;
+}
+
+.inputField,
+.textareaField {
+  margin: 5px 0;
+  padding: 5px;
+  border: 1px solid grey;
+  border-radius: 4px;
+}
+
+.textareaField {
+  height: 80px;
+  resize: vertical;
+}
+
+@media (max-width: 600px) {
+  .profileContainer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .userInfo > div {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .userInfo > div > p,
+  .userInfo > div > label {
+    text-align: left;
+    width: 100%;
+  }
+
+  .editButton,
+  .saveButton,
+  .cancelButton {
+    margin-top: 5px;
+  }
+
+  .inputField,
+  .textareaField {
+    width: 100%;
+  }
+}
