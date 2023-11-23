@@ -1,17 +1,12 @@
+import { getRandomDate, makeRng } from "./utils";
+
 export interface Account {
   id: number;
   firstName: string;
   lastName: string;
+  username: string;
   creationDate: Date;
 }
-
-const getRandomDate = () => {
-  const start = new Date(2020, 0, 1);
-  const end = new Date();
-  return new Date(
-    start.getTime() + Math.random() * (end.getTime() - start.getTime()),
-  );
-};
 
 const firstNames = [
   "Anna",
@@ -39,16 +34,21 @@ const lastNames = [
   "Mulder",
 ];
 
-const getRandom = <T>(xs: T[]): T => xs[Math.floor(Math.random() * xs.length)];
+const rng = makeRng();
 
-const generateRandomAccount = (): Account => ({
-  id: Math.floor(Math.random() * 1000),
-  firstName: getRandom(firstNames),
-  lastName: getRandom(lastNames),
-  creationDate: getRandomDate(),
-});
+const generateRandomAccount = (): Account => {
+  const firstName = rng.getRandom(firstNames);
+  const lastName = rng.getRandom(lastNames);
+  return {
+    id: Math.floor(Math.abs(rng.get()) * 1000),
+    firstName,
+    lastName,
+    username: (firstName + lastName).replaceAll(" ", ""),
+    creationDate: getRandomDate(),
+  };
+};
 
-const getRandomAccounts = (length: number): Account[] =>
-  Array.from({ length: length }, generateRandomAccount);
+const randomAccounts = Array.from({ length: 100 }, generateRandomAccount);
+const getRandomAccounts = (length: number) => randomAccounts.slice(0, length);
 
 export default getRandomAccounts;

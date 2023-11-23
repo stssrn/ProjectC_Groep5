@@ -1,0 +1,119 @@
+.post {
+  width: 100%;
+  padding: 16px 16px 16px 32px;
+}
+
+.top {
+  display: flex;
+  align-items: center;
+}
+
+.profilePicture {
+  background-color: var(--b700);
+  color: #fff;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  font-size: 22px;
+  border-radius: 50%;
+  margin-right: 16px;
+}
+
+.name {
+  font-weight: 600;
+}
+
+.subtext {
+  font-size: 12px;
+}
+
+.content {
+  margin: 16px 0;
+}
+
+.bottom {
+  display: flex;
+  gap: 24px;
+}
+
+.bottomItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  font-size: 16px;
+  width: 48px;
+  color: inherit;
+}
+
+.bottomItemButton {
+  font-size: 24px;
+}
+
+.bottomItemButton:hover {
+  cursor: pointer;
+}
+
+.likeButton {
+  font-variation-settings: "FILL" 0 !important;
+}
+
+.userInfo {
+  flex-grow: 1;
+}
+
+.bottomItemButton.liked {
+  font-variation-settings: "FILL" 1 !important;
+}
+
+.options {
+  font-size: 20px;
+  justify-self: flex-end;
+  display: flex;
+  border-radius: 50%;
+  padding: 4px;
+  position: relative;
+}
+
+.optionsSymbol {
+  color: #2699fb;
+  font-size: 24px;
+}
+
+.options:hover {
+  cursor: pointer;
+  background-color: #691c1210;
+}
+
+.optionsMenu {
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: var(--bg500);
+  font-size: 16px;
+  width: max-content;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid var(--g500);
+  box-shadow: 0px 3px 3px rgba(0, 0, 0, 20%);
+}
+
+.optionsList {
+  list-style: none;
+}
+
+.optionsList > li {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.listSymbol {
+  display: block;
+}
+
+.subtextUrl {
+  color: inherit;
+}
