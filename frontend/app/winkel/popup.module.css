@@ -1,0 +1,40 @@
+.ClickButton {
+    background: #AC3B61;
+    color: white;
+    padding: 10px;
+    z-index: 999;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: pointer;
+    width: 90px;
+    text-align: center;
+}
+
+.PopupCard {
+    width: 50vw;
+    height: 70vh;
+    position: absolute;
+    border-radius: 32px;
+    border: 2px solid var(--g500);
+    left: 50%;
+    top: 15%;
+    z-index: 998;
+    background-color: #edc7b7;
+    padding: 40px;
+    transform: translateX(-50%);
+}
+
+
+.Overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 900;
+    width: 100vw;
+    height: 100vh;
+    backdrop-filter: blur(1px);
+}
+
+.content {
+    height: 55vh;
+}

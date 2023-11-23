@@ -24,7 +24,7 @@ const ForumBlock: React.FC<{
 }> = ({ className }) => {
     return (
         <section className={className}>
-            <Container padding={12} title="Forum posts">
+            <Container padding={12} title="Populaire discussies">
                 <div className={styles.posts}>
                     {posts.map((post, i) => (
                         <article key={i} className={styles.post}>

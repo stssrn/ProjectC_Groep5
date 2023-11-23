@@ -1,0 +1,104 @@
+.rewardsContainer {
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.rewards {
+    height: 70vh;
+    width: 80vw;
+    display: flex;
+    overflow: hidden;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.reward {
+    border: 1px black solid;
+    box-shadow: 5px 5px 2px grey;
+    background: rgba(238, 226, 220, 1);
+    display: grid;
+    grid-template-columns: 1vw [first] 10vw [middle] 25vw;
+    grid-template-rows: [first-line] 5vh [middle-start] 20vh [middle-end] 5vh [last-line];
+    align-items: center;
+    margin: 0 10px;
+}
+
+.rewardName {
+    margin-bottom: 16px;
+    font-size: 20px;
+}
+
+.rewardInfo,
+.rewardName {
+    line-height: 1.5em;
+}
+
+.rewardRight {
+    grid-column-start: middle;
+    grid-row-start: middle-start;
+}
+
+.rewardLeft {
+    grid-column-start: first;
+    grid-row-start: middle-start;
+}
+
+.showNext {
+    position: absolute;
+    top: 50%;
+    /* transform: translateY(-50%); */
+    right: 2vw;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0) 5%, rgba(0, 0, 0, 0.3) 95%);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.showNext:hover,
+.showPrev:hover {
+    background: linear-gradient(to right, rgba(171, 218, 244, 0) 5%, rgba(171, 218, 244, 0.3) 95%)
+}
+
+.showPrev {
+    position: absolute;
+    top: 50%;
+    /* transform: translateY(-50%); */
+    background: linear-gradient(to left, rgba(0, 0, 0, 0) 5%, rgba(0, 0, 0, 0.3) 95%);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+@media screen and (max-width: 420px) {
+    .rewards {
+        height: 70vh;
+        width: 54vw;
+        row-gap: 5px;
+        display: flex;
+        overflow-y: scroll;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .showNext,
+    .showPrev {
+        display: none;
+    }
+
+    .reward {
+        display: block;
+        flex-basis: 100%;
+        font-size: smaller;
+        padding: 2px;
+    }
+
+    .rewardLeft {
+        display: none;
+    }
+}
