@@ -46,7 +46,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={clsx(inter.className, styles.body, materialSymbols.variable)}>
         <div className={styles.wrapper}>
-<<<<<<< HEAD
+
                   {seg !== "quote" && seg !== "ggzinfo" &&
                       <header className={styles.header}>
                           <Image src={logo} alt="Antes Logo" height={24}></Image>
@@ -75,34 +75,7 @@ export default function RootLayout({
                   </nav>
               }
           </body>
-=======
-          {seg !== "quote" && (
-            <header className={styles.header}>
-              <Image src={logo} alt="Antes Logo" height={24} />
-              <div className={styles.cornerSquare}></div>
-            </header>
-          )}
-          <div className={styles.container}>{children}</div>
-        </div>
-        {seg !== "quote" && (
-          <nav className={styles.nav}>
-            <ul className={styles.list}>
-              {seg !== "login" &&
-                navItems.map((p) => (
-                  <Link key={p.path} href={`/${p.path}`} title={p.path}>
-                    <li className={clsx(styles.listItem, p.path === seg && styles.active)}>
-                      <div className={styles.navItem}>
-                        <span className={styles.hoverText}>{p.name}</span>
-                        <i className="symbol">{p.symbol}</i>
-                      </div>
-                    </li>
-                  </Link>
-                ))}
-            </ul>
-          </nav>
-        )}
-      </body>
->>>>>>> main
+
     </html>
   );
 }
