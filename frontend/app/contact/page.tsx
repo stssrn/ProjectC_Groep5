@@ -39,6 +39,8 @@ const ContactInfoPage = () => {
         <p>contact@example.com</p>
         <h2>Telefoonnummer:</h2>
         <p>088 358 50 50</p>
+        <h2>Openingstijden</h2>
+        <p>Werkdagen: 08:30 - 17:00 uur</p>
       </InfoCard>
     </Container>
   );
