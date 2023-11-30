@@ -7,9 +7,10 @@ import { useState } from "react";
 import Link from "next/link";
 
 const Page = () => {
-    const [currentStep, setCurrentStep] = useState(
-        parseInt(localStorage.getItem("currentStep") || "1", 10)
-    );
+    const storedStep = localStorage.getItem("currentStep");
+    const initialStep = storedStep ? parseInt(storedStep, 10) : 1;
+
+    const [currentStep, setCurrentStep] = useState(initialStep);
 
     const handleStepChange = (step: number) => {
         setCurrentStep(step);
@@ -54,7 +55,7 @@ const Page = () => {
                         <div className={styles.form}>
                             <input className={styles.textbox} placeholder="wachtwoord" type="password" name="" id="" />
                             <input className={styles.textbox} placeholder="herhaal wachtwoord" type="password" name="" id="" />
-                            <Link href="/login" className={styles.continuePasswordChange}>
+                            <Link href="/login" className={styles.continuePasswordChange} onClick={() => handleStepChange(1)}>
                                 Wachtwoord veranderen
                             </Link>
                         </div>
