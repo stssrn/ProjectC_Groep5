@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import image from "./classroom.svg";
 import Image from "next/image";
 import Link from "next/link";
-import Joyride from "react-joyride";
 
 
 const Display = () => {

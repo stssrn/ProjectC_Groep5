@@ -33,7 +33,8 @@ const navItems = [
   { path: "instellingen", symbol: "settings", name: "Instellingen" },
   { path: "faq", symbol: "help", name: "FAQ" },
   { path: "contact", symbol: "call", name: "Contact" },
-  { path: "casussen", symbol: "book", name: "Casus" }
+  { path: "casussen", symbol: "book", name: "Casus" },
+  { path: "educatie", symbol: "education", name: "Educatie"}
 ];
 
 export default function RootLayout({

@@ -1,6 +1,6 @@
 "use client";
-import Joyride, { Step } from 'react-joyride';
-import stylestour from "./stylestour.module.css";
+import { Step } from 'react-joyride';
+import stylestour from "./page.module.css";
 import React, { useState, useEffect } from 'react';
 import styles from "../dashboard/page.module.css";
 import NewsSection from "../dashboard/NewsSection";
@@ -9,6 +9,9 @@ import ForumSection from "../dashboard/ForumSection";
 import QuizSection from "../dashboard/QuizSection";
 import EducationSection from "../dashboard/EducationSection";
 import LayoutModule from "../layout.module.css";
+import Image from "next/image";
+import image from "./image.png";
+import JoyRideNoSSR from '../components/JoyRideNoSSR';
 
 const Page: React.FC = () => {
     const [run, setRun] = useState(false);
@@ -36,7 +39,7 @@ const Page: React.FC = () => {
         },
         {
             target: `.${LayoutModule.nav}`,
-            content: 'Gebruik de navigatie balk aan de rechterzijde om ons platform verder te verkennen.',
+            content: 'Je kunt punten verdienen door quizzes te maken en actief te zijn op ons platform. Deze punten kun je uitgeven in de puntenwinkel. Gebruik de navigatie balk aan de rechterzijde om ons platform verder te verkennen.',
             placement: 'center',
             isFixed: true,
         },
@@ -70,7 +73,7 @@ const Page: React.FC = () => {
             <EducationSection className={styles.education} />
             <AgendaSection className={styles.agenda} />
 
-            <Joyride {...joyrideOptions} />
+            <JoyRideNoSSR {...joyrideOptions} />
         </main>
     );
 };

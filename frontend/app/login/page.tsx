@@ -23,7 +23,7 @@ const Page = () => {
     };
 
     const handleNo = () => {
-        router.push("/tour");
+        router.push("/dashboard");
         setShowPopup(false);
     };
 
