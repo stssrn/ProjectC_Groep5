@@ -7,10 +7,13 @@ import { useState } from "react";
 import Link from "next/link";
 
 const Page = () => {
-    const [currentStep, setCurrentStep] = useState(1);
+    const [currentStep, setCurrentStep] = useState(
+        parseInt(localStorage.getItem("currentStep") || "1", 10)
+    );
 
     const handleStepChange = (step: number) => {
         setCurrentStep(step);
+        localStorage.setItem("currentStep", String(step));
     };
 
     return (
