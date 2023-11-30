@@ -49,3 +49,7 @@ i.symbol {
   font-variation-settings: "FILL" 1;
   user-select: none;
 }
+
+textarea {
+  font-family: inherit;
+}

@@ -1,62 +1,7 @@
 "use client";
 import React, { useState } from "react";
+import styles from "./page.module.css";
 import Container from "../components/Container";
-import styled from "@emotion/styled";
-import { keyframes } from "@emotion/react";
-
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-`;
-
-const CasusListDiv = styled.div`
-  flex: 1;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  background-color: #edc7b7;
-`;
-
-const CasusButton = styled.button`
-  display: block;
-  width: 100%;
-  padding: 16px;
-  margin-bottom: 8px;
-  background: none;
-  border: none;
-  text-align: left;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  &:hover {
-
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-  &:active {
-    transform: scale(0.98);
-  }
-
-  animation: ${fadeIn} 0.5s ease;
-
-`;
-
-const CasusContentDiv = styled.div`
-  flex: 3;
-  padding: 16px;
-  border-left: 1px solid #ddd;
-  animation: ${fadeIn} 0.5s ease;
-`;
-
-const CasusPageLayout = styled.div`
-  display: flex;
-  height: 100%;
-  background-color: #edc7b7;
-`;
 
 // Dummy data for the casus list
 const casusData = [
@@ -81,13 +26,17 @@ type CasusListProps = {
 
 const CasusList: React.FC<CasusListProps> = ({ onSelect }) => {
   return (
-    <CasusListDiv>
+    <div className={styles.casusListDiv}>
       {casusData.map((casus) => (
-        <CasusButton key={casus.id} onClick={() => onSelect(casus)}>
+        <button
+          key={casus.id}
+          className={styles.casusButton}
+          onClick={() => onSelect(casus)}
+        >
           {casus.title}
-        </CasusButton>
+        </button>
       ))}
-    </CasusListDiv>
+    </div>
   );
 };
 
@@ -97,10 +46,10 @@ type CasusContentProps = {
 
 const CasusContent: React.FC<CasusContentProps> = ({ casus }) => {
   return (
-    <CasusContentDiv>
+    <div className={styles.casusContentDiv}>
       <h2>{casus.title}</h2>
       <p>{casus.content}</p>
-    </CasusContentDiv>
+    </div>
   );
 };
 
@@ -109,10 +58,10 @@ const CasusPage: React.FC = () => {
 
   return (
     <Container title="Casussen">
-      <CasusPageLayout>
+      <div className={styles.casusPageLayout}>
         <CasusList onSelect={setSelectedCasus} />
         <CasusContent casus={selectedCasus} />
-      </CasusPageLayout>
+      </div>
     </Container>
   );
 };

@@ -1,1 +1,52 @@
-/* hier is leeg vanwege het gebruik van de styled components als er iets in moet komen kan dat hier dat is dan de standaard css */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.casusListDiv {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  background-color: #edc7b7;
+}
+
+.casusButton {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 8px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  animation: fadeIn 0.5s ease;
+}
+
+.casusButton:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.casusButton:active {
+  transform: scale(0.98);
+}
+
+.casusContentDiv {
+  flex: 3;
+  padding: 16px;
+  border-left: 1px solid #ddd;
+  animation: fadeIn 0.5s ease;
+}
+
+.casusPageLayout {
+  display: flex;
+  height: 100%;
+  background-color: #edc7b7;
+}

@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
+import componentStyles from "../components/SettingsComponents.module.css";
 import { useState } from "react";
-import { SettingOption, Switch } from "../components/SettingsComponents";
 
 const NotificationSettings = () => {
   const [emailNotifications, setEmailNotifications] = useState(
@@ -31,28 +31,30 @@ const NotificationSettings = () => {
 
   return (
     <div>
-      <SettingOption>
+      <div className={componentStyles.settingOption}>
         <span>Email Notifications</span>
-        <Switch>
+        <label className={componentStyles.switchLabel}>
           <input
             type="checkbox"
+            className={componentStyles.switchInput}
             checked={emailNotifications}
             onChange={toggleEmailNotifications}
           />
-          <span className="slider"></span>
-        </Switch>
-      </SettingOption>
-      <SettingOption>
+          <span className={componentStyles.slider}></span>
+        </label>
+      </div>
+      <div className={componentStyles.settingOption}>
         <span>Push Notifications</span>
-        <Switch>
+        <label className={componentStyles.switchLabel}>
           <input
             type="checkbox"
+            className={componentStyles.switchInput}
             checked={pushNotifications}
             onChange={togglePushNotifications}
           />
-          <span className="slider"></span>
-        </Switch>
-      </SettingOption>
+          <span className={componentStyles.slider}></span>
+        </label>
+      </div>
       {/* Add more notification settings options here */}
     </div>
   );

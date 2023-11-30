@@ -432,3 +432,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+#package-lock.json ignored
+frontend/package-lock.json
