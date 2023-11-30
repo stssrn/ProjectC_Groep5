@@ -26,18 +26,20 @@ const FAQItem = ({ question, answer }: FAQItemProps) => {
 const FAQPage = () => {
   return (
     <Container title="FAQ">
-      <FAQItem
-        question="Officia laboris eu irure fugiat qui duis mollit labore."
-        answer="Ipsum minim dolore laborum aute fugiat est Lorem id qui velit duis aute anim sit."
-      />
-      <FAQItem
-        question="Ea nostrud aliquip aliqua magna do nostrud occaecat."
-        answer="Est ad proident occaecat non tempor."
-      />
-      <FAQItem
-        question="Quis consectetur sunt occaecat aliqua non laborum enim dolor sit qui."
-        answer="Deserunt veniam cillum culpa do deserunt fugiat ex ad aliquip officia sint."
-      />
+      <div className={styles.fixedWidth}>
+        <FAQItem
+          question="Officia laboris eu irure fugiat qui duis mollit labore."
+          answer="Ipsum minim dolore laborum aute fugiat est Lorem id qui velit duis aute anim sit."
+        />
+        <FAQItem
+          question="Ea nostrud aliquip aliqua magna do nostrud occaecat."
+          answer="Est ad proident occaecat non tempor."
+        />
+        <FAQItem
+          question="Quis consectetur sunt occaecat aliqua non laborum enim dolor sit qui."
+          answer="Deserunt veniam cillum culpa do deserunt fugiat ex ad aliquip officia sint."
+        />
+      </div>
     </Container>
   );
 };

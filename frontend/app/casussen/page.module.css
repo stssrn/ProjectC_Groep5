@@ -3,6 +3,7 @@
     opacity: 0;
     transform: translateX(-20px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -48,5 +49,6 @@
 .casusPageLayout {
   display: flex;
   height: 100%;
+  width: 75vw;
   background-color: #edc7b7;
 }

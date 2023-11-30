@@ -29,7 +29,7 @@ const navItems = [
   { path: "forum", symbol: "forum", name: "Forum" },
   { path: "quiz", symbol: "quiz", name: "Quiz" },
   { path: "winkel", symbol: "shopping_cart", name: "Winkel" },
-  { path: "admin", symbol: "shield", name: "admin" },
+  { path: "admin", symbol: "shield", name: "Admin" },
   { path: "instellingen", symbol: "settings", name: "Instellingen" },
   { path: "faq", symbol: "help", name: "FAQ" },
   { path: "contact", symbol: "call", name: "Contact" },
