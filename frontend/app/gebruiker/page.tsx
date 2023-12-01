@@ -95,7 +95,7 @@ const Page = () => {
               className={styles.editButton}
               onClick={() => setEditMode({ ...editMode, photo: true })}
             >
-              Edit Photo
+              Bewerk Foto
             </button>
             {editMode.photo && (
               <input
@@ -107,11 +107,11 @@ const Page = () => {
           </div>
           <div className={styles.userInfo}>
             <div>
-              <label>Name:</label>
+              <label>Naam:</label>
               <p>{userData.name}</p>
             </div>
             <div>
-              <label>Age:</label>
+              <label>Leeftijd:</label>
               <p>{userData.age}</p>
             </div>
             <div>
@@ -135,7 +135,7 @@ const Page = () => {
                     className={styles.cancelButton}
                     onClick={() => handleCancel("email")}
                   >
-                    Cancel
+                    Annuleren
                   </button>
                 </>
               ) : (
@@ -145,7 +145,7 @@ const Page = () => {
                     className={styles.editButton}
                     onClick={() => handleEdit("email")}
                   >
-                    Edit
+                    Bewerken
                   </button>
                 </>
               )}
@@ -164,13 +164,13 @@ const Page = () => {
                     className={styles.saveButton}
                     onClick={() => handleSave("bio")}
                   >
-                    Save
+                    Opslaan
                   </button>
                   <button
                     className={styles.cancelButton}
                     onClick={() => handleCancel("bio")}
                   >
-                    Cancel
+                    Annuleren
                   </button>
                 </>
               ) : (
@@ -180,13 +180,13 @@ const Page = () => {
                     className={styles.editButton}
                     onClick={() => handleEdit("bio")}
                   >
-                    Edit
+                    Bewerken
                   </button>
                 </>
               )}
             </div>
             <div>
-              <label>Points:</label>
+              <label>Punten:</label>
               <p>{userData.points}</p>
             </div>
           </div>
