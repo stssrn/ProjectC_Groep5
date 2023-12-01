@@ -41,3 +41,7 @@
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   animation: fadeIn 0.3s ease;
 }
+
+.fixedWidth {
+  width: 40vw;
+}
