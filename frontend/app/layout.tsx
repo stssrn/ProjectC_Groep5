@@ -30,7 +30,6 @@ const navItems = [
   { path: "quiz", symbol: "quiz", name: "Quiz" },
   { path: "winkel", symbol: "shopping_cart", name: "Winkel" },
   { path: "admin", symbol: "shield", name: "admin" },
-  { path: "instellingen", symbol: "settings", name: "Instellingen" },
   { path: "faq", symbol: "help", name: "FAQ" },
   { path: "contact", symbol: "call", name: "Contact" },
   { path: "casussen", symbol: "book", name: "Casus" }

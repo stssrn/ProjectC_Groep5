@@ -129,7 +129,7 @@ const Page = () => {
                     className={styles.saveButton}
                     onClick={() => handleSave("email")}
                   >
-                    Save
+                    Opslaan
                   </button>
                   <button
                     className={styles.cancelButton}
