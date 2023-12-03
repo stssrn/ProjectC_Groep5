@@ -1,29 +1,35 @@
 import prisma from "../lib/prisma";
 import getRandomAccounts from "../lib/accounts";
+import { hashPassword } from "../lib/passwordUtils";
 
 async function seed() {
-  const promises = getRandomAccounts(30).map((account) => {
+  const accounts = getRandomAccounts(30);
+  const promises = accounts.map(async (account) => {
+    const hashedPassword = await hashPassword("defaultPassword123");
     return prisma.users.upsert({
-      where: {
-        id: account.id,
-      },
+      where: { email: `${account.username.toLowerCase()}@example.com` },
       update: {},
       create: {
-        id: account.id,
+        email: `${account.username.toLowerCase()}@example.com`,
+        password: hashedPassword,
+        address: "Voorbeeld Straat 123, 1234 AB, Voorbeeldstad",
+        bio: "Dit is een Bio Voor " + account.firstName,
         firstName: account.firstName,
         lastName: account.lastName,
         username: account.username,
         registationDate: account.creationDate,
-      }});
+      },
+    });
   });
-  const response = await Promise.all(promises);
-  console.log(response);
+
+  await Promise.all(promises);
+  console.log("Database seeded!");
 }
 
 seed()
-  .then(async () => prisma.$disconnect())
-  .catch(async (e) => {
+  .then(() => prisma.$disconnect())
+  .catch((e) => {
     console.error(e);
-    await prisma.$disconnect();
+    prisma.$disconnect();
     process.exit(1);
   });
