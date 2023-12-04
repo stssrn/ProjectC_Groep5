@@ -52,7 +52,6 @@ const Page = () => {
                 <Image className={styles.image} src={image} alt="" />
             </div>
 
-            {/* Pop-up */}
             {showPopup && (
                 <div className={styles.popupContainer}>
                     <div className={styles.popup}>

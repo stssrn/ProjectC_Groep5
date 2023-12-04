@@ -22,19 +22,20 @@ const materialSymbols = localFont({
   weight: "100 700",
 });
 
+
 const navItems = [
-  { path: "gebruiker", symbol: "person", name: "Profiel" },
-  { path: "dashboard", symbol: "dashboard", name: "Dashboard" },
-  { path: "agenda", symbol: "calendar_month", name: "Agenda" },
-  { path: "forum", symbol: "forum", name: "Forum" },
-  { path: "quiz", symbol: "quiz", name: "Quiz" },
-  { path: "winkel", symbol: "shopping_cart", name: "Winkel" },
-  { path: "admin", symbol: "shield", name: "admin" },
-  { path: "instellingen", symbol: "settings", name: "Instellingen" },
-  { path: "faq", symbol: "help", name: "FAQ" },
-  { path: "contact", symbol: "call", name: "Contact" },
-  { path: "casussen", symbol: "book", name: "Casus" },
-  { path: "educatie", symbol: "education", name: "Educatie"}
+    { path: "gebruiker", symbol: "person", name: "Profiel" },
+    { path: "dashboard", symbol: "dashboard", name: "Dashboard" },
+    { path: "agenda", symbol: "calendar_month", name: "Agenda" },
+    { path: "forum", symbol: "forum", name: "Forum" },
+    { path: "quiz", symbol: "quiz", name: "Quiz" },
+    { path: "winkel", symbol: "shopping_cart", name: "Winkel" },
+    { path: "admin", symbol: "shield", name: "admin" },
+    { path: "instellingen", symbol: "settings", name: "Instellingen" },
+    { path: "faq", symbol: "help", name: "FAQ" },
+    { path: "contact", symbol: "call", name: "Contact" },
+    { path: "casussen", symbol: "book", name: "Casus" },
+    { path: "educatie", symbol: "school", name: "Educatie"}
 ];
 
 export default function RootLayout({

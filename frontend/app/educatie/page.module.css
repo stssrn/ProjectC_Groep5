@@ -1,0 +1,83 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.searchBar {
+    padding: 15px;
+    border-bottom: 1px solid var(--g500);
+    display: flex;
+    align-items: center; 
+}
+
+.inputBox {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    border-color: transparent;
+    background-color: transparent;
+    font-size: 15px;
+}
+
+.searchIcon {
+    margin-right: 5px;
+    width: 60%;
+    height: 45px;
+}
+
+.contentContainer {
+    display: flex;
+    flex: 1;
+}
+
+.moduleList {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--g500);
+}
+
+.moduleItem {
+    cursor: pointer;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+    .moduleItem:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+
+.moduleInfo {
+    padding: 20px;
+    flex: 2;
+    margin-left: 40px;
+    font-size: 20px;
+}
+
+.moduleTitle {
+    padding: 20px;
+    flex: 2;
+    text-align: center;
+    font-size: 40px;
+}
+
+@media (max-width: 450px) {
+    .searchBar {
+        flex-direction: column;
+    }
+
+    .searchIcon {
+        display: none;
+    }
+}
+
+
+@media (min-width: 451px)
+{
+    .hamburgerIcon {
+        display: none;
+    }
+}
