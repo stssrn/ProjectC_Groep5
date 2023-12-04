@@ -46,18 +46,15 @@ const Page: React.FC = () => {
     };
 
     useEffect(() => {
-        // Define a function to update the window width
         const updateWindowWidth = () => {
             setWindowWidth(window.innerWidth);
         };
 
-        // Add an event listener for window resize
         window.addEventListener("resize", updateWindowWidth);
 
-        // Call the function to set the initial window width
         updateWindowWidth();
 
-        // Remove the event listener when the component is unmounted
+
         return () => {
             window.removeEventListener("resize", updateWindowWidth);
         };
@@ -71,8 +68,8 @@ const Page: React.FC = () => {
                     <Image
                         src={hamburgerMenu}
                         alt=""
-                        width={50} // Adjust width as needed
-                        height={50} // Adjust height as needed
+                        width={50}
+                        height={50}
                     />
                 </div>
                 {(isMenuOpen || windowWidth >= 451) && (
