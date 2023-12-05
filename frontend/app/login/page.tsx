@@ -6,7 +6,6 @@ import image from "./image.svg";
 import { useId } from "react";
 import Link from "next/link";
 
-
 const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,7 +23,8 @@ const Page = () => {
       });
 
       if (response.ok) {
-        // dit gaat natuurlijk nog aangepast worden binnenkort
+        const data = await response.json();
+        localStorage.setItem("userId", data.userId); // Opslaan in local storage zodat we de gebruiker kunnen identificeren bij het ophalen van data.
         window.location.href = "/dashboard";
       } else {
         const data = await response.json();
@@ -66,7 +66,10 @@ const Page = () => {
             />
           </div>
           {error && <p style={{ color: "red" }}>{error}</p>}
-          <Link className={styles.forgotPassword} href="/login/wachtwoord-vergeten">
+          <Link
+            className={styles.forgotPassword}
+            href="/login/wachtwoord-vergeten"
+          >
             Wachtwoord vergeten?
           </Link>
           <button className={styles.loginButton} onClick={handleLogin}>
