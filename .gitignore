@@ -8,8 +8,6 @@ frontend/node_modules
 frontend/.pnp
 .pnp.js
 
-frontend/generated
-
 # testing
 frontend/coverage
 
@@ -31,6 +29,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
+.env
 
 # vercel
 .vercel

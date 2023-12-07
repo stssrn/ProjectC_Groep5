@@ -1,42 +1,7 @@
 "use client";
 import { useState } from "react";
-import styled from "@emotion/styled";
-import { keyframes } from "@emotion/react";
+import styles from "./page.module.css";
 import Container from "../components/Container";
-
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-`;
-
-const QuestionButton = styled.button`
-  background: none;
-  border: none;
-  font-weight: bold;
-  text-align: left;
-  width: 100%;
-  padding: 16px;
-  cursor: pointer;
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-  &:active {
-    transform: scale(0.98);
-  }
-  animation: ${fadeIn} 0.3s ease;
-`;
-
-const Answer = styled.div`
-  padding: 16px;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  animation: ${fadeIn} 0.3s ease;
-`;
 
 type FAQItemProps = {
   question: string;
@@ -46,11 +11,14 @@ type FAQItemProps = {
 const FAQItem = ({ question, answer }: FAQItemProps) => {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div>
-      <QuestionButton onClick={() => setIsOpen(!isOpen)}>
+    <div className={styles.faqItem}>
+      <button
+        className={styles.questionButton}
+        onClick={() => setIsOpen(!isOpen)}
+      >
         {isOpen ? "-" : "+"} {question}
-      </QuestionButton>
-      {isOpen && <Answer>{answer}</Answer>}
+      </button>
+      {isOpen && <div className={styles.answer}>{answer}</div>}
     </div>
   );
 };
@@ -58,18 +26,47 @@ const FAQItem = ({ question, answer }: FAQItemProps) => {
 const FAQPage = () => {
   return (
     <Container title="FAQ">
-      <FAQItem
-        question="Officia laboris eu irure fugiat qui duis mollit labore."
-        answer="Ipsum minim dolore laborum aute fugiat est Lorem id qui velit duis aute anim sit."
-      />
-      <FAQItem
-        question="Ea nostrud aliquip aliqua magna do nostrud occaecat."
-        answer="Est ad proident occaecat non tempor."
-      />
-      <FAQItem
-        question="Quis consectetur sunt occaecat aliqua non laborum enim dolor sit qui."
-        answer="Deserunt veniam cillum culpa do deserunt fugiat ex ad aliquip officia sint."
-      />
+      <div className={styles.fixedWidth}>
+        <FAQItem
+          question="Wat is de geschiedenis en achtergrond van Antes?"
+          answer="Antes is ontstaan uit een fusie tussen Delta Psychiatrisch Centrum Poortugaal en Bouman GGZ en fuseerde in oktober 2017 met de Parnassia Groep..."
+        />
+
+        <FAQItem
+          question="Wat zijn de speerpunten van Antes binnen de Parnassia Groep?"
+          answer="Antes richt zich op vijf speerpunten: cliënten die ons aanbevelen, onze hulpverlening dichterbij en lichter maken, extern partnerschap, interne verbinding, en een gezond, positief en uitdagend werkklimaat."
+        />
+
+        <FAQItem
+          question="In welke regio's is Antes actief?"
+          answer="Antes is actief in Rotterdam-Rijnmond, Nieuwe Waterweg-Noord, Drechtsteden, Alblasserwaard-Vijfheerenlanden, en de Zuid-Hollandse eilanden."
+        />
+
+        <FAQItem
+          question="Voor wie is de onboarding-app bedoeld?"
+          answer="De app is ontwikkeld voor nieuwe medewerkers in de geestelijke gezondheidszorg, waaronder psychiaters, psychologen, therapeuten, verpleegkundigen en ander zorgpersoneel."
+        />
+
+        <FAQItem
+          question="Welke belangrijke functionaliteiten biedt de app?"
+          answer="De app biedt welkomstberichten en introductie, GGZ-specifieke training en educatie, informatie over protocollen en richtlijnen, een agenda en planning, en interactieve functies zoals casusbesprekingen en quizzen."
+        />
+
+        <FAQItem
+          question="Hoe zorgt de app voor een gebruikersvriendelijke en toegankelijke ervaring?"
+          answer="De app is ontworpen met focus op gebruiksvriendelijkheid, toegankelijkheid voor mensen met beperkingen, schaalbaarheid, gegevensbeveiliging en privacy, en offline toegankelijkheid."
+        />
+
+        <FAQItem
+          question="Hoe ondersteunt Antes het project?"
+          answer="Antes biedt kennisdeling over de GGZ-sector, toegang tot experts, ondersteuning bij gebruikerstesten, het delen van relevante documentatie en richtlijnen, en beoordeling en evaluatie van de voortgang."
+        />
+
+        <FAQItem
+          question="Wie zijn de contactpersonen voor dit project bij Antes?"
+          answer="De primaire contactpersoon is Sergej Koopmans, ondersteund door Patrick Rancuret, Indra Kandhai en Bas Molijn."
+        />
+      </div>
     </Container>
   );
 };

@@ -1,1 +1,91 @@
-/* hier is leeg vanwege het gebruik van de styled components als er iets in moet komen kan dat hier dat is dan de standaard css */
+.casusListDiv {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  background-color: #edc7b7;
+  overflow-y: auto;
+}
+
+.casusButton {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  margin-bottom: 8px;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  animation: fadeIn 0.5s ease;
+}
+
+.casusButton:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.casusButton:active {
+  transform: scale(0.98);
+}
+
+.casusContentDiv {
+  flex: 3;
+  padding: 16px;
+  border-left: 1px solid #ddd;
+  overflow-y: auto;
+}
+
+.casusPageLayout {
+  display: flex;
+  flex-direction: column-reverse;
+  width: 100%;
+  height: auto;
+  background-color: #edc7b7;
+}
+
+@media (min-width: 768px) {
+  .casusPageLayout {
+    flex-direction: row;
+    width: 75vw;
+    height: 100%;
+  }
+}
+
+.detailsknop {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #e4beae;
+  border: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.detailsknop summary {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.detailsknop p,
+.detailsknop ul {
+  margin-top: 10px;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+.detailsknop ul {
+  list-style: inside;
+  padding-left: 0;
+}
+
+.detailsknop li {
+  margin-bottom: 8px;
+}
+
+.iframe {
+  margin-top: 20px;
+  width: 100%;
+  height: 315px;
+  border-radius: 5px;
+}
