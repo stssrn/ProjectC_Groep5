@@ -12,7 +12,7 @@ interface Learn {
 const learn: Learn = {
     title: "Excepteur sint occaecat cupidatat non proident.",
     summary:
-        "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum.",
+        "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum.",
     date: new Date(),
     url: new URL("https://anteszorg.nl/"),
 };

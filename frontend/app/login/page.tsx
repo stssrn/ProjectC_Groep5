@@ -1,10 +1,12 @@
 "use client";
-import { useState } from "react";
 import Image from "next/image";
 import styles from "./page.module.css";
 import image from "./image.svg";
 import { useId } from "react";
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
 
 const Page = () => {
   const [email, setEmail] = useState("");
@@ -82,6 +84,7 @@ const Page = () => {
       </div>
     </main>
   );
+
 };
 
 export default Page;
