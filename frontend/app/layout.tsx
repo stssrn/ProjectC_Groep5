@@ -32,10 +32,10 @@ const navItems = [
     { path: "winkel", symbol: "shopping_cart", name: "Winkel" },
     { path: "admin", symbol: "shield", name: "admin" },
     { path: "instellingen", symbol: "settings", name: "Instellingen" },
-    { path: "faq", symbol: "help", name: "FAQ" },
-    { path: "contact", symbol: "call", name: "Contact" },
     { path: "casussen", symbol: "book", name: "Casus" },
-    { path: "educatie", symbol: "school", name: "Educatie"}
+    { path: "educatie", symbol: "school", name: "Educatie" },
+    { path: "faq", symbol: "help", name: "FAQ" },
+    { path: "contact", symbol: "call", name: "Contact" }
 ];
 
 export default function RootLayout({
