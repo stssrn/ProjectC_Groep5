@@ -7,7 +7,7 @@ async function seed() {
   const promises = accounts.map(async (account) => {
     const hashedPassword = await hashPassword("defaultPassword123");
     return prisma.users.upsert({
-      where: { email: `${account.username.toLowerCase()}@example.com` },
+      where: { email: `${account.username.toLowerCase()}${account.id}@example.com` },
       update: {},
       create: {
         email: `${account.username.toLowerCase()}${account.id}@example.com`,
