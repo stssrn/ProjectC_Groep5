@@ -3,15 +3,28 @@ import Container from "../../components/Container";
 import Image from "next/image";
 import image from "./image.svg";
 import styles from "./page.module.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 
 const Page = () => {
-    const [currentStep, setCurrentStep] = useState(1);
+    const [currentStep, setCurrentStep] = useState(
+        parseInt(localStorage.getItem("currentStep") || "1", 10)
+    );
 
     const handleStepChange = (step: number) => {
         setCurrentStep(step);
+        // Save the currentStep to localStorage
+        localStorage.setItem("currentStep", String(step));
     };
+
+    useEffect(() => {
+        // Cleanup function to be executed when the component is unmounted
+        return () => {
+            // Reset currentStep to 1 when leaving the page
+            setCurrentStep(1);
+            localStorage.removeItem("currentStep");
+        };
+    }, []);
 
     return (
         < main className={styles.forgotPassword} >

@@ -24,17 +24,17 @@ const materialSymbols = localFont({
 
 
 const navItems = [
-    { path: "gebruiker", symbol: "person", name: "Profiel" },
-    { path: "dashboard", symbol: "dashboard", name: "Dashboard" },
-    { path: "agenda", symbol: "calendar_month", name: "Agenda" },
-    { path: "forum", symbol: "forum", name: "Forum" },
-    { path: "quiz", symbol: "quiz", name: "Quiz" },
-    { path: "winkel", symbol: "shopping_cart", name: "Winkel" },
-    { path: "admin", symbol: "shield", name: "admin" },
-    { path: "casussen", symbol: "book", name: "Casus" },
-    { path: "educatie", symbol: "school", name: "Educatie" },
-    { path: "faq", symbol: "help", name: "FAQ" },
-    { path: "contact", symbol: "call", name: "Contact" }
+  { path: "gebruiker", symbol: "person", name: "Profiel" },
+  { path: "dashboard", symbol: "dashboard", name: "Dashboard" },
+  { path: "agenda", symbol: "calendar_month", name: "Agenda" },
+  { path: "forum", symbol: "forum", name: "Forum" },
+  { path: "quiz", symbol: "quiz", name: "Quiz" },
+  { path: "winkel", symbol: "shopping_cart", name: "Winkel" },
+  { path: "admin", symbol: "shield", name: "admin" },
+  { path: "casussen", symbol: "book", name: "Casus" },
+  { path: "educatie", symbol: "school", name: "Educatie" },
+  { path: "faq", symbol: "help", name: "FAQ" },
+  { path: "contact", symbol: "call", name: "Contact" }
 ];
 
 export default function RootLayout({
@@ -48,34 +48,37 @@ export default function RootLayout({
       <body className={clsx(inter.className, styles.body, materialSymbols.variable)}>
         <div className={styles.wrapper}>
 
-                  {seg !== "quote" && seg !== "ggzinfo" &&
-                      <header className={styles.header}>
-                          <Image src={logo} alt="Antes Logo" height={24}></Image>
-                          <div className={styles.cornerSquare}></div>
-                      </header>
-                  }
+          {seg !== "quote" && seg !== "ggzinfo" &&
+            <header className={styles.header}>
+              <Image src={logo} alt="Antes Logo" height={24}></Image>
+              <div className={styles.cornerSquare}></div>
+            </header>
+          }
           <div className={styles.container}>{children}</div>
-              </div>
-              {seg !== "quote" && seg !== "ggzinfo" &&
-                  <nav className={styles.nav}>
-                      <ul className={styles.list}>
-                          {seg !== "login" && navItems.map((p) => (
-                              <li
-                                  key={p.path}
-                                  className={clsx(
-                                      styles.listItem,
-                                      p.path === seg && styles.active
-                                  )}
-                              >
-                                  <Link href={`/${p.path}`} title={p.path}>
-                                      <i className="symbol">{p.symbol}</i>
-                                  </Link>
-                              </li>
-                          ))}
-                      </ul>
-                  </nav>
-              }
-          </body>
+        </div>
+        {seg !== "quote" && seg !== "ggzinfo" &&
+          <nav className={styles.nav}>
+            <ul className={styles.list}>
+              {seg !== "login" && navItems.map((p) => (
+                <li
+                  key={p.path}
+                  className={clsx(
+                    styles.listItem,
+                    p.path === seg && styles.active
+                  )}
+                >
+                  <Link href={`/${p.path}`} title={p.path}>
+                    <div className={styles.navItem}>
+                      <span className={styles.hoverText}>{p.name}</span>
+                      <i className="symbol">{p.symbol}</i>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        }
+      </body>
 
     </html>
   );
