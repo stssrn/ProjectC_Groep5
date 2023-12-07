@@ -19,5 +19,9 @@ model users {
   firstName       String
   lastName        String
   username        String
+  points          Int
+  firstLogin      Boolean @default(true)
+  isAdmin         Boolean @default(false)
+  isModerator     Boolean @default(false)
   registationDate DateTime @default(now())
 }

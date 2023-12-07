@@ -82,6 +82,9 @@ const Page = () => {
       <div className={styles.right}>
         <Image className={styles.image} src={image} alt="Login Image" />
       </div>
+      <div>
+
+      </div>
     </main>
   );
 
