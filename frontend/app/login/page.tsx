@@ -1,3 +1,4 @@
+
 "use client";
 import Image from "next/image";
 import styles from "./page.module.css";
@@ -6,25 +7,29 @@ import { useId } from "react";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import router from "next/router";
 
 
 const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
-
   const checkboxId = useId();
-  const [showPopup, setShowPopup] = useState(false);
-    const handleYes = () => {
-        router.push("/tour");
-        setShowPopup(false);
-    };
 
-    const handleNo = () => {
-        router.push("/dashboard");
-        setShowPopup(false);
-    };
+  const [showPopup, setShowPopup] = useState(false);
+
+
+
+  const handleYes = async () => {
+    router.push("/tour");
+    setShowPopup(false);
+
+  };
+
+  const handleNo = () => {
+    router.push("/dashboard");
+    setShowPopup(false);
+  };
   const handleLogin = async () => {
     try {
       const response = await fetch("/api/login", {
@@ -92,16 +97,16 @@ const Page = () => {
       </div>
       <div className={styles.right}>
         <Image className={styles.image} src={image} alt="Login Image" />
+      </div>
+      {showPopup && (
+        <div className={styles.popupContainer}>
+          <div className={styles.popup}>
+            <p>We zien dat dit de eerste keer is dat je inlogd. Wil je een tour van de applicatie?</p>
+            <button onClick={handleYes}>Breng me naar de tour</button>
+            <button onClick={handleNo}>Overslaan</button>
           </div>
-          {showPopup && (
-              <div className={styles.popupContainer}>
-                  <div className={styles.popup}>
-                      <p>We zien dat dit de eerste keer is dat je inlogd. Wil je een tour van de applicatie?</p>
-                      <button onClick={handleYes}>Breng me naar de tour</button>
-                      <button onClick={handleNo}>Overslaan</button>
-                  </div>
-              </div>
-          )}
+        </div>
+      )}
     </main>
   );
 

@@ -20,4 +20,5 @@ model users {
   lastName        String
   username        String
   registationDate DateTime @default(now())
+  isFirstTime     Boolean  @default(true)
 }
