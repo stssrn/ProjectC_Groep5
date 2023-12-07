@@ -31,7 +31,6 @@ const navItems = [
     { path: "quiz", symbol: "quiz", name: "Quiz" },
     { path: "winkel", symbol: "shopping_cart", name: "Winkel" },
     { path: "admin", symbol: "shield", name: "admin" },
-    { path: "instellingen", symbol: "settings", name: "Instellingen" },
     { path: "casussen", symbol: "book", name: "Casus" },
     { path: "educatie", symbol: "school", name: "Educatie" },
     { path: "faq", symbol: "help", name: "FAQ" },
