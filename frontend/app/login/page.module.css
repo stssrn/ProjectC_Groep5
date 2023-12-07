@@ -78,3 +78,36 @@
   text-align: center;
   padding: 8px;
 }
+
+.popupContainer {
+    position: fixed;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--bg500);
+    padding: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+}
+
+.popup {
+    text-align: center;
+}
+
+.popup p {
+    margin-bottom: 15px;
+}
+
+.popup button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    background-color: var(--p500);
+    color: white;
+    font-size: 14px;
+}
+
+
+

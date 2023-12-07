@@ -22,6 +22,7 @@ const materialSymbols = localFont({
   weight: "100 700",
 });
 
+
 const navItems = [
   { path: "gebruiker", symbol: "person", name: "Profiel" },
   { path: "dashboard", symbol: "dashboard", name: "Dashboard" },
@@ -29,11 +30,12 @@ const navItems = [
   { path: "forum", symbol: "forum", name: "Forum" },
   { path: "quiz", symbol: "quiz", name: "Quiz" },
   { path: "winkel", symbol: "shopping_cart", name: "Winkel" },
-  { path: "admin", symbol: "shield", name: "Admin" },
+  { path: "admin", symbol: "shield", name: "admin" },
   { path: "instellingen", symbol: "settings", name: "Instellingen" },
+  { path: "casussen", symbol: "book", name: "Casus" },
+  { path: "educatie", symbol: "school", name: "Educatie" },
   { path: "faq", symbol: "help", name: "FAQ" },
-  { path: "contact", symbol: "call", name: "Contact" },
-  { path: "casussen", symbol: "book", name: "Casus" }
+  { path: "contact", symbol: "call", name: "Contact" }
 ];
 
 export default function RootLayout({
@@ -46,32 +48,39 @@ export default function RootLayout({
     <html lang="en">
       <body className={clsx(inter.className, styles.body, materialSymbols.variable)}>
         <div className={styles.wrapper}>
-          {seg !== "quote" && (
+
+          {seg !== "quote" && seg !== "ggzinfo" &&
             <header className={styles.header}>
-              <Image src={logo} alt="Antes Logo" height={24} />
+              <Image src={logo} alt="Antes Logo" height={24}></Image>
               <div className={styles.cornerSquare}></div>
             </header>
-          )}
+          }
           <div className={styles.container}>{children}</div>
         </div>
-        {seg !== "quote" && (
+        {seg !== "quote" && seg !== "ggzinfo" &&
           <nav className={styles.nav}>
             <ul className={styles.list}>
-              {seg !== "login" &&
-                navItems.map((p) => (
-                  <Link key={p.path} href={`/${p.path}`} title={p.path}>
-                    <li className={clsx(styles.listItem, p.path === seg && styles.active)}>
-                      <div className={styles.navItem}>
-                        <span className={styles.hoverText}>{p.name}</span>
-                        <i className="symbol">{p.symbol}</i>
-                      </div>
-                    </li>
+              {seg !== "login" && navItems.map((p) => (
+                <li
+                  key={p.path}
+                  className={clsx(
+                    styles.listItem,
+                    p.path === seg && styles.active
+                  )}
+                >
+                  <Link href={`/${p.path}`} title={p.path}>
+                    <div className={styles.navItem}>
+                      <span className={styles.hoverText}>{p.name}</span>
+                      <i className="symbol">{p.symbol}</i>
+                    </div>
                   </Link>
-                ))}
+                </li>
+              ))}
             </ul>
           </nav>
-        )}
+        }
       </body>
+
     </html>
   );
 }

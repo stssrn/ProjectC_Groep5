@@ -1,20 +1,37 @@
 # Antes Onboarding App
 
-## Building the app
+## Development
 
-First install the required build tools **npm** and **dotnet**.
+First, make sure that the environment variables for the Postgres database are inside `frontend/.env`.
 
-After installing the build tools, install the npm dependencies of the frontend app.
+To generate Typescript types from the Prisma schema run:
 
 ```sh
 cd frontend
-npm i
+pnpx prisma generate
 ```
 
-Then, move into the backend directory and build the C# project. You cannot build the frontend without building the backend first, because the backend generates types and fetching functions for the frontend.
-
+To run the dev server run:
 
 ```sh
-cd ../backend
-dotnet build --configuration Gen
+cd frontend
+pnpm dev
+```
+
+To seed the database run:
+
+```sh
+npx prisma db seed
+```
+
+> [!WARNING]
+> Do **not** run `pnpx prisma db seed` because it doesn't work pnpm/pnpm#6464. Use `npx`!
+
+## Building
+
+To build the app run:
+
+```sh
+cd frontend
+pnpm build
 ```

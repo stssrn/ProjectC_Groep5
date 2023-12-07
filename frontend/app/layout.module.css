@@ -121,7 +121,7 @@
 .hoverText {
     display: none;
     position: absolute;
-    top: -5px;
+    top: -8px;
     right: 32px;
     background-color: var(--bg500);
     padding: 11px;

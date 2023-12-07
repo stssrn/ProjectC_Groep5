@@ -2,6 +2,7 @@
 import React from "react";
 import styles from "./page.module.css";
 import Container from "../components/Container";
+import Link from "next/link";
 
 const ContactInfoPage = () => {
   return (
@@ -17,6 +18,10 @@ const ContactInfoPage = () => {
         <h2>Openingstijden</h2>
         <p>Werkdagen: 08:30 - 17:00 uur</p>
       </div>
+
+          <div className={styles.bugMelden}>
+              <Link href="/bugmelden" className={styles.bugButton } >Bug melden</Link>
+        </div>
     </Container>
   );
 };
