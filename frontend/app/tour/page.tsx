@@ -9,8 +9,6 @@ import ForumSection from "../dashboard/ForumSection";
 import QuizSection from "../dashboard/QuizSection";
 import EducationSection from "../dashboard/EducationSection";
 import LayoutModule from "../layout.module.css";
-import Image from "next/image";
-import image from "./image.png";
 import JoyRideNoSSR from '../components/JoyRideNoSSR';
 
 const Page: React.FC = () => {
