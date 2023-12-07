@@ -5,6 +5,10 @@ export interface Account {
   firstName: string;
   lastName: string;
   username: string;
+  points: number;
+  firstLogin: Boolean;
+  isAdmin: Boolean;
+  isModerator: Boolean;
   creationDate: Date;
 }
 
@@ -44,6 +48,10 @@ const generateRandomAccount = (): Account => {
     firstName,
     lastName,
     username: (firstName + lastName).replaceAll(" ", ""),
+    points: 10,
+    firstLogin: true,
+    isAdmin: false,
+    isModerator: false,
     creationDate: getRandomDate(),
   };
 };
