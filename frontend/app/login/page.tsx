@@ -12,8 +12,19 @@ const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const checkboxId = useId();
 
+
+  const checkboxId = useId();
+  const [showPopup, setShowPopup] = useState(false);
+    const handleYes = () => {
+        router.push("/tour");
+        setShowPopup(false);
+    };
+
+    const handleNo = () => {
+        router.push("/dashboard");
+        setShowPopup(false);
+    };
   const handleLogin = async () => {
     try {
       const response = await fetch("/api/login", {
