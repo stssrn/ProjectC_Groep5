@@ -81,7 +81,16 @@ const Page = () => {
       </div>
       <div className={styles.right}>
         <Image className={styles.image} src={image} alt="Login Image" />
-      </div>
+          </div>
+          {showPopup && (
+              <div className={styles.popupContainer}>
+                  <div className={styles.popup}>
+                      <p>We zien dat dit de eerste keer is dat je inlogd. Wil je een tour van de applicatie?</p>
+                      <button onClick={handleYes}>Breng me naar de tour</button>
+                      <button onClick={handleNo}>Overslaan</button>
+                  </div>
+              </div>
+          )}
     </main>
   );
 
