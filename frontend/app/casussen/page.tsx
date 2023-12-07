@@ -1,118 +1,134 @@
 "use client";
 import React, { useState } from "react";
+import styles from "./page.module.css";
 import Container from "../components/Container";
-import styled from "@emotion/styled";
-import { keyframes } from "@emotion/react";
 
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-`;
+type Casus = {
+  id: string;
+  title: string;
+  content: JSX.Element;
+  treatment: string;
+  videoId: string;
+};
 
-const CasusListDiv = styled.div`
-  flex: 1;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  background-color: #edc7b7;
-`;
-
-const CasusButton = styled.button`
-  display: block;
-  width: 100%;
-  padding: 16px;
-  margin-bottom: 8px;
-  background: none;
-  border: none;
-  text-align: left;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  &:hover {
-
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-  &:active {
-    transform: scale(0.98);
-  }
-
-  animation: ${fadeIn} 0.5s ease;
-
-`;
-
-const CasusContentDiv = styled.div`
-  flex: 3;
-  padding: 16px;
-  border-left: 1px solid #ddd;
-  animation: ${fadeIn} 0.5s ease;
-`;
-
-const CasusPageLayout = styled.div`
-  display: flex;
-  height: 100%;
-  background-color: #edc7b7;
-`;
-
-// Dummy data for the casus list
-const casusData = [
+const casusData: Casus[] = [
   {
-    id: "casus1",
-    title: "Casus 1",
-    content:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    id: "Angststoornis",
+    title: "Angststoornis",
+    content: (
+      <>
+        <p>Naam: David</p>
+        <p>Leeftijd: 30 jaar</p>
+        <p>Geslacht: Man</p>
+        <p>
+          Beroep: Grafisch Ontwerper
+          <br />
+          <br />
+          Verhaal:
+        </p>
+        <p>
+          David heeft sinds de universiteit te kampen met een gegeneraliseerde
+          angststoornis. Hij ervaart constante zorgen over alledaagse zaken,
+          vooral op zijn werk. Deze zorgen zijn vaak overweldigend en leiden tot
+          fysieke symptomen zoals hartkloppingen, zweten en slapeloosheid.
+        </p>
+        <p>
+          De angst heeft een impact op zijn sociale leven; David vermijdt
+          sociale bijeenkomsten en heeft moeite met het onderhouden van
+          relaties. Ondanks zijn talent en vaardigheden, heeft hij moeite met
+          het presenteren van zijn werk en het spreken in het openbaar.
+        </p>
+        <p>
+          David zoekt hulp bij een psychotherapeut en leert technieken om zijn
+          angst te beheersen. Hij begint met cognitieve gedragstherapie (CGT) en
+          maakt geleidelijk vorderingen in het omgaan met zijn angsten.
+        </p>
+      </>
+    ),
+    treatment:
+      "Cognitieve gedragstherapie is een effectieve behandeling voor angststoornissen. Deze therapie helpt patiënten hun gedachten en gedragingen te herkennen en te veranderen. Medicatie kan ook worden voorgeschreven afhankelijk van de ernst van de symptomen.",
+    videoId: "odo6v527jxI",
   },
   {
-    id: "casus2",
-    title: "Casus 2",
-    content:
-      "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    id: "Psychose",
+    title: "Psychose",
+    content: (
+      <>
+        <p>Naam: Emma</p>
+        <p>Leeftijd: 24 jaar</p>
+        <p>Geslacht: Vrouw</p>
+        <p>
+          Beroep: Student
+          <br />
+          <br />
+          Kenmerken:
+        </p>
+        <ul>
+          <li>Moeite met concentreren</li>
+          <li>Overgevoeligheid</li>
+          <li>Behoefte aan terugtrekking</li>
+          <li>Verminderde interesse</li>
+          <br />
+        </ul>
+        <p>
+          Emma ervaart intense psychoses, gekenmerkt door hallucinaties en
+          wanen. Dit heeft een significante impact op haar studie en sociale
+          leven.
+        </p>
+      </>
+    ),
+    treatment:
+      "Behandelingen kunnen bestaan uit medicatie, psychotherapie en in sommige gevallen Electro Convulsie Therapie (ECT). Vroege interventie is cruciaal voor een effectief herstel.",
+    videoId: "uypofJrs8oQ",
   },
-  // ...add more cases as needed
 ];
 
-type CasusListProps = {
-  onSelect: (casus: { id: string; title: string; content: string }) => void;
-};
+const YouTubeVideo: React.FC<{ videoId: string }> = ({ videoId }) => (
+  <iframe
+    className={styles.iframe}
+    src={`https://www.youtube.com/embed/${videoId}`}
+    frameBorder="0"
+    allowFullScreen
+  ></iframe>
+);
 
-const CasusList: React.FC<CasusListProps> = ({ onSelect }) => {
-  return (
-    <CasusListDiv>
-      {casusData.map((casus) => (
-        <CasusButton key={casus.id} onClick={() => onSelect(casus)}>
-          {casus.title}
-        </CasusButton>
-      ))}
-    </CasusListDiv>
-  );
-};
+const CasusList: React.FC<{ onSelect: (casus: Casus) => void }> = ({
+  onSelect,
+}) => (
+  <div className={styles.casusListDiv}>
+    {casusData.map((casus) => (
+      <button
+        key={casus.id}
+        className={styles.casusButton}
+        onClick={() => onSelect(casus)}
+      >
+        {casus.title}
+      </button>
+    ))}
+  </div>
+);
 
-type CasusContentProps = {
-  casus: { id: string; title: string; content: string };
-};
-
-const CasusContent: React.FC<CasusContentProps> = ({ casus }) => {
-  return (
-    <CasusContentDiv>
-      <h2>{casus.title}</h2>
-      <p>{casus.content}</p>
-    </CasusContentDiv>
-  );
-};
+const CasusContent: React.FC<{ casus: Casus }> = ({ casus }) => (
+  <div className={styles.casusContentDiv}>
+    <h1>{casus.title}</h1>
+    <p>{casus.content}</p>
+    <details className={styles.detailsknop}>
+      <summary>Behandeling</summary>
+      <p>{casus.treatment}</p>
+      <YouTubeVideo videoId={casus.videoId} />
+    </details>
+  </div>
+);
 
 const CasusPage: React.FC = () => {
-  const [selectedCasus, setSelectedCasus] = useState(casusData[0]);
+  const [selectedCasus, setSelectedCasus] = useState<Casus>(casusData[0]);
 
   return (
     <Container title="Casussen">
-      <CasusPageLayout>
+      <div className={styles.casusPageLayout}>
         <CasusList onSelect={setSelectedCasus} />
         <CasusContent casus={selectedCasus} />
-      </CasusPageLayout>
+      </div>
     </Container>
   );
 };

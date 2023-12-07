@@ -1,7 +1,47 @@
-button:focus {
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.faqItem {
+  margin-bottom: 16px;
+}
+
+.questionButton {
+  background: none;
+  border: none;
+  font-weight: bold;
+  text-align: left;
+  width: 100%;
+  padding: 16px;
+  cursor: pointer;
+  animation: fadeIn 0.3s ease;
+}
+
+.questionButton:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.questionButton:focus {
   outline: none;
 }
 
-button:active {
+.questionButton:active {
   transform: scale(0.98);
+}
+
+.answer {
+  padding: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.3s ease;
+}
+
+.fixedWidth {
+  width: 40vw;
 }

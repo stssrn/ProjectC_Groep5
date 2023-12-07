@@ -4,6 +4,7 @@
   gap: 20px;
   align-items: center;
   justify-content: center;
+  width: 70vw;
 }
 
 .profileContainer {
@@ -56,7 +57,8 @@
 }
 
 .editButton {
-  background-color: lightblue;
+  background-color: var(--p500);
+  color: white;
 }
 
 .saveButton {
