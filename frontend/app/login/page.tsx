@@ -7,7 +7,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-
 const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,7 +15,7 @@ const Page = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch("/api/login/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -84,7 +83,6 @@ const Page = () => {
       </div>
     </main>
   );
-
 };
 
 export default Page;

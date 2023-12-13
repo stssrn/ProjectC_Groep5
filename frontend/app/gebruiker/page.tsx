@@ -1,7 +1,11 @@
 "use client";
-import { useState, useEffect, ChangeEvent } from "react";
+import { useState, useEffect, useRef, ChangeEvent } from "react";
 import Container from "../components/Container";
 import styles from "./page.module.css";
+import Image from "next/image";
+
+import MaleDefaultPhoto from "./male.svg";
+import FemaleDefaultPhoto from "./female.svg";
 
 type UserData = {
   id: number;
@@ -9,7 +13,8 @@ type UserData = {
   email: string;
   bio: string;
   points: number;
-  profilePhoto: string;
+  profilePhoto: "MALE" | "FEMALE";
+  profilePhotoUrl?: string;
   firstName: string;
   lastName: string;
   username: string;
@@ -20,10 +25,10 @@ const Page = () => {
   const defaultData: UserData = {
     id: 0,
     age: 30,
-    email: "johndoe@example.com",
+    email: "DefaultData@example.com",
     bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     points: 100,
-    profilePhoto: "https://randomuser.me/api/portraits/men/88.jpg",
+    profilePhoto: "MALE",
     firstName: "",
     lastName: "",
     username: "",
@@ -31,15 +36,24 @@ const Page = () => {
   };
 
   const [userData, setUserData] = useState<UserData>(defaultData);
+  const inputFileRef = useRef<HTMLInputElement>(null);
   const [editMode, setEditMode] = useState({ email: false, bio: false });
   const [tempData, setTempData] = useState<Pick<UserData, "email" | "bio">>({
     email: userData.email,
     bio: userData.bio,
   });
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    if (userId) {
+      fetchUserData(userId);
+    }
+  }, []);
 
   const fetchUserData = async (userId: string) => {
     try {
-      const response = await fetch(`/api/user?id=${userId}`);
+      const response = await fetch(`/api/gebruiker/user/user?id=${userId}`);
       if (!response.ok) throw new Error("Failed to fetch user data");
 
       const data = await response.json();
@@ -49,12 +63,54 @@ const Page = () => {
     }
   };
 
-  useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    if (userId) {
-      fetchUserData(userId);
+  const handlePhotoChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const uploadResponse = await fetch(
+        `/api/gebruiker/avatar/upload?filename=${encodeURIComponent(
+          file.name
+        )}&contentType=${encodeURIComponent(file.type)}`,
+        {
+          method: "POST",
+          body: file,
+        }
+      );
+
+      if (!uploadResponse.ok) throw new Error("Failed to upload image");
+
+      const blobData = await uploadResponse.json();
+
+      const updateResponse = await fetch(
+        "/api/gebruiker/avatar/updateProfilePhoto",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: userData.id,
+            profilePhotoUrl: blobData.url,
+          }),
+        }
+      );
+
+      if (!updateResponse.ok) throw new Error("Failed to update user profile");
+
+      setUserData({ ...userData, profilePhotoUrl: blobData.url });
+    } catch (error) {
+      console.error("Error in photo upload or profile update:", error);
+      setError("Failed to upload image or update profile");
     }
-  }, []);
+  };
+
+  const getImagePath = () => {
+    return (
+      userData.profilePhotoUrl ||
+      (userData.profilePhoto === "MALE" ? MaleDefaultPhoto : FemaleDefaultPhoto)
+    );
+  };
 
   const handleEdit = (field: keyof Pick<UserData, "email" | "bio">) => {
     setEditMode({ ...editMode, [field]: true });
@@ -67,11 +123,8 @@ const Page = () => {
       [field]: tempData[field],
     };
 
-    setUserData(updatedData);
-    setEditMode({ ...editMode, [field]: false });
-
     try {
-      const response = await fetch("/api/updateUser", {
+      const response = await fetch("/api/gebruiker/user/updateUser", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -82,11 +135,13 @@ const Page = () => {
         }),
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to update user data");
-      }
+      if (!response.ok) throw new Error("Failed to update user data");
+
+      setUserData(updatedData);
+      setEditMode({ ...editMode, [field]: false });
     } catch (error) {
       console.error("Error updating user data:", error);
+      setError("Failed to update user data");
     }
   };
 
@@ -100,11 +155,26 @@ const Page = () => {
       <div className={styles.parentContainer}>
         <div className={styles.profileContainer}>
           <div className={styles.circularProfilePhotoContainer}>
-            <img
-              src={userData.profilePhoto}
+            <Image
+              src={getImagePath()}
               alt="Profile"
+              width={150}
+              height={150}
               className={styles.circularProfilePhoto}
             />
+            <input
+              ref={inputFileRef}
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={handlePhotoChange}
+            />
+            <button
+              className={styles.editButton}
+              onClick={() => inputFileRef.current?.click()}
+            >
+              Bewerk Foto
+            </button>
           </div>
           <div className={styles.userInfo}>
             <div>
@@ -195,6 +265,7 @@ const Page = () => {
           </div>
         </div>
       </div>
+      {error && <p style={{ color: "red" }}>{error}</p>}
     </Container>
   );
 };

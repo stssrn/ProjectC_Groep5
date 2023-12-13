@@ -12,6 +12,8 @@ datasource db {
 
 model users {
   id              Int      @id @default(autoincrement())
+  profilePhotoUrl String?
+  profilePhoto    profilePhoto @default(MALE)
   email           String   @unique
   password        String
   address         String?
@@ -20,4 +22,11 @@ model users {
   lastName        String
   username        String
   registationDate DateTime @default(now())
+  firstLogin      Boolean  @default(true)
+}
+
+
+enum profilePhoto{
+  MALE
+  FEMALE
 }
