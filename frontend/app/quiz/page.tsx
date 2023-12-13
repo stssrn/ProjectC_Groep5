@@ -1,74 +1,132 @@
+// Page.tsx
 "use client";
-import { useState } from "react";
-import Container from "../components/Container";
+import React, { useState } from 'react';
+import { quizData } from './data';
+import Container from '../components/Container';
 import styles from "./page.module.css";
+
+interface Question {
+    question: string;
+    options: string[];
+    correctAnswer: string;
+}
 
 const Page: React.FC = () => {
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [score, setScore] = useState(0);
+    const [showScore, setShowScore] = useState(false);
+    const [selectedAnswers, setSelectedAnswers] = useState<Array<string | null>>(
+        Array(quizData.length).fill(null)
+    );
+    const [progress, setProgress] = useState(0);
 
-    const quizData = [
-        {
-            question: 'Wat is een veelvoorkomend symptoom van stress?',
-            options: [
-                'Verhoogde energie',
-                'Vermoeidheid',
-                'Verbeterde concentratie',
-                'Betere slaapkwaliteit',
-            ],
-            correctAnswer: 'Vermoeidheid',
-        },
-        {
-            question: 'Welke activiteit kan helpen bij het verminderen van angst?',
-            options: ['Rennen', 'Meditatie', 'Koffie drinken', 'TV kijken'],
-            correctAnswer: 'Meditatie',
-        },
-        {
-            question: 'Wat is een mogelijke oorzaak van depressie?',
-            options: [
-                'Overmatige lichaamsbeweging',
-                'Tekort aan sociale interactie',
-                'Te veel slaap',
-                'Chemische onbalans in de hersenen',
-            ],
-            correctAnswer: 'Chemische onbalans in de hersenen',
-        },
-        // Add more questions as needed
-    ];
+    const handleAnswerClick = (selectedAnswer: string) => {
+        const newSelectedAnswers = [...selectedAnswers];
+        newSelectedAnswers[currentQuestion] = selectedAnswer;
 
-    const handleAnswer = (selectedAnswer: string) => {
-        const currentQuestionData = quizData[currentQuestion];
-
-        // Check if the selected answer is correct
-        if (selectedAnswer === currentQuestionData.correctAnswer) {
+        if (selectedAnswer === quizData[currentQuestion].correctAnswer) {
             setScore(score + 1);
         }
 
-        // Move to the next question
-        const nextQuestion = currentQuestion + 1;
+        setSelectedAnswers(newSelectedAnswers);
+    };
 
-        // Check if it's the last question, otherwise move to the next question
-        if (nextQuestion < quizData.length) {
-            setCurrentQuestion(nextQuestion);
-        } else {
-            // Quiz is finished
-            alert(`Quiz is afgelopen! Je score is ${score} van de ${quizData.length} vragen.`);
-            // You can add additional actions here, like resetting the quiz or displaying results.
+    const handlePreviousClick = () => {
+        if (currentQuestion > 0) {
+            setCurrentQuestion(currentQuestion - 1);
         }
     };
+
+    const handleNextClick = () => {
+        if (currentQuestion < quizData.length - 1) {
+            setCurrentQuestion(currentQuestion + 1);
+            const newProgress = ((currentQuestion + 1) / quizData.length) * 100;
+            setProgress(newProgress);
+        } else {
+            setShowScore(true);
+        }
+    };
+
+    const finishQuiz = () => {
+        // Reset the quiz state
+        setCurrentQuestion(0);
+        setScore(0);
+        setShowScore(false);
+        setSelectedAnswers(Array(quizData.length).fill(null));
+        setProgress(0);
+
+        // Redirect to a different page
+        window.location.href = '/dashboard'; // Replace '/your-target-page' with the actual target page URL    };
+    }
+
     return (
-        <Container title="Quiz">
-            <div>
-                <h1>Mental Health Quiz</h1>
-                <p>Vraag {currentQuestion + 1}: {quizData[currentQuestion].question}</p>
-                <ul>
-                    {quizData[currentQuestion].options.map((option, index) => (
-                        <li key={index} onClick={() => handleAnswer(option)}>
-                            {option}
-                        </li>
-                    ))}
-                </ul>
-                <p>Score: {score}</p>
+        <Container title='Quiz'>
+            <div className={styles.quizContainer}>
+                <div className={styles.quizContent}>
+                    <div>
+                        {showScore ? (
+                            <div>
+                                <h2>Score: {score}</h2>
+                                <h3>Antwoorden:</h3>
+                                <ul>
+                                    {quizData.map((question, index) => (
+                                        <li key={index}>
+                                            <strong>{question.question}</strong>:
+                                            <p>
+                                                {selectedAnswers[index] === question.correctAnswer
+                                                    ? 'Correct'
+                                                    : selectedAnswers[index]
+                                                        ? `Incorrect (Jou antwoord: ${selectedAnswers[index]}, Correcte antwoord: ${question.correctAnswer})`
+                                                        : `Niet beantwoord (Correcte antwoord: ${question.correctAnswer})`}
+                                            </p>
+                                        </li>
+                                    ))}
+                                </ul>
+                                <div className={styles.buttonContainer}>
+                                    <button onClick={finishQuiz}>Finish</button>
+                                </div>
+                            </div>
+                        ) : (
+                            <div>
+                                <h2>{quizData[currentQuestion].question}</h2>
+                                <ul className={styles.answerList}>
+                                    {quizData[currentQuestion].options.map((option, index) => (
+                                        <li key={index}>
+                                            <label>
+                                                <input
+                                                    type="radio"
+                                                    name="answer"
+                                                    value={option}
+                                                    checked={selectedAnswers[currentQuestion] === option || false}
+                                                    onChange={() => handleAnswerClick(option)}
+                                                />
+                                                {option}
+                                            </label>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+                    </div>
+                </div>
+                {!showScore && (
+                    <div className={styles.buttonContainer}>
+                        {currentQuestion > 0 && (
+                            <button onClick={handlePreviousClick}>Vorige</button>
+                        )}
+                        <button onClick={handleNextClick}>
+                            {currentQuestion < quizData.length - 1 ? 'Volgende' : 'Inleveren'}
+                        </button>
+                    </div>
+                )}
+                {
+                    !showScore && (
+                        <div className={styles.progressBar}>
+                            <progress className={styles.progress} value={progress} max="100" />
+                            <span style={{ marginLeft: '10px' }}>{progress.toFixed()}%</span>
+                        </div>
+                    )
+                }
             </div>
         </Container>
     );

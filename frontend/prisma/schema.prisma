@@ -11,8 +11,9 @@ datasource db {
 }
 
 model users {
-  id              Int      @id @default(autoincrement())
-  email           String   @unique
+  id              Int             @id @default(autoincrement())
+  profilePhoto    profilePhoto    @default(MALE)
+  email           String          @unique
   password        String
   address         String?
   bio             String?
@@ -20,8 +21,15 @@ model users {
   lastName        String
   username        String
   points          Int
-  firstLogin      Boolean @default(true)
-  isAdmin         Boolean @default(false)
-  isModerator     Boolean @default(false)
-  registationDate DateTime @default(now())
+  firstLogin      Boolean         @default(true)
+  isAdmin         Boolean         @default(false)
+  isModerator     Boolean         @default(false)
+  registationDate DateTime        @default(now())
+}
+
+
+
+enum profilePhoto{
+  MALE
+  FEMALE
 }

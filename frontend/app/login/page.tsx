@@ -13,6 +13,7 @@ const Page = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const checkboxId = useId();
+  const router = useRouter();
 
   const handleLogin = async () => {
     try {
@@ -26,8 +27,16 @@ const Page = () => {
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem("userId", data.userId); // Opslaan in local storage zodat we de gebruiker kunnen identificeren bij het ophalen van data.
-        window.location.href = "/dashboard";
+        localStorage.setItem("userId", data.userId);
+
+        if (data.firstLogin) {
+          // It's the user's first login
+          data.firstLogin = false; // Consider updating the firstLogin value on the server
+          window.location.href = "/tour";
+        } else {
+          // It's not the user's first login
+          window.location.href = "/dashboard";
+        }
       } else {
         const data = await response.json();
         setError(data.message);

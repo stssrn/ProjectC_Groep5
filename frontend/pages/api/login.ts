@@ -20,7 +20,7 @@ export default async function handler(
     }
 
     // Opslaan van de gebruiker in de sessie
-    res.status(200).json({ message: "Succesvol Ingelogd", userId: user.id });
+    res.status(200).json({ message: "Succesvol Ingelogd", userId: user.id, firstLogin: user.firstLogin });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Server error" });
