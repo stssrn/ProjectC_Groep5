@@ -17,10 +17,7 @@ async function seed() {
         firstName: account.firstName,
         lastName: account.lastName,
         username: account.username,
-        points: account.points,
         firstLogin: true,
-        isAdmin: false,
-        isModerator: false,
         registationDate: account.creationDate,
       },
     });

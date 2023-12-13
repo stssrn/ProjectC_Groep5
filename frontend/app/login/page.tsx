@@ -7,22 +7,92 @@ import { useId } from "react";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import router from "next/router";
 
+type UserData = {
+  id: number;
+  age: number;
+  email: string;
+  bio: string;
+  points: number;
+  profilePhoto: string;
+  firstName: string;
+  lastName: string;
+  username: string;
+  registrationDate: string;
+  firstLogin: boolean;
+};
 
 const Page = () => {
+  const defaultData: UserData = {
+    id: 0,
+    age: 30,
+    email: "johndoe@example.com",
+    bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    points: 100,
+    profilePhoto: "https://randomuser.me/api/portraits/men/88.jpg",
+    firstName: "",
+    lastName: "",
+    username: "",
+    registrationDate: "",
+    firstLogin: true
+
+  };
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const checkboxId = useId();
 
   const [showPopup, setShowPopup] = useState(false);
+  const [userData, setUserData] = useState<UserData>(defaultData);
+  const router = useRouter();
 
+  const fetchUserData = async (userId: string) => {
+    try {
+      const response = await fetch(`/api/user?id=${userId}`);
+      if (!response.ok) throw new Error("Failed to fetch user data");
+
+      const data = await response.json();
+      setUserData({ ...userData, ...data });
+      if (data.firstLogin) {
+        setShowPopup(true);
+      }
+      else {
+        console.log("Name is: " + data.firstName + " And is it your first time? " + data.firstLogin);
+        handleNo();
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  const saveFirstLogin = async (firstlogin: boolean) => {
+    try {
+      const response = await fetch("/api/popup", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id: userData.id,
+          firstLogin: firstlogin,
+        }),
+      });
+
+
+      if (!response.ok) {
+        throw new Error("Failed to update user data");
+      }
+    } catch (error) {
+      console.error("Error updating user data:", error);
+    }
+  };
 
 
   const handleYes = async () => {
     router.push("/tour");
     setShowPopup(false);
+    saveFirstLogin(false);
 
   };
 
@@ -30,6 +100,7 @@ const Page = () => {
     router.push("/dashboard");
     setShowPopup(false);
   };
+
   const handleLogin = async () => {
     try {
       const response = await fetch("/api/login", {
@@ -43,7 +114,10 @@ const Page = () => {
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem("userId", data.userId); // Opslaan in local storage zodat we de gebruiker kunnen identificeren bij het ophalen van data.
-        window.location.href = "/dashboard";
+
+        //check for firstlogin
+        await fetchUserData(data.userId);
+
       } else {
         const data = await response.json();
         setError(data.message);
@@ -53,6 +127,9 @@ const Page = () => {
       setError("Server error");
     }
   };
+
+
+
 
   return (
     <main className={styles.loginContainer}>
