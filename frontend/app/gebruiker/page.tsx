@@ -11,6 +11,7 @@ type UserData = {
   id: number;
   age: number;
   email: string;
+  password: string;
   bio: string;
   points: number;
   profilePhoto: "MALE" | "FEMALE";
@@ -26,6 +27,7 @@ const Page = () => {
     id: 0,
     age: 30,
     email: "DefaultData@example.com",
+    password: "",
     bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     points: 100,
     profilePhoto: "MALE",
@@ -37,12 +39,22 @@ const Page = () => {
 
   const [userData, setUserData] = useState<UserData>(defaultData);
   const inputFileRef = useRef<HTMLInputElement>(null);
-  const [editMode, setEditMode] = useState({ email: false, bio: false });
-  const [tempData, setTempData] = useState<Pick<UserData, "email" | "bio">>({
+  const [editMode, setEditMode] = useState({
+    email: false,
+    bio: false,
+    password: false,
+  });
+  const [tempData, setTempData] = useState<
+    Pick<UserData, "email" | "bio" | "password">
+  >({
     email: userData.email,
     bio: userData.bio,
+    password: userData.password,
   });
   const [error, setError] = useState("");
+
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
@@ -112,40 +124,83 @@ const Page = () => {
     );
   };
 
-  const handleEdit = (field: keyof Pick<UserData, "email" | "bio">) => {
+  const handleEdit = (
+    field: keyof Pick<UserData, "email" | "bio" | "password">
+  ) => {
     setEditMode({ ...editMode, [field]: true });
     setTempData({ ...tempData, [field]: userData[field] });
   };
 
-  const handleSave = async (field: keyof Pick<UserData, "email" | "bio">) => {
-    const updatedData = {
-      ...userData,
-      [field]: tempData[field],
-    };
+  const toggleChangePasswordForm = () => {
+    setShowChangePassword(!showChangePassword);
+  };
 
+  const handleChangePassword = async () => {
     try {
-      const response = await fetch("/api/gebruiker/user/updateUser", {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          id: userData.id,
-          [field]: tempData[field],
-        }),
-      });
+      const response = await fetch(
+        "/api/gebruiker/changepassword/changePassword",
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: userData.id,
+            newPassword: newPassword,
+          }),
+        }
+      );
 
-      if (!response.ok) throw new Error("Failed to update user data");
+      if (!response.ok) {
+        throw new Error("Failed to change password");
+      }
 
-      setUserData(updatedData);
-      setEditMode({ ...editMode, [field]: false });
+      const result = await response.json();
+      console.log(result.message);
+      setShowChangePassword(false);
     } catch (error) {
-      console.error("Error updating user data:", error);
-      setError("Failed to update user data");
+      console.error("Error changing password:", error);
+      setError("Failed to change password");
     }
   };
 
-  const handleCancel = (field: keyof Pick<UserData, "email" | "bio">) => {
+  const handleSave = async (
+    field: keyof Pick<UserData, "email" | "bio" | "password">
+  ) => {
+    if (field === "password") {
+      await handleChangePassword();
+    } else {
+      const updatedData = {
+        ...userData,
+        [field]: tempData[field],
+      };
+
+      try {
+        const response = await fetch("/api/gebruiker/user/updateUser", {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id: userData.id,
+            [field]: tempData[field],
+          }),
+        });
+
+        if (!response.ok) throw new Error("Failed to update user data");
+
+        setUserData(updatedData);
+        setEditMode({ ...editMode, [field]: false });
+      } catch (error) {
+        console.error("Error updating user data:", error);
+        setError("Failed to update user data");
+      }
+    }
+  };
+
+  const handleCancel = (
+    field: keyof Pick<UserData, "email" | "bio" | "password">
+  ) => {
     setTempData({ ...tempData, [field]: userData[field] });
     setEditMode({ ...editMode, [field]: false });
   };
@@ -221,6 +276,33 @@ const Page = () => {
                     Bewerken
                   </button>
                 </>
+              )}
+            </div>
+            <div className={styles.passwordChangeSection}>
+              <button
+                onClick={toggleChangePasswordForm}
+                className={styles.editButton}
+              >
+                {showChangePassword ? "Annuleren" : "Wachtwoord Wijzigen"}
+              </button>
+
+              {showChangePassword && (
+                <div>
+                  <label htmlFor="newPassword">Nieuw Wachtwoord:</label>
+                  <input
+                    type="password"
+                    id="newPassword"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className={styles.inputField}
+                  />
+                  <button
+                    onClick={handleChangePassword}
+                    className={styles.saveButton}
+                  >
+                    Opslaan
+                  </button>
+                </div>
               )}
             </div>
             <div>
