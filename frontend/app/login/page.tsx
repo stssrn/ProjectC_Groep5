@@ -58,7 +58,6 @@ const Page = () => {
         setShowPopup(true);
       }
       else {
-        console.log("Name is: " + data.firstName + " And is it your first time? " + data.firstLogin);
         handleNo();
       }
     } catch (error) {
