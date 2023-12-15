@@ -28,6 +28,7 @@
 
 .userInfo {
   display: flex;
+  object-fit: cover;
   flex-direction: column;
   gap: 10px;
   width: 100%;

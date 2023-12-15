@@ -9,7 +9,6 @@ import FemaleDefaultPhoto from "./female.svg";
 
 type UserData = {
   id: number;
-  age: number;
   email: string;
   password: string;
   bio: string;
@@ -25,7 +24,6 @@ type UserData = {
 const Page = () => {
   const defaultData: UserData = {
     id: 0,
-    age: 30,
     email: "DefaultData@example.com",
     password: "",
     bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
@@ -238,10 +236,10 @@ const Page = () => {
                 {userData.firstName} {userData.lastName}
               </p>
             </div>
-            <div>
+            {/* <div>
               <label>Leeftijd:</label>
               <p>{userData.age}</p>
-            </div>
+            </div> */}
             <div>
               <label>Email:</label>
               {editMode.email ? (
@@ -278,33 +276,7 @@ const Page = () => {
                 </>
               )}
             </div>
-            <div className={styles.passwordChangeSection}>
-              <button
-                onClick={toggleChangePasswordForm}
-                className={styles.editButton}
-              >
-                {showChangePassword ? "Annuleren" : "Wachtwoord Wijzigen"}
-              </button>
 
-              {showChangePassword && (
-                <div>
-                  <label htmlFor="newPassword">Nieuw Wachtwoord:</label>
-                  <input
-                    type="password"
-                    id="newPassword"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    className={styles.inputField}
-                  />
-                  <button
-                    onClick={handleChangePassword}
-                    className={styles.saveButton}
-                  >
-                    Opslaan
-                  </button>
-                </div>
-              )}
-            </div>
             <div>
               <label>Bio:</label>
               {editMode.bio ? (
@@ -343,6 +315,33 @@ const Page = () => {
             <div>
               <label>Punten:</label>
               <p>{userData.points}</p>
+            </div>
+            <div className={styles.passwordChangeSection}>
+              <button
+                onClick={toggleChangePasswordForm}
+                className={styles.editButton}
+              >
+                {showChangePassword ? "Annuleren" : "Wachtwoord Wijzigen"}
+              </button>
+
+              {showChangePassword && (
+                <div>
+                  <label htmlFor="newPassword">Nieuw Wachtwoord:</label>
+                  <input
+                    type="password"
+                    id="newPassword"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    className={styles.inputField}
+                  />
+                  <button
+                    onClick={handleChangePassword}
+                    className={styles.saveButton}
+                  >
+                    Opslaan
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </div>
