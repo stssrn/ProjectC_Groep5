@@ -1,9 +1,11 @@
 // Page.tsx
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { quizData } from './data';
 import Container from '../components/Container';
 import styles from "./page.module.css";
+import { Popup } from "./score";
+
 
 interface Question {
     question: string;
@@ -19,6 +21,12 @@ const Page: React.FC = () => {
         Array(quizData.length).fill(null)
     );
     const [progress, setProgress] = useState(0);
+
+    const [isPopupVisible, setPopupVisible] = useState(false);
+    const togglePopup = (score: number) => {
+        // If the popup is already open for the selected reward, close it
+        setScore(score);
+    };
 
     const handleAnswerClick = (selectedAnswer: string) => {
         const newSelectedAnswers = [...selectedAnswers];
@@ -47,20 +55,29 @@ const Page: React.FC = () => {
         }
     };
 
+    useEffect(() => {
+        // Open the popup when showScore becomes true
+        if (showScore) {
+            setPopupVisible(true);
+        }
+    }, [showScore]);
+
     const finishQuiz = () => {
-        // Reset the quiz state
-        setCurrentQuestion(0);
-        setScore(0);
-        setShowScore(false);
-        setSelectedAnswers(Array(quizData.length).fill(null));
-        setProgress(0);
+        setPopupVisible(true);
 
         // Redirect to a different page
-        window.location.href = '/dashboard'; // Replace '/your-target-page' with the actual target page URL    };
-    }
+        // (You can handle the redirection logic here)
+    };
 
     return (
         <Container title='Quiz'>
+            {isPopupVisible && (
+                <Popup
+                    isPopupVisible={isPopupVisible}
+                    togglePopup={() => setPopupVisible(false)}
+                    score={score}
+                />
+            )}
             <div className={styles.quizContainer}>
                 <div className={styles.quizContent}>
                     <div>
@@ -83,7 +100,8 @@ const Page: React.FC = () => {
                                     ))}
                                 </ul>
                                 <div className={styles.buttonContainer}>
-                                    <button onClick={finishQuiz}>Finish</button>
+                                    {/* Conditionally render the Finish button based on whether the popup is visible or not */}
+                                    {!isPopupVisible && <button onClick={finishQuiz}>Finish</button>}
                                 </div>
                             </div>
                         ) : (
@@ -109,7 +127,8 @@ const Page: React.FC = () => {
                         )}
                     </div>
                 </div>
-                {!showScore && (
+
+                {(!showScore && !isPopupVisible) && (
                     <div className={styles.buttonContainer}>
                         {currentQuestion > 0 && (
                             <button onClick={handlePreviousClick}>Vorige</button>
@@ -119,14 +138,12 @@ const Page: React.FC = () => {
                         </button>
                     </div>
                 )}
-                {
-                    !showScore && (
-                        <div className={styles.progressBar}>
-                            <progress className={styles.progress} value={progress} max="100" />
-                            <span style={{ marginLeft: '10px' }}>{progress.toFixed()}%</span>
-                        </div>
-                    )
-                }
+                {!showScore && (
+                    <div className={styles.progressBar}>
+                        <progress className={styles.progress} value={progress} max="100" />
+                        <span style={{ marginLeft: '10px' }}>{progress.toFixed()}%</span>
+                    </div>
+                )}
             </div>
         </Container>
     );
