@@ -65,7 +65,7 @@ const Page = () => {
 
   const fetchUserData = async (userId: string) => {
     try {
-      const response = await fetch(`/api/gebruiker/user/user?id=${userId}`);
+      const response = await fetch(`/api/user/fetchFromUserId?id=${userId}`);
       if (!response.ok) throw new Error("Failed to fetch user data");
 
       const data = await response.json();
@@ -81,7 +81,7 @@ const Page = () => {
 
     try {
       const uploadResponse = await fetch(
-        `/api/gebruiker/avatar/upload?filename=${encodeURIComponent(
+        `/api/avatar/upload?filename=${encodeURIComponent(
           file.name
         )}&contentType=${encodeURIComponent(file.type)}`,
         {
@@ -95,7 +95,7 @@ const Page = () => {
       const blobData = await uploadResponse.json();
 
       const updateResponse = await fetch(
-        "/api/gebruiker/avatar/updateProfilePhoto",
+        "/api/avatar/updateProfilePhoto",
         {
           method: "PUT",
           headers: {
@@ -138,7 +138,7 @@ const Page = () => {
   const handleChangePassword = async () => {
     try {
       const response = await fetch(
-        "/api/gebruiker/changepassword/changePassword",
+        "/api/changePassword",
         {
           method: "PUT",
           headers: {
@@ -176,7 +176,7 @@ const Page = () => {
       };
 
       try {
-        const response = await fetch("/api/gebruiker/user/updateUser", {
+        const response = await fetch("/api/user/updateUser", {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
