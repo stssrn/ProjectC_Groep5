@@ -11,10 +11,14 @@ const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const checkboxId = useId();
 
   const handleLogin = async () => {
     try {
+      setLoading(true);
+
       const response = await fetch("/api/login", {
         method: "POST",
         headers: {
@@ -25,7 +29,7 @@ const Page = () => {
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem("userId", data.userId); // Opslaan in local storage zodat we de gebruiker kunnen identificeren bij het ophalen van data.
+        localStorage.setItem("userId", data.userId);
         window.location.href = "/dashboard";
       } else {
         const data = await response.json();
@@ -34,6 +38,14 @@ const Page = () => {
     } catch (error) {
       console.error("Login error:", error);
       setError("Server error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleLogin();
     }
   };
 
@@ -48,6 +60,7 @@ const Page = () => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
           <input
             className={styles.textbox}
@@ -55,6 +68,7 @@ const Page = () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
           <div className={styles.checkboxWrapper}>
             <label className={styles.label} htmlFor={checkboxId}>
@@ -74,7 +88,7 @@ const Page = () => {
             Wachtwoord vergeten?
           </Link>
           <button className={styles.loginButton} onClick={handleLogin}>
-            Inloggen
+            {loading ? 'Logging in...' : 'Login'}
           </button>
         </div>
       </div>
