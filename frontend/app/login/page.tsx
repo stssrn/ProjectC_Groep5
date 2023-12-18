@@ -14,6 +14,7 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
 
   const checkboxId = useId();
+  const router = useRouter();
 
   const handleLogin = async () => {
     try {
@@ -31,6 +32,7 @@ const Page = () => {
         const data = await response.json();
         localStorage.setItem("userId", data.userId);
         window.location.href = "/dashboard";
+        router.push("/dashboard");
       } else {
         const data = await response.json();
         setError(data.message);
