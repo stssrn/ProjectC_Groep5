@@ -39,36 +39,6 @@ const Page = () => {
     }
   };
 
-
-  // const handleLogin = async () => {
-  //   try {
-  //     setLoading(true);
-
-  //     const response = await fetch("/api/login", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ email, password }),
-  //     });
-
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       localStorage.setItem("userId", data.userId);
-  //       window.location.href = "/dashboard";
-  //       router.push("/dashboard");
-  //     } else {
-  //       const data = await response.json();
-  //       setError(data.message);
-  //     }
-  //   } catch (error) {
-  //     console.error("Login error:", error);
-  //     setError("Server error");
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       handleLogin();

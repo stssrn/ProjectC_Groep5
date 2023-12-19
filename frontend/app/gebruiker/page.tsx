@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, ChangeEvent } from "react";
 import Container from "../components/Container";
 import styles from "./page.module.css";
 import Image from "next/image";
+import { useSession } from 'next-auth/react';
 
 import MaleDefaultPhoto from "./male.svg";
 import FemaleDefaultPhoto from "./female.svg";
@@ -35,6 +36,7 @@ const Page = () => {
     registrationDate: "",
   };
 
+  const { data: session } = useSession();
   const [userData, setUserData] = useState<UserData>(defaultData);
   const inputFileRef = useRef<HTMLInputElement>(null);
   const [editMode, setEditMode] = useState({
@@ -55,11 +57,17 @@ const Page = () => {
   const [newPassword, setNewPassword] = useState("");
 
   useEffect(() => {
-    const userId = localStorage.getItem("userId");
-    if (userId) {
-      fetchUserData(userId);
+    if (session?.user?.id) {
+      fetchUserData(session.user.id.toString());
     }
-  }, []);
+  }, [session]);
+
+  // useEffect(() => {
+  //   const userId = localStorage.getItem("userId");
+  //   if (userId) {
+  //     fetchUserData(userId);
+  //   }
+  // }, []);
 
   const fetchUserData = async (userId: string) => {
     try {
