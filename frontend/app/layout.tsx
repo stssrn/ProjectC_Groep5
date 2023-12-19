@@ -11,6 +11,7 @@ import Image from "next/image";
 import localFont from "next/font/local";
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
+import { Providers } from './providers';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -54,7 +55,7 @@ export default function RootLayout({
                           <div className={styles.cornerSquare}></div>
                       </header>
                   }
-          <div className={styles.container}>{children}</div>
+          <div className={styles.container}><Providers>{children}</Providers></div>
               </div>
               {seg !== "quote" && seg !== "ggzinfo" &&
                   <nav className={styles.nav}>

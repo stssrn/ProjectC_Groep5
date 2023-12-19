@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "prisma generate && next dev",
     "build": "prisma generate && prisma db push && prisma db seed && next build",
+    "fortesting": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -20,6 +21,7 @@
     "clsx": "^2.0.0",
     "material-symbols": "^0.13.0",
     "next": "13.5.4",
+    "next-auth": "^4.24.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-joyride": "^2.7.0",

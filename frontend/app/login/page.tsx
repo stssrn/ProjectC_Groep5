@@ -6,6 +6,7 @@ import { useId } from "react";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn, signOut } from 'next-auth/react'
 
 const Page = () => {
   const [email, setEmail] = useState("");
@@ -19,23 +20,16 @@ const Page = () => {
   const handleLogin = async () => {
     try {
       setLoading(true);
-
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+      setError("");
+      const response = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem("userId", data.userId);
-        window.location.href = "/dashboard";
-        router.push("/dashboard");
+      if (response && response.error) {
+        setError(response.error);
       } else {
-        const data = await response.json();
-        setError(data.message);
+        router.push("/dashboard");
       }
     } catch (error) {
       console.error("Login error:", error);
@@ -44,6 +38,36 @@ const Page = () => {
       setLoading(false);
     }
   };
+
+
+  // const handleLogin = async () => {
+  //   try {
+  //     setLoading(true);
+
+  //     const response = await fetch("/api/login", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ email, password }),
+  //     });
+
+  //     if (response.ok) {
+  //       const data = await response.json();
+  //       localStorage.setItem("userId", data.userId);
+  //       window.location.href = "/dashboard";
+  //       router.push("/dashboard");
+  //     } else {
+  //       const data = await response.json();
+  //       setError(data.message);
+  //     }
+  //   } catch (error) {
+  //     console.error("Login error:", error);
+  //     setError("Server error");
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
