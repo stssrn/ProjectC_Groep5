@@ -16,7 +16,6 @@ const Page = () => {
             };
             const jsonString = JSON.stringify(jsonData);
 
-            // You can now send the jsonString to your server or save it to a file
             console.log(jsonString);
 
             setInputValue("");

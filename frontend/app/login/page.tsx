@@ -58,7 +58,6 @@ const Page = () => {
         setShowPopup(true);
       }
       else {
-        console.log("Name is: " + data.firstName + " And is it your first time? " + data.firstLogin);
         handleNo();
       }
     } catch (error) {
@@ -68,7 +67,7 @@ const Page = () => {
 
   const saveFirstLogin = async (firstlogin: boolean) => {
     try {
-      const response = await fetch("/api/popup", {
+      const response = await fetch("api/popup", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -127,9 +126,6 @@ const Page = () => {
       setError("Server error");
     }
   };
-
-
-
 
   return (
     <main className={styles.loginContainer}>

@@ -1,19 +1,112 @@
+"use client";
 import styles from "./page.module.css";
 import Container from "../components/Container";
 import Event from "./Event";
 import clsx from "clsx";
-
-import agendaData from "@/lib/agenda";
+import { useState, useEffect } from "react";
 import { monthNames } from "@/lib/agenda";
 
-// the month a new year starts, and works in case there are no events in
-// January. Assumes there are no events planned more than a year in advance.
-const newYearMonth = Object.entries(agendaData)
-  .filter(([_, events]) => events.length)
-  .map(([month, _]) => month)
-  .find((m, i) => monthNames.indexOf(m) <= i);
+interface AgendaEvent {
+  id: number,
+  date: Date,
+  name: string,
+  description: string,
+}
+interface MonthData {
+  [key: string]: AgendaEvent[]; // Assuming each month has an array of AgendaData
+}
 
 const Page = () => {
+  const defaultData: MonthData = {
+    januari: [],
+    februari: [],
+    maart: [],
+    april: [],
+    mei: [],
+    juni: [],
+    juli: [],
+    augustus: [],
+    september: [],
+    oktober: [],
+    november: [],
+    december: [],
+  };
+
+  const [agendaData, setAgendaData] = useState<MonthData>(defaultData);
+
+
+  const fetchAgendaData = async () => {
+    try {
+      const response = await fetch(`/api/event`, {
+        method: "GET",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to fetch agenda data");
+      }
+
+      const fetchedData = await response.json();
+      const organizedData: MonthData = {
+        januari: [],
+        februari: [],
+        maart: [],
+        april: [],
+        mei: [],
+        juni: [],
+        juli: [],
+        augustus: [],
+        september: [],
+        oktober: [],
+        november: [],
+        december: [],
+      };
+
+      fetchedData.events.forEach((event: AgendaEvent) => {
+        event.date = new Date(event.date);
+
+        const eventMonth = event.date.getMonth();
+        const monthName = getMonthName(eventMonth + 1);
+
+        if (organizedData.hasOwnProperty(monthName)) {
+          organizedData[monthName].push(event);
+        }
+      });
+
+      setAgendaData({ ...agendaData, ...organizedData });
+    } catch (error) {
+      console.error("Error fetching agenda data:", error);
+    }
+  };
+
+  const getMonthName = (monthNumber: number) => {
+    const monthNames = [
+      "januari",
+      "februari",
+      "maart",
+      "april",
+      "mei",
+      "juni",
+      "juli",
+      "augustus",
+      "september",
+      "oktober",
+      "november",
+      "december",
+    ];
+
+    return monthNames[monthNumber - 1];
+  };
+
+  // the month a new year starts, and works in case there are no events in
+  // January. Assumes there are no events planned more than a year in advance.
+  const newYearMonth = Object.entries(agendaData)
+    .filter(([_, events]) => events.length)
+    .map(([month, _]) => month)
+    .find((m, i) => monthNames.indexOf(m) <= i);
+
+  useEffect(() => {
+    fetchAgendaData();
+  }, []);
+
   const eventElements = Object.entries(agendaData)
     .filter(([_, events]) => events.length)
     .map(([month, events]) => (

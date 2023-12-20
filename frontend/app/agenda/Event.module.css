@@ -17,3 +17,73 @@
 .eventName {
   display: block;
 }
+
+.createPopUp {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #4104;
+}
+
+.dialog {
+  background-color: var(--bg500);
+  width: fit-content;
+  height: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) translateY(-10%);
+  padding: 24px;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: column;
+}
+
+.dialogButtons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: auto;
+}
+
+.button,
+.secondaryButton {
+  display: block;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.button {
+  background-color: var(--p500);
+  border: none;
+  color: #fff;
+}
+
+.secondaryButton {
+  background-color: var(--bg300);
+  color: inherit;
+}
+
+.h1 {
+  font-size: 36px;
+  align-items: center;
+}
+
+.description {
+  font-size: 20px;
+  align-items: center;
+  margin-bottom: 300px;
+  margin-top: 15px;
+}
+
+@media (max-width: 450px) {
+  .description {
+    font-size: 20px;
+    align-items: center;
+    margin-bottom: 200px;
+    margin-top: 15px;
+  }
+}
