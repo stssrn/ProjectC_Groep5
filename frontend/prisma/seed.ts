@@ -12,7 +12,6 @@ async function seed() {
       create: {
         email: `${account.username.toLowerCase()}${account.id}@example.com`,
         password: hashedPassword,
-        address: "Voorbeeld Straat 123, 1234 AB, Voorbeeldstad",
         bio: "Dit is een Bio Voor " + account.firstName,
         firstName: account.firstName,
         lastName: account.lastName,
