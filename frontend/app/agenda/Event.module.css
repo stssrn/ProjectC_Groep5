@@ -29,7 +29,7 @@
 
 .dialog {
   background-color: var(--bg500);
-  width: fit-content;
+  width: 35%;
   height: 50%;
   position: absolute;
   left: 50%;
@@ -38,14 +38,21 @@
   padding: 24px;
   align-items: center;
   justify-content: flex-end;
+
+  display: flex;
   flex-direction: column;
+  justify-content: space-between;
+}
+
+.content {
+  overflow: auto;
 }
 
 .dialogButtons {
   display: flex;
   gap: 16px;
   justify-content: center;
-  margin-top: auto;
+  margin-top: 20px;
 }
 
 .button,
@@ -75,15 +82,20 @@
 .description {
   font-size: 20px;
   align-items: center;
-  margin-bottom: 300px;
   margin-top: 15px;
 }
 
-@media (max-width: 450px) {
-  .description {
-    font-size: 20px;
-    align-items: center;
-    margin-bottom: 200px;
-    margin-top: 15px;
+@media (max-width: 700px) {
+  .dialog {
+    width: 80%;
   }
+}
+
+.signUp {
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.signUp:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }

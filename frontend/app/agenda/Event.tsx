@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import styles from "./Event.module.css";
-
+import { useSession } from "next-auth/react";
 
 type EventData = {
   id: number;
@@ -10,10 +10,13 @@ type EventData = {
   description: string;
 };
 
+
 const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
 
+  const { data: session } = useSession();
   const [showSignUp, setShowSignUp] = useState(false);
   const [signedIn, setSignIn] = useState(false);
+  const [userId, setUserId] = useState(0);
   const [eventData, setEventData] = useState<EventData>({
     id: 0,
     date: new Date(),
@@ -23,32 +26,48 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
 
   const handleSignUp = async () => {
     if (signedIn) {
-      await saveSignOut(1, event.id);
+      await saveSignOut(userId, event.id);
       setSignIn(false);
+
     }
     else {
-      await saveSignIn(1, event.id);
+      await saveSignIn(userId, event.id);
       setSignIn(true);
 
     }
   };
 
-  const fetchEventData = async (eventId: number) => {
+  const fetchEventData = async (eventId: number, userID: number) => {
     try {
-      const response = await fetch(`api/agendaUser?id=${eventId}`, {
+      const response = await fetch(`api/event?id=${eventId}`, {
         method: "GET",
       });
       if (!response.ok) throw new Error("Failed to fetch agenda data");
-
       const data = await response.json();
-
+      await fetchAgendaUserData(userID, eventId);
+      setUserId(userID);
       setEventData({ ...eventData, ...data });
+
     } catch (error) {
       console.error("Error fetching agenda data:", error);
     }
   };
 
-  const saveSignIn = async (userId: number, eventId: number) => {
+  const fetchAgendaUserData = async (userID: number, eventId: number) => {
+    try {
+      const response = await fetch(`api/agendaUser?userId=${userID}&eventId=${eventId}`, {
+        method: "GET",
+      });
+      if (!response.ok) throw new Error("Failed to fetch agenda user data");
+      const data = await response.json();
+      if (data.entry !== null) await setSignIn(true);
+      else await setSignIn(false);
+    } catch (error) {
+      console.error("Error fetching agenda user data:", error);
+    }
+  };
+
+  const saveSignIn = async (userID: number, eventId: number) => {
     try {
       //console.log("save sign in");
       const response = await fetch("api/agendaUser", {
@@ -58,7 +77,7 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
         },
         body: JSON.stringify({
           eventId: eventId,
-          userId: userId
+          userId: Number(userID)
         }),
       });
 
@@ -69,7 +88,7 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
       console.error("Error updating event and/or user data:", error);
     }
   }
-  const saveSignOut = async (userId: number, eventId: number) => {
+  const saveSignOut = async (userID: number, eventId: number) => {
     try {
       //console.log("save sign out");
       const response = await fetch("api/agendaUser", {
@@ -79,7 +98,7 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
         },
         body: JSON.stringify({
           eventId: eventId,
-          userId: userId
+          userId: Number(userID)
         }),
       });
 
@@ -93,8 +112,10 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
 
   useEffect(() => {
     const eventId = event.id;
-    fetchEventData(eventId);
-  }, [event.id]);
+    if (session?.user?.id) {
+      fetchEventData(eventId, session?.user.id);
+    }
+  }, [event.id, session]);
 
 
   return (
@@ -105,14 +126,23 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
             {event.date.getDate()}
           </time>
           <div className={styles.eventName}>{event.name}</div>
+
         </div>
-        <button className={styles.signUp} onClick={() => setShowSignUp(true)}>Inschrijven</button>
+        {signedIn && (
+          <button className={styles.signUp} onClick={() => setShowSignUp(true)}>Uitschrijven</button>
+        )}
+        {signedIn === false && (
+          <button className={styles.signUp} onClick={() => setShowSignUp(true)}>Inschrijven</button>
+        )}
       </div>
+
       {showSignUp && (
         <div className={styles.createPopUp}>
           <div className={styles.dialog}>
-            <h1 className={styles.h1}>{event.name}</h1>
-            <p className={styles.description}>{event.description}</p>
+            <div className={styles.content}>
+              <h1 className={styles.h1}>{event.name}</h1>
+              <p className={styles.description}>{event.description}</p>
+            </div>
             <div className={styles.dialogButtons}>
               <div
                 onClick={() => setShowSignUp(false)}

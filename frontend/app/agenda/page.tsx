@@ -5,6 +5,8 @@ import Event from "./Event";
 import clsx from "clsx";
 import { useState, useEffect } from "react";
 import { monthNames } from "@/lib/agenda";
+import agendaData2 from "@/lib/agenda";
+
 
 interface AgendaEvent {
   id: number,
@@ -37,12 +39,12 @@ const Page = () => {
 
   const fetchAgendaData = async () => {
     try {
-      const response = await fetch(`/api/event`, {
+      console.log(agendaData2);
+      const eventId = 0;
+      const response = await fetch(`api/event?id=${eventId}`, {
         method: "GET",
       });
-      if (!response.ok) {
-        throw new Error("Failed to fetch agenda data");
-      }
+      if (!response.ok) throw new Error("Failed to fetch agenda data");
 
       const fetchedData = await response.json();
       const organizedData: MonthData = {
@@ -95,7 +97,9 @@ const Page = () => {
 
     return monthNames[monthNumber - 1];
   };
-
+  useEffect(() => {
+    fetchAgendaData();
+  }, []);
   // the month a new year starts, and works in case there are no events in
   // January. Assumes there are no events planned more than a year in advance.
   const newYearMonth = Object.entries(agendaData)
@@ -103,15 +107,13 @@ const Page = () => {
     .map(([month, _]) => month)
     .find((m, i) => monthNames.indexOf(m) <= i);
 
-  useEffect(() => {
-    fetchAgendaData();
-  }, []);
-
+  let currentYear: Date;
+  currentYear = new Date("YYYY");
   const eventElements = Object.entries(agendaData)
     .filter(([_, events]) => events.length)
     .map(([month, events]) => (
       <div key={month} className={clsx(styles.month, styles[month])}>
-        {month === newYearMonth && <h1>2024</h1>}
+        {month === newYearMonth && <h1>{Number(currentYear) + 1}</h1>}
         <h2 className={styles.monthName}>{month}</h2>
         <div className={styles.eventsWrapper}>
           <div className={clsx(styles.bar, styles[month])}></div>

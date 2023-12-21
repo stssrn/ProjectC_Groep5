@@ -1,39 +1,32 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../lib/prisma';
-import { useSearchParams } from 'next/navigation';
-
-async function handleError(error: Error): Promise<NextResponse> {
-    console.error("Error:", error);
-    return new NextResponse(JSON.stringify({ message: "Server error" }), {
-        status: 500,
-    });
-}
 
 export async function GET(request: Request): Promise<NextResponse> {
     try {
         if (request.method === 'GET') {
             const searchParams = new URL(request.url).searchParams;
-            const id = searchParams.get("id");
+            const userId = searchParams.get("userId");
+            const eventId = searchParams.get("eventId");
             if (!searchParams) {
                 return new NextResponse(
-                    JSON.stringify({ message: 'Missing ID in the request body' }),
+                    JSON.stringify({ message: 'Missing IDs in the request body' }),
                     { status: 400 }
                 );
             }
-            const event = await prisma.event.findFirst({
+            const agendaUserEntry = await prisma.agendaUser.findFirst({
                 where: {
-                    id: Number(id),
+                    userId: Number(userId),
+                    eventId: Number(eventId),
                 },
             });
-
-            if (!event) {
+            if (!agendaUserEntry) {
                 return new NextResponse(
-                    JSON.stringify({ message: 'No events found', event: null }),
-                    { status: 404 }
+                    JSON.stringify({ message: 'No entries found', entry: null })
+
                 );
             }
 
-            return NextResponse.json({ event }, { status: 200 });
+            return NextResponse.json({ entry: agendaUserEntry }, { status: 200 });
         } else {
             return new NextResponse(
                 JSON.stringify({ message: 'Method error' }),
@@ -41,7 +34,10 @@ export async function GET(request: Request): Promise<NextResponse> {
             );
         }
     } catch (error: any) {
-        return handleError(error);
+        console.error("Fetch agenda user error:", error);
+        return new NextResponse(JSON.stringify({ message: "Server error" }), {
+            status: 500,
+        });
     }
 }
 
