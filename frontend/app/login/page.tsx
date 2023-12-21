@@ -6,44 +6,42 @@ import { useId } from "react";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
+import { signIn, signOut } from 'next-auth/react'
 
 const Page = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const checkboxId = useId();
   const router = useRouter();
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+      setLoading(true);
+      setError("");
+      const response = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem("userId", data.userId);
-
-        if (data.firstLogin) {
-          // It's the user's first login
-          data.firstLogin = false; // Consider updating the firstLogin value on the server
-          window.location.href = "/tour";
-        } else {
-          // It's not the user's first login
-          window.location.href = "/dashboard";
-        }
+      if (response && response.error) {
+        setError(response.error);
       } else {
-        const data = await response.json();
-        setError(data.message);
+        router.push("/dashboard");
       }
     } catch (error) {
       console.error("Login error:", error);
       setError("Server error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleLogin();
     }
   };
 
@@ -58,6 +56,7 @@ const Page = () => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
           <input
             className={styles.textbox}
@@ -65,6 +64,7 @@ const Page = () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
           <div className={styles.checkboxWrapper}>
             <label className={styles.label} htmlFor={checkboxId}>
@@ -84,7 +84,7 @@ const Page = () => {
             Wachtwoord vergeten?
           </Link>
           <button className={styles.loginButton} onClick={handleLogin}>
-            Inloggen
+            {loading ? 'Logging in...' : 'Login'}
           </button>
         </div>
       </div>
@@ -96,7 +96,6 @@ const Page = () => {
       </div>
     </main>
   );
-
 };
 
 export default Page;
