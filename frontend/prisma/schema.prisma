@@ -11,20 +11,22 @@ datasource db {
 }
 
 model users {
-  id              Int          @id @default(autoincrement())
-  profilePhotoUrl String?
-  profilePhoto    profilePhoto @default(MALE)
-  email           String       @unique
-  password        String
-  bio             String?
-  firstName       String
-  lastName        String
-  username        String
-  registationDate DateTime     @default(now())
-  firstLogin      Boolean      @default(true)
-  points          Int          @default(0)
-  isAdmin         Boolean      @default(false)
-  isForumMod      Boolean      @default(false)
+  id               Int          @id @default(autoincrement())
+  profilePhotoUrl  String?
+  profilePhoto     profilePhoto @default(MALE)
+  email            String       @unique
+  password         String
+  bio              String?
+  firstName        String
+  lastName         String
+  username         String
+  registationDate  DateTime     @default(now())
+  firstLogin       Boolean      @default(true)
+  points           Int          @default(0)
+  isAdmin          Boolean      @default(false)
+  isForumMod       Boolean      @default(false)
+  resetToken       String?
+  resetTokenExpiry DateTime?
 
   posts      Post[]
   reactions  Reaction[]

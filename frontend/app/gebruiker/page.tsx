@@ -62,13 +62,6 @@ const Page = () => {
     }
   }, [session]);
 
-  // useEffect(() => {
-  //   const userId = localStorage.getItem("userId");
-  //   if (userId) {
-  //     fetchUserData(userId);
-  //   }
-  // }, []);
-
   const fetchUserData = async (userId: string) => {
     try {
       const response = await fetch(`/api/user/fetchFromUserId?id=${userId}`);

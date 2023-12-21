@@ -1,69 +1,209 @@
 "use client";
-import Container from "../../components/Container";
 import Image from "next/image";
-import image from "./image.svg";
 import styles from "./page.module.css";
+import image from "./image.svg";
 import { useState } from "react";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 
 const Page = () => {
-    const [currentStep, setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [email, setEmail] = useState("");
+  const [resetToken, setResetToken] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
-    const handleStepChange = (step: number) => {
-        setCurrentStep(step);
-    };
 
-    return (
-        < main className={styles.forgotPassword} >
-            {currentStep === 1 && (
-                <div className={styles.stepOne}>
-                    <div className={styles.left}>
-                        <h1 className={styles.loginTitle}>Wachtwoord Vergeten</h1>
-                        <div className={styles.form}>
-                            <input className={styles.textbox} placeholder="email" type="email" name="" id="" />
-                            <button className={styles.continuePasswordChange} onClick={() => handleStepChange(currentStep + 1)}>code verzenden</button>
-                        </div>
-                    </div>
-                    <div className={styles.right}>
-                        <Image className={styles.image} src={image} alt="" />
-                    </div>
-                </div>
-            )}
-            {currentStep === 2 && (
-                <div className={styles.stepTwo}>
-                    <div className={styles.left}>
-                        <h1 className={styles.loginTitle}>Code invoeren</h1>
-                        <div className={styles.form}>
-                            <input className={styles.textbox} placeholder="code" type="tekst" name="" id="" />
-                            <button className={styles.continuePasswordChange} onClick={() => handleStepChange(currentStep + 1)}>volgende stap</button>
-                        </div>
-                    </div>
-                    <div className={styles.right}>
-                        <Image className={styles.image} src={image} alt="" />
-                    </div>
-                </div>
-            )}
+  const handleRequestReset = async () => {
+    setLoading(true);
+    setError("");
 
-            {currentStep === 3 && (
-                <div className={styles.stepThree}>
-                    <div className={styles.left}>
-                        <h1 className={styles.loginTitle}>Nieuw wachtwoord</h1>
-                        <div className={styles.form}>
-                            <input className={styles.textbox} placeholder="wachtwoord" type="password" name="" id="" />
-                            <input className={styles.textbox} placeholder="herhaal wachtwoord" type="password" name="" id="" />
-                            <Link href="/login" className={styles.continuePasswordChange}>
-                                Wachtwoord veranderen
-                            </Link>
-                        </div>
-                    </div>
-                    <div className={styles.right}>
-                        <Image className={styles.image} src={image} alt="" />
-                    </div>
-                </div>
-            )
-            }
-        </main >
-    );
+    try {
+      const response = await fetch('/api/forgotpassword', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
+      setCurrentStep(2);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const validateResetToken = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch('/api/validateResetToken', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ resetToken }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || "Invalid or expired reset token.");
+        return;
+      }
+
+      setCurrentStep(3);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleResetPassword = async () => {
+    if (newPassword !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const response = await fetch('/api/resetpassword', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ resetToken, password: newPassword }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Something went wrong");
+      }
+
+      setCurrentStep(1);
+      alert('Password has been reset successfully.');
+      router.push("/login");
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <main className={styles.forgotPassword}>
+      {currentStep === 1 && (
+        <div className={styles.stepOne}>
+          <div className={styles.left}>
+            <h1 className={styles.loginTitle}>Wachtwoord Vergeten</h1>
+            <div className={styles.form}>
+              <input
+                className={styles.textbox}
+                placeholder="Email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <button
+                className={styles.continuePasswordChange}
+                onClick={handleRequestReset}
+                disabled={loading}
+              >
+                {loading ? 'Verzenden...' : 'Verzend'}
+              </button>
+            </div>
+          </div>
+          <div className={styles.right}>
+            <Image className={styles.image} src={image} alt="" />
+          </div>
+        </div>
+      )}
+
+      {currentStep === 2 && (
+        <div className={styles.stepTwo}>
+          <div className={styles.left}>
+            <h1 className={styles.loginTitle}>Code invoeren</h1>
+            <div className={styles.form}>
+              <input
+                className={styles.textbox}
+                placeholder="Reset Code"
+                type="text"
+                value={resetToken}
+                onChange={(e) => setResetToken(e.target.value)}
+              />
+              <button
+                className={styles.continuePasswordChange}
+                onClick={validateResetToken}
+              >
+                Volgende stap
+              </button>
+            </div>
+          </div>
+          <div className={styles.right}>
+            <Image className={styles.image} src={image} alt="" />
+          </div>
+        </div>
+      )}
+
+      {currentStep === 3 && (
+        <div className={styles.stepThree}>
+          <div className={styles.left}>
+            <h1 className={styles.loginTitle}>Nieuw wachtwoord</h1>
+            <div className={styles.form}>
+              <input
+                className={styles.textbox}
+                placeholder="New Password"
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+              <input
+                className={styles.textbox}
+                placeholder="Confirm New Password"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
+              <button
+                className={styles.continuePasswordChange}
+                onClick={handleResetPassword}
+                disabled={loading}
+              >
+                {loading ? 'Resetting...' : 'Reset Password'}
+              </button>
+            </div>
+          </div>
+          <div className={styles.right}>
+            <Image className={styles.image} src={image} alt="" />
+          </div>
+        </div>
+      )}
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
+    </main>
+  );
 };
 
 export default Page;
