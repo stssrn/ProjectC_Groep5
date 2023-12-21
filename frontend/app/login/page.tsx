@@ -1,20 +1,24 @@
 
 "use client";
 import Image from "next/image";
+import { useState, useEffect, useRef, ChangeEvent } from "react";
 import styles from "./page.module.css";
 import image from "./image.svg";
 import { useId } from "react";
 import Link from "next/link";
-import { useState } from "react";
+// import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { signIn, signOut } from 'next-auth/react'
+import { useSession } from "next-auth/react";
 
 type UserData = {
   id: number;
-  age: number;
   email: string;
+  password: string;
   bio: string;
   points: number;
-  profilePhoto: string;
+  profilePhoto: "MALE" | "FEMALE";
+  profilePhotoUrl?: string;
   firstName: string;
   lastName: string;
   username: string;
@@ -25,11 +29,11 @@ type UserData = {
 const Page = () => {
   const defaultData: UserData = {
     id: 0,
-    age: 30,
     email: "johndoe@example.com",
+    password: "",
     bio: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     points: 100,
-    profilePhoto: "https://randomuser.me/api/portraits/men/88.jpg",
+    profilePhoto: "MALE",
     firstName: "",
     lastName: "",
     username: "",
@@ -38,18 +42,28 @@ const Page = () => {
 
   };
 
+  const { data: session } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const checkboxId = useId();
 
   const [showPopup, setShowPopup] = useState(false);
   const [userData, setUserData] = useState<UserData>(defaultData);
   const router = useRouter();
 
+  useEffect(() => {
+    if (session?.user?.id) {
+      fetchUserData(session.user.id.toString());
+    }
+  }, [session]);
+
+
   const fetchUserData = async (userId: string) => {
     try {
-      const response = await fetch(`/api/user?id=${userId}`);
+      const response = await fetch(`/api/user/fetchFromUserId?id=${userId}`);
       if (!response.ok) throw new Error("Failed to fetch user data");
 
       const data = await response.json();
@@ -102,28 +116,29 @@ const Page = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch("/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
+      setLoading(true);
+      setError("");
+      const response = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
       });
-
-      if (response.ok) {
-        const data = await response.json();
-        localStorage.setItem("userId", data.userId); // Opslaan in local storage zodat we de gebruiker kunnen identificeren bij het ophalen van data.
-
-        //check for firstlogin
-        await fetchUserData(data.userId);
-
-      } else {
-        const data = await response.json();
-        setError(data.message);
+      if (response && response.error) {
+        setError(response.error);
+      } else if (session) {
+        fetchUserData(session.user.id.toString())
       }
     } catch (error) {
       console.error("Login error:", error);
       setError("Server error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleLogin();
     }
   };
 
@@ -138,6 +153,7 @@ const Page = () => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
           <input
             className={styles.textbox}
@@ -145,6 +161,7 @@ const Page = () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={handleKeyDown}
           />
           <div className={styles.checkboxWrapper}>
             <label className={styles.label} htmlFor={checkboxId}>
@@ -164,7 +181,7 @@ const Page = () => {
             Wachtwoord vergeten?
           </Link>
           <button className={styles.loginButton} onClick={handleLogin}>
-            Inloggen
+            {loading ? 'Logging in...' : 'Login'}
           </button>
         </div>
       </div>
@@ -182,7 +199,6 @@ const Page = () => {
       )}
     </main>
   );
-
 };
 
 export default Page;

@@ -14,6 +14,7 @@ async function seed() {
       data: {
         email: `${account.username.toLowerCase()}@example.com`,
         password: hashedPassword,
+        bio: "Dit is een Bio Voor " + account.firstName,
         firstName: account.firstName,
         lastName: account.lastName,
         username: account.username,
