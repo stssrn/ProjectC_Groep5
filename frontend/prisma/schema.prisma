@@ -46,6 +46,7 @@ model casus {
   id          Int     @unique @default(autoincrement())
   name        String?
   description String?
+  treatment   String?
   url         String?
 }
 

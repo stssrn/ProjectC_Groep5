@@ -1,42 +1,48 @@
-// Page.tsx
-"use client";
-import React, { useEffect, useState } from 'react';
-import { quizData } from './data';
+'use client'
+import { useEffect, useState } from 'react';
 import Container from '../components/Container';
-import styles from "./page.module.css";
-import { Popup } from "./score";
+import styles from './page.module.css';
+import { Popup } from './score';
 
-
-interface Question {
-    question: string;
-    options: string[];
-    correctAnswer: string;
+interface QuizData {
+    quizId: number;
+    quizTitle: string;
+    questions: {
+        question: string;
+        options: string[];
+        correctAnswer: string;
+    }[];
 }
 
 const Page: React.FC = () => {
+    const [quizzes, setQuizzes] = useState<QuizData[]>([]);
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [score, setScore] = useState(0);
     const [showScore, setShowScore] = useState(false);
-    const [selectedAnswers, setSelectedAnswers] = useState<Array<string | null>>(
-        Array(quizData.length).fill(null)
-    );
+    const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
     const [progress, setProgress] = useState(0);
-
     const [isPopupVisible, setPopupVisible] = useState(false);
+
+    useEffect(() => {
+        const fetchQuizzes = async () => {
+            try {
+                const response = await fetch('/api/quiz');
+                const data = await response.json();
+                setQuizzes(data.quizzes);
+            } catch (error) {
+                console.error('Fetch quizzes error:', error);
+            }
+        };
+
+        fetchQuizzes();
+    }, []);
+
     const togglePopup = (score: number) => {
-        // If the popup is already open for the selected reward, close it
         setScore(score);
     };
 
-    const handleAnswerClick = (selectedAnswer: string) => {
-        const newSelectedAnswers = [...selectedAnswers];
-        newSelectedAnswers[currentQuestion] = selectedAnswer;
-
-        if (selectedAnswer === quizData[currentQuestion].correctAnswer) {
-            setScore(score + 1);
-        }
-
-        setSelectedAnswers(newSelectedAnswers);
+    const handleAnswerClick = (answer: string) => {
+        setSelectedAnswer(answer);
     };
 
     const handlePreviousClick = () => {
@@ -46,37 +52,29 @@ const Page: React.FC = () => {
     };
 
     const handleNextClick = () => {
-        if (currentQuestion < quizData.length - 1) {
+        if (selectedAnswer === quizzes[currentQuestion].questions[currentQuestion].correctAnswer) {
+            setScore(score + 1);
+        }
+
+        setSelectedAnswer(null);
+
+        if (currentQuestion < quizzes.length - 1) {
             setCurrentQuestion(currentQuestion + 1);
-            const newProgress = ((currentQuestion + 1) / quizData.length) * 100;
+            const newProgress = ((currentQuestion + 1) / quizzes.length) * 100;
             setProgress(newProgress);
         } else {
             setShowScore(true);
         }
     };
 
-    useEffect(() => {
-        // Open the popup when showScore becomes true
-        if (showScore) {
-            setPopupVisible(true);
-        }
-    }, [showScore]);
-
     const finishQuiz = () => {
         setPopupVisible(true);
-
-        // Redirect to a different page
-        // (You can handle the redirection logic here)
     };
 
     return (
-        <Container title='Quiz'>
+        <Container title="Quiz">
             {isPopupVisible && (
-                <Popup
-                    isPopupVisible={isPopupVisible}
-                    togglePopup={() => setPopupVisible(false)}
-                    score={score}
-                />
+                <Popup isPopupVisible={isPopupVisible} togglePopup={() => setPopupVisible(false)} score={score} />
             )}
             <div className={styles.quizContainer}>
                 <div className={styles.quizContent}>
@@ -84,42 +82,32 @@ const Page: React.FC = () => {
                         {showScore ? (
                             <div>
                                 <h2>Score: {score}</h2>
-                                <h3>Antwoorden:</h3>
+                                <h3>Answers:</h3>
                                 <ul>
-                                    {quizData.map((question, index) => (
+                                    {quizzes.map((quiz, index) => (
                                         <li key={index}>
-                                            <strong>{question.question}</strong>:
+                                            <strong>{quiz.questions[index].question}</strong>:
                                             <p>
-                                                {selectedAnswers[index] === question.correctAnswer
+                                                {selectedAnswer === quiz.questions[index].correctAnswer
                                                     ? 'Correct'
-                                                    : selectedAnswers[index]
-                                                        ? `Incorrect (Jou antwoord: ${selectedAnswers[index]}, Correcte antwoord: ${question.correctAnswer})`
-                                                        : `Niet beantwoord (Correcte antwoord: ${question.correctAnswer})`}
+                                                    : selectedAnswer
+                                                        ? `Incorrect (Your answer: ${selectedAnswer}, Correct answer: ${quiz.questions[index].correctAnswer})`
+                                                        : `Not answered (Correct answer: ${quiz.questions[index].correctAnswer})`}
                                             </p>
                                         </li>
                                     ))}
                                 </ul>
                                 <div className={styles.buttonContainer}>
-                                    {/* Conditionally render the Finish button based on whether the popup is visible or not */}
                                     {!isPopupVisible && <button onClick={finishQuiz}>Finish</button>}
                                 </div>
                             </div>
                         ) : (
                             <div>
-                                <h2>{quizData[currentQuestion].question}</h2>
-                                <ul className={styles.answerList}>
-                                    {quizData[currentQuestion].options.map((option, index) => (
-                                        <li key={index}>
-                                            <label>
-                                                <input
-                                                    type="radio"
-                                                    name="answer"
-                                                    value={option}
-                                                    checked={selectedAnswers[currentQuestion] === option || false}
-                                                    onChange={() => handleAnswerClick(option)}
-                                                />
-                                                {option}
-                                            </label>
+                                <h2>{quizzes[currentQuestion].questions[currentQuestion].question}</h2>
+                                <ul>
+                                    {quizzes[currentQuestion].questions[currentQuestion].options.map((option, qIndex) => (
+                                        <li key={qIndex}>
+                                            <button onClick={() => handleAnswerClick(option)}>{option}</button>
                                         </li>
                                     ))}
                                 </ul>
@@ -128,13 +116,11 @@ const Page: React.FC = () => {
                     </div>
                 </div>
 
-                {(!showScore && !isPopupVisible) && (
+                {!showScore && !isPopupVisible && (
                     <div className={styles.buttonContainer}>
-                        {currentQuestion > 0 && (
-                            <button onClick={handlePreviousClick}>Vorige</button>
-                        )}
+                        {currentQuestion > 0 && <button onClick={handlePreviousClick}>Previous</button>}
                         <button onClick={handleNextClick}>
-                            {currentQuestion < quizData.length - 1 ? 'Volgende' : 'Inleveren'}
+                            {currentQuestion < quizzes.length - 1 ? 'Next' : 'Submit'}
                         </button>
                     </div>
                 )}

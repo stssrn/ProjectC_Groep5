@@ -28,7 +28,7 @@ export const Popup: React.FC<PopupProps> = ({ isPopupVisible, togglePopup, score
         <>
             {/* Conditionally render the Popup based on the prop */}
             {isPopupVisible && (
-                <div className={styles.Overlay} onClick={handleClickOutside}>
+                <div className={styles.Overlay}>
                     <div className={styles.PopupCard}>
                         <div className={styles.content}>
                             <h1></h1>
