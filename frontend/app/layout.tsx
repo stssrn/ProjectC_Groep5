@@ -35,7 +35,8 @@ const navItems = [
     { path: "casussen", symbol: "book", name: "Casus" },
     { path: "educatie", symbol: "school", name: "Educatie" },
     { path: "faq", symbol: "help", name: "FAQ" },
-    { path: "contact", symbol: "call", name: "Contact" }
+    { path: "contact", symbol: "call", name: "Contact" },
+    { path: "signout", symbol: "logout", name: "Uitloggen" }
 ];
 
 export default function RootLayout({
