@@ -45,6 +45,8 @@ const Page: React.FC<{
             if (!response.ok) throw new Error("Failed to fetch agenda data");
 
             const fetchedData = await response.json();
+            //console.log("fetched data:");
+            //console.log(fetchedData);
             const organizedData: MonthData = {
                 januari: [],
                 februari: [],
@@ -60,7 +62,7 @@ const Page: React.FC<{
                 december: [],
             };
 
-            fetchedData.events.forEach((event: AgendaEvent) => {
+            fetchedData.formattedEvents.forEach((event: AgendaEvent) => {
                 event.date = new Date(event.date);
 
                 const eventMonth = event.date.getMonth();
@@ -99,7 +101,7 @@ const Page: React.FC<{
     const today = new Date();
     const upcomingEvents = Object.entries(agendaData)
         .flatMap(([month, events]) => events.map((e) => ({ month, ...e })))
-        .filter((x) => x.date.getMonth() === today.getMonth())
+        .filter((x) => x.date.getMonth() === today.getMonth() && x.date.getFullYear() == today.getFullYear())
         .slice(0, 2)
 
     upcomingEvents.sort((a, b) => a.date.getTime() - b.date.getTime());
