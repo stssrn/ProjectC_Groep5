@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import styles from "./Event.module.css";
 import { useSession } from "next-auth/react";
+import { DateTime } from 'luxon';
 
 type EventData = {
   id: number;
@@ -39,11 +40,13 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
 
   const fetchEventData = async (eventId: number, userID: number) => {
     try {
-      const response = await fetch(`api/event?id=${eventId}`, {
+      const response = await fetch(`api/event?id=${0}`, {
         method: "GET",
       });
       if (!response.ok) throw new Error("Failed to fetch agenda data");
       const data = await response.json();
+      //console.log("data: ");
+      //console.log(data);
       await fetchAgendaUserData(userID, eventId);
       setUserId(userID);
       setEventData({ ...eventData, ...data });
@@ -118,12 +121,13 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
   }, [event.id, session]);
 
 
+
   return (
     <main>
-      <div key={event.date.getMilliseconds()} className={styles.event}>
+      <div key={new Date(event.date).getMilliseconds()} className={styles.event}>
         <div className={styles.info}>
-          <time dateTime={event.date.toISOString()} className={styles.eventDay}>
-            {event.date.getDate()}
+          <time dateTime={new Date(event.date).toISOString()} className={styles.eventDay}>
+            {new Date(event.date).getDate()}
           </time>
           <div className={styles.eventName}>{event.name}</div>
 
@@ -141,6 +145,9 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
           <div className={styles.dialog}>
             <div className={styles.content}>
               <h1 className={styles.h1}>{event.name}</h1>
+              <p className={styles.timeText}>
+                {new Date(event.date).getUTCHours() + ":" + new Date(event.date).getUTCMinutes()}
+              </p>
               <p className={styles.description}>{event.description}</p>
             </div>
             <div className={styles.dialogButtons}>

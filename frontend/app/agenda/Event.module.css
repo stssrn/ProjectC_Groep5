@@ -29,7 +29,7 @@
 
 .dialog {
   background-color: var(--bg500);
-  width: 35%;
+  width: 20%;
   height: 50%;
   position: absolute;
   left: 50%;
@@ -46,6 +46,7 @@
 
 .content {
   overflow: auto;
+  align-items: left;
 }
 
 .dialogButtons {
@@ -76,7 +77,7 @@
 
 .h1 {
   font-size: 36px;
-  align-items: center;
+  text-align: left;
 }
 
 .description {
@@ -91,11 +92,26 @@
   }
 }
 
+@media (max-width: 450px) {
+  .dialog {
+    width: 60%;
+  }
+}
+
 .signUp {
   background-color: transparent;
   border-color: transparent;
+  font-family: inherit;
+  color: inherit;
+  font-weight: bold;
+  font-size: 15px;
 }
 
 .signUp:hover {
   background-color: rgba(0, 0, 0, 0.05);
+  text-decoration: underline;
+}
+
+.timeText {
+  font-size: 30px;
 }
