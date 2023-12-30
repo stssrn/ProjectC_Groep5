@@ -3,14 +3,12 @@ import Container from "../components/Container";
 import clsx from "clsx";
 
 interface CurrentQuiz {
-    title: string;
     topic: string;
     questions: number;
     questionsAnswered: number;
 }
 
 const currentQuiz: CurrentQuiz = {
-    title: "Quiz nummer: #",
     topic:
         "Onderwerp: casussen",
     questions: 10,
@@ -22,12 +20,11 @@ const QuizBlock: React.FC<{
 }> = ({ className }) => {
     return (
         <section className={className}>
-            <Container padding={12} title="Quiz">
+            <Container padding={12} title="Quiz nummer: #">
                 <div className={styles.quizes}>
                     <article className={styles.quiz}>
                         <div className={styles.top}>
                             <div className={styles.topOverlay}></div>
-                            <h2 className={styles.postTitle}>{currentQuiz.title}</h2>
                             <p className={styles.quizTopic}>{currentQuiz.topic}</p>
                         </div>
                         <div className={styles.quizProgressTracker}>

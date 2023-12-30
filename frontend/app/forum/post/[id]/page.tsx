@@ -38,6 +38,10 @@ const Page = ({ params }: { params: { id: number } }) => {
                     lastName: "Doe",
                     username: "@johndoe",
                     creationDate: new Date(),
+                    points: 0,
+                    firstLogin: true,
+                    isAdmin: false,
+                    isModerator: false
                   },
                   content: replyContent,
                   date: new Date(),

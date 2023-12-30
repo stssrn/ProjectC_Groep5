@@ -20,6 +20,7 @@ type UserData = {
   lastName: string;
   username: string;
   registrationDate: string;
+  isFirstTime: boolean;
 };
 
 const Page = () => {
@@ -34,6 +35,7 @@ const Page = () => {
     lastName: "",
     username: "",
     registrationDate: "",
+    isFirstTime: true,
   };
 
   const { data: session } = useSession();
