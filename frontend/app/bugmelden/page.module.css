@@ -19,11 +19,14 @@
     border-radius: 10px;
 }
 
-.inputField {
+.inputFieldDesc,
+.inputFieldTitle {
     padding: 15px;
     display: flex;
     align-items: center;
 }
+
+
 
 .sendBut {
     margin-left: 10px;
@@ -42,7 +45,7 @@
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
-    margin-top: 15px; 
+    margin-top: 15px;
 }
 
 .inputBoxError {
@@ -62,7 +65,7 @@
     .inputBox {
         width: 250px;
         height: 70px;
-        font-size: 14px;
+        font-size: 12px;
         text-align: center;
     }
 
