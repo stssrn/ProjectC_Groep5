@@ -140,13 +140,13 @@ const Page = () => {
       // Sort the events by month, day, and time
       const sortedEvents = currentYearEvents.sort((a, b) => {
         // Sort by month
-        const monthDiff = a.date.getMonth() - b.date.getMonth();
+        const monthDiff = new Date(a.date).getMonth() - new Date(b.date).getMonth();
         if (monthDiff !== 0) {
           return monthDiff;
         }
 
         // If months are the same, sort by day and time
-        return a.date.getDate() - b.date.getDate() || a.date.getTime() - b.date.getTime();
+        return new Date(a.date).getDate() - new Date(b.date).getDate() || new Date(a.date).getTime() - new Date(b.date).getTime();
       });
 
       return {

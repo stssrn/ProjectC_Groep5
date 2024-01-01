@@ -29,6 +29,7 @@ const Page = () => {
             const response = await fetch(`api/bug?id=${0}`, {
                 method: "GET",
             });
+            console.log(response)
             if (!response.ok) throw new Error("Failed to fetch bug report data");
             const data = await response.json();
             console.log("data: ");
