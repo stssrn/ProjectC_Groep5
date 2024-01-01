@@ -4,18 +4,20 @@ import Container from '../components/Container';
 import styles from './page.module.css';
 import { Popup } from './score';
 
-interface QuizData {
-    quizId: number;
-    quizTitle: string;
+interface Quiz {
+    Id: number;
+    Title: string;
     questions: {
         question: string;
         options: string[];
         correctAnswer: string;
+
     }[];
+    points: number;
 }
 
 const Page: React.FC = () => {
-    const [quizzes, setQuizzes] = useState<QuizData[]>([]);
+    const [quiz, setQuiz] = useState<Quiz | null>(null);
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [score, setScore] = useState(0);
     const [showScore, setShowScore] = useState(false);
@@ -24,19 +26,22 @@ const Page: React.FC = () => {
     const [isPopupVisible, setPopupVisible] = useState(false);
 
     useEffect(() => {
-        const fetchQuizzes = async () => {
-            try {
-                const response = await fetch('/api/quiz');
-                const data = await response.json();
-                setQuizzes(data.quizzes);
-            } catch (error) {
-                console.error('Fetch quizzes error:', error);
-            }
-        };
-
-        fetchQuizzes();
+        fetchQuiz("1");
     }, []);
 
+    const fetchQuiz = async (Id: string) => {
+        try {
+            const response = await fetch(`/api/quiz?id=1`);
+            if (!response.ok) throw new Error("Failed to fetch quiz");
+
+            const data = await response.json();
+            setQuiz(data); // Assuming the API returns the entire quiz data
+
+        } catch (error) {
+            console.error('Fetch quiz error:', error);
+            // Handle error, e.g., show an error message to the user
+        }
+    };
     const togglePopup = (score: number) => {
         setScore(score);
     };
@@ -52,15 +57,15 @@ const Page: React.FC = () => {
     };
 
     const handleNextClick = () => {
-        if (selectedAnswer === quizzes[currentQuestion].questions[currentQuestion].correctAnswer) {
+        if (selectedAnswer === quiz?.questions[currentQuestion].correctAnswer) {
             setScore(score + 1);
         }
 
         setSelectedAnswer(null);
 
-        if (currentQuestion < quizzes.length - 1) {
+        if (currentQuestion < quiz?.questions.length - 1) {
             setCurrentQuestion(currentQuestion + 1);
-            const newProgress = ((currentQuestion + 1) / quizzes.length) * 100;
+            const newProgress = ((currentQuestion + 1) / quiz?.questions.length) * 100;
             setProgress(newProgress);
         } else {
             setShowScore(true);
@@ -73,6 +78,7 @@ const Page: React.FC = () => {
 
     return (
         <Container title="Quiz">
+
             {isPopupVisible && (
                 <Popup isPopupVisible={isPopupVisible} togglePopup={() => setPopupVisible(false)} score={score} />
             )}
@@ -84,15 +90,15 @@ const Page: React.FC = () => {
                                 <h2>Score: {score}</h2>
                                 <h3>Answers:</h3>
                                 <ul>
-                                    {quizzes.map((quiz, index) => (
+                                    {quiz?.questions.map((quiz, index) => (
                                         <li key={index}>
-                                            <strong>{quiz.questions[index].question}</strong>:
+                                            <strong>{quiz.question}</strong>:
                                             <p>
-                                                {selectedAnswer === quiz.questions[index].correctAnswer
+                                                {selectedAnswer === quiz.correctAnswer
                                                     ? 'Correct'
                                                     : selectedAnswer
-                                                        ? `Incorrect (Your answer: ${selectedAnswer}, Correct answer: ${quiz.questions[index].correctAnswer})`
-                                                        : `Not answered (Correct answer: ${quiz.questions[index].correctAnswer})`}
+                                                        ? `Incorrect (Your answer: ${selectedAnswer}, Correct answer: ${quiz.correctAnswer})`
+                                                        : `Not answered (Correct answer: ${quiz.correctAnswer})`}
                                             </p>
                                         </li>
                                     ))}
@@ -103,9 +109,9 @@ const Page: React.FC = () => {
                             </div>
                         ) : (
                             <div>
-                                <h2>{quizzes[currentQuestion].questions[currentQuestion].question}</h2>
+                                <h2>{quiz?.questions[currentQuestion].question}</h2>
                                 <ul>
-                                    {quizzes[currentQuestion].questions[currentQuestion].options.map((option, qIndex) => (
+                                    {quiz?.questions[currentQuestion].options.map((option, qIndex) => (
                                         <li key={qIndex}>
                                             <button onClick={() => handleAnswerClick(option)}>{option}</button>
                                         </li>
@@ -120,7 +126,7 @@ const Page: React.FC = () => {
                     <div className={styles.buttonContainer}>
                         {currentQuestion > 0 && <button onClick={handlePreviousClick}>Previous</button>}
                         <button onClick={handleNextClick}>
-                            {currentQuestion < quizzes.length - 1 ? 'Next' : 'Submit'}
+                            {currentQuestion < quiz?.questions.length - 1 ? 'Next' : 'Submit'}
                         </button>
                     </div>
                 )}

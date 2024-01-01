@@ -69,7 +69,10 @@ export default function RootLayout({
                   )}
                 >
                   <Link href={`/${p.path}`} title={p.path}>
-                    <i className="symbol">{p.symbol}</i>
+                    <div className={styles.navItem}>
+                      <span className={styles.hoverText}>{p.name}</span>
+                      <i className="symbol">{p.symbol}</i>
+                    </div>
                   </Link>
                 </li>
               ))}
