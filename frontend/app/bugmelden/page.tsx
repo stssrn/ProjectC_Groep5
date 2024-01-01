@@ -11,7 +11,6 @@ const Page = () => {
     const [inputError, setInputError] = useState(false);
     const [successMessage, setSuccessMessage] = useState("");
     const { data: session } = useSession();
-    const [lastBugReportId, setLastBugReportId] = useState(0);
 
     const sendData = async () => {
         setSuccessMessage("");
@@ -24,10 +23,11 @@ const Page = () => {
             if (inputValue.trim() !== "") {
                 try {
                     await sendReportToBug();
-                    await fetchLastBugReportId(); // Wait for fetchLastBugReportId to complete
+                    const lastBugReportId = await fetchLastBugReportId(); // Wait for fetchLastBugReportId to complete
 
-                    //console.log(lastBugReportId);
-                    sendReportToBugUser(Number(lastBugReportId) + 1);
+                    //console.log("lastreportbugid:" + lastBugReportId);
+
+                    sendReportToBugUser(Number(lastBugReportId));
 
                     setInputValue("");
                     setTitleValue("");
@@ -54,18 +54,14 @@ const Page = () => {
             });
             if (!response.ok) throw new Error("Failed to fetch bug report data");
             const data = await response.json();
-            //console.log("data: ");
-            //console.log(data);
-            //console.log(data.formattedBugs[data.formattedBugs.length - 1]);
-            //console.log(Number(data.formattedBugs[data.formattedBugs.length - 1].id))
-
-
-            await setLastBugReportId(Number(data.formattedBugs[data.formattedBugs.length - 1].id));
-
+            const lastReportId = Number(data.formattedBugs[data.formattedBugs.length - 1].id);
+            return lastReportId;
         } catch (error) {
             console.error("Error fetching bug report data:", error);
         }
     };
+
+
 
     const sendReportToBug = async () => {
         try {
@@ -101,7 +97,7 @@ const Page = () => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    bugId: bugId,
+                    bugId: Number(bugId),
                     userId: Number(session?.user?.id),
                 }),
             });

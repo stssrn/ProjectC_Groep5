@@ -15,7 +15,7 @@ export async function GET(request: Request): Promise<NextResponse> {
                 );
             }
 
-
+            console.log(id);
             if (!id || id === "0") {
                 const bugs = await prisma.bug.findMany();
                 const formattedBugs = bugs.map(bug => ({

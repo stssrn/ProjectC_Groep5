@@ -7,6 +7,7 @@ export async function GET(request: Request): Promise<NextResponse> {
             const searchParams = new URL(request.url).searchParams;
             const userId = searchParams.get("userId");
             const bugId = searchParams.get("bugId");
+
             if (!searchParams) {
                 return new NextResponse(
                     JSON.stringify({ message: 'Missing IDs in the request body' }),
@@ -46,7 +47,6 @@ export async function POST(request: Request): Promise<NextResponse> {
         if (request.method === "POST") {
             const body = await request.json();
             const { bugId, userId } = body;
-
             try {
                 // Create a new AgendaUser entry
                 const newBugUser = await prisma.bugUser.create({
