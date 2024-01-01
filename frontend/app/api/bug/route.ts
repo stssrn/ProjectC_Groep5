@@ -15,39 +15,35 @@ export async function GET(request: Request): Promise<NextResponse> {
                 );
             }
 
-            console.log(id);
-            if (!id || id === "0") {
-                const bugs = await prisma.bug.findMany();
-                const formattedBugs = bugs.map(bug => ({
-                    ...bug,
-                    date: DateTime.fromJSDate(bug.date, { zone: 'utc' }).toLocal().toJSDate(),
+            if (Number(id) === 0) {
+                const bugReports = await prisma.bug.findMany();
+                const formattedBugs = bugReports.map(report => ({
+                    ...report,
+                    date: DateTime.fromJSDate(report.date, { zone: 'utc' }).toLocal().toJSDate(),
                 }));
 
-                return NextResponse.json({ formattedBugs }, { status: 200 });
+                return NextResponse.json({ formattedBugs: formattedBugs }, { status: 200 });
             }
-            //console.log("before id=0 return formatted events:");
-            //for (const event of formattedEvents) {
-            //    console.log(event.date);
-            //}
-            const bug = await prisma.bug.findFirst({
+
+            const bugReport = await prisma.bug.findFirst({
                 where: {
                     id: Number(id),
                 },
             });
 
-            if (!bug) {
+            if (!bugReport) {
                 return new NextResponse(
-                    JSON.stringify({ message: 'No bug reports found', event: null }),
+                    JSON.stringify({ message: 'No bug reports found', report: null }),
                     { status: 404 }
                 );
             }
             const formattedBug = {
-                ...bug,
-                date: DateTime.fromJSDate(bug.date, { zone: 'utc' }).toLocal().toJSDate(),
+                ...bugReport,
+                date: DateTime.fromJSDate(bugReport.date, { zone: 'utc' }).toLocal().toJSDate(),
             };
             // console.log("before the return single formatted event");
             // console.log(formattedEvent.date);
-            return NextResponse.json({ formattedBug }, { status: 200 });
+            return NextResponse.json({ formattedBug: formattedBug }, { status: 200 });
         } else {
             return new NextResponse(
                 JSON.stringify({ message: 'Method error' }),
@@ -55,7 +51,7 @@ export async function GET(request: Request): Promise<NextResponse> {
             );
         }
     } catch (error: any) {
-        console.error("Fetch event error:", error);
+        console.error("Fetch bug report error:", error);
         return new NextResponse(JSON.stringify({ message: "Server error" }), {
             status: 500,
         });
@@ -104,3 +100,98 @@ export async function POST(request: Request): Promise<NextResponse> {
 }
 
 
+export async function PUT(request: Request): Promise<NextResponse> {
+    try {
+        if (request.method !== "PUT") {
+            return new NextResponse(JSON.stringify({ message: "Method error" }), {
+                status: 405,
+            });
+        }
+        else {
+            const body = await request.json();
+            const { id, title, description } = body;
+            try {
+                const updatedBugReport = await prisma.bug.update({
+                    where: { id },
+                    data: { title, description },
+                });
+                return new NextResponse(
+                    JSON.stringify({ message: "Succesfully changed the data", bugId: updatedBugReport.id }),
+                    { status: 200 }
+                );
+            } catch (error) {
+                console.error("Update bug report error:", error);
+                return new NextResponse(JSON.stringify({ message: "Server error" }), {
+                    status: 500,
+                });
+            }
+        }
+
+    }
+    catch (error) {
+        console.error("Update user error:", error);
+        return new NextResponse(JSON.stringify({ message: "Server error" }), {
+            status: 500,
+        });
+    }
+}
+
+export async function DELETE(request: Request): Promise<NextResponse> {
+    try {
+        if (request.method === "DELETE") {
+            const searchParams = new URL(request.url).searchParams;
+            const id = Number(searchParams.get("id"));
+            console.log
+            if (!searchParams) {
+                return new NextResponse(
+                    JSON.stringify({ message: 'Missing ID in the request body' }),
+                    { status: 400 }
+                );
+            }
+
+            try {
+                // Find the AgendaUser entry based on userId and eventId
+                const bugEntry = await prisma.bug.findFirst({
+                    where: { id },
+                });
+
+                if (!bugEntry) {
+                    return new NextResponse(
+                        JSON.stringify({ message: 'Bug entry not found' }),
+                        { status: 404 }
+                    );
+                }
+
+                // Delete the AgendaUser entry
+                await prisma.bug.delete({
+                    where: { id: bugEntry.id },
+                });
+
+                return new NextResponse(
+                    JSON.stringify({
+                        message: "Successfully deleted the Bug entry",
+                        deletedBugUserId: bugEntry.id,
+                        title: bugEntry.title,
+                        description: bugEntry.description,
+                    }),
+                    { status: 200 }
+                );
+            } catch (error) {
+                console.error("Delete bug error:", error);
+                return new NextResponse(JSON.stringify({ message: "Server error" }), {
+                    status: 500,
+                });
+            }
+        } else {
+            return new NextResponse(
+                JSON.stringify({ message: 'Method error' }),
+                { status: 405 }
+            );
+        }
+    } catch (error) {
+        console.error("Fetch error:", error);
+        return new NextResponse(JSON.stringify({ message: "Server error" }), {
+            status: 500,
+        });
+    }
+}

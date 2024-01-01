@@ -49,7 +49,7 @@ const Page = () => {
     };
     const fetchLastBugReportId = async () => {
         try {
-            const response = await fetch(`api/bug?id=${0}`, {
+            const response = await fetch(`../api/bug?id=${0}`, {
                 method: "GET",
             });
             if (!response.ok) throw new Error("Failed to fetch bug report data");
