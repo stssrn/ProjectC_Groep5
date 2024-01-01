@@ -33,6 +33,9 @@ const Page = () => {
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
     const [searchQuery, setSearchQuery] = useState<string>('');
     const [currentUserId, setCurrentUserId] = useState(0);
+    const [titleIsEmpty, setTitleIsEmpty] = useState(false);
+    const [descIsEmpty, setDescIsEmpty] = useState(false);
+
 
 
     const dialogTitle = useId();
@@ -66,6 +69,8 @@ const Page = () => {
         await deleteBugUserEntry(bugID, userID);
         await deleteBugReportEntry(bugID);
         setShowDialog(false);
+        setDescIsEmpty(false);
+        setTitleIsEmpty(false);
         await refreshBugReports();
     };
 
@@ -329,7 +334,7 @@ const Page = () => {
                         name="Titel"
                         value={currentReport?.title || ""}
                         id={dialogTitle}
-                        className={styles.textBox}
+                        className={titleIsEmpty === false ? styles.textBox : styles.errorBorder}
                         onChange={(e) => setCurrentReport({ ...currentReport, title: e.target.value })}
                     />
                     <label htmlFor={dialogDescription}>Beschrijving</label>
@@ -338,7 +343,7 @@ const Page = () => {
                         name="Beschrijving"
                         id={dialogDescription}
                         value={currentReport?.description || ""}
-                        className={styles.textBox}
+                        className={descIsEmpty === false ? styles.textBox : styles.errorBorder}
                         onChange={(e) => setCurrentReport({ ...currentReport, description: e.target.value })}
                     />
                     <input
@@ -346,13 +351,17 @@ const Page = () => {
                         value="Opslaan"
                         className={styles.button}
                         onClick={() => {
-                            if (currentReport?.title && currentReport?.description) {
+                            if (currentReport?.title) setTitleIsEmpty(false);
+                            else setTitleIsEmpty(true);
+                            if (currentReport?.description) {
+                                setDescIsEmpty(false);
                                 saveAndClose();
-                            } else {
-                                alert("Please fill in both title and description.");
                             }
+                            else setDescIsEmpty(true);
+
                         }}
                     />
+
                     <input
                         type="button"
                         value="Verwijderen"
@@ -365,8 +374,11 @@ const Page = () => {
                         type="button"
                         value="Sluiten"
                         className={styles.secondaryButton}
-                        onClick={() => setShowDialog(false)}
-                    />
+                        onClick={() => {
+                            setShowDialog(false);
+                            setDescIsEmpty(false);
+                            setTitleIsEmpty(false);
+                        }} />
                 </div>
             </div>
         </Container >

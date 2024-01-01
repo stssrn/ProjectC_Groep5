@@ -119,3 +119,11 @@
     color: inherit;
     font-size: inherit;
 }
+
+.errorBorder {
+    display: block;
+    min-height: 32px;
+    padding: 0 12px;
+    flex-grow: 1;
+    border: 1px solid red;
+}
