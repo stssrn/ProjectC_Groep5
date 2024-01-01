@@ -13,19 +13,25 @@ interface BugReport {
 const Page = () => {
     const [bugReports, setBugReports] = useState<BugReport[]>([]);
 
-    const fetchBugs = async () => {
+    const showAllBugReports = async () => {
         try {
-            console.log("bravo going darkee");
+            await fetchBugReports();
+        }
+        catch (error) {
+            console.error("Error sending data:", error);
+        }
+
+
+    };
+
+    const fetchBugReports = async () => {
+        try {
             const response = await fetch(`api/bug?id=${0}`, {
                 method: "GET",
             });
             if (!response.ok) throw new Error("Failed to fetch bug report data");
             const data = await response.json();
-            //console.log("data: ");
-            //console.log(data);
-            //console.log(data.formattedBugs[data.formattedBugs.length - 1]);
-            //console.log(Number(data.formattedBugs[data.formattedBugs.length - 1].id))
-
+            console.log("data: ");
             console.log(data);
             await setBugReports(data.formattedBugs);
 
@@ -35,7 +41,7 @@ const Page = () => {
     };
 
     useEffect(() => {
-        fetchBugs();
+        showAllBugReports();
     }, []);
 
     return (

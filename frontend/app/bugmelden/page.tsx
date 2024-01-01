@@ -56,8 +56,8 @@ const Page = () => {
             const data = await response.json();
             //console.log("data: ");
             //console.log(data);
-            console.log(data.formattedBugs[data.formattedBugs.length - 1]);
-            console.log(Number(data.formattedBugs[data.formattedBugs.length - 1].id))
+            //console.log(data.formattedBugs[data.formattedBugs.length - 1]);
+            //console.log(Number(data.formattedBugs[data.formattedBugs.length - 1].id))
 
 
             await setLastBugReportId(Number(data.formattedBugs[data.formattedBugs.length - 1].id));
@@ -93,8 +93,8 @@ const Page = () => {
     const sendReportToBugUser = async (bugId: number) => {
         try {
             //console.log("save sign in");
-            console.log("bugUser:");
-            console.log(bugId + " " + session?.user?.id);
+            //console.log("bugUser:");
+            //console.log(bugId + " " + session?.user?.id);
             const response = await fetch("api/bugUser", {
                 method: "POST",
                 headers: {
