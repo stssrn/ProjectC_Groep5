@@ -2,52 +2,159 @@
 import { useEffect, useState } from 'react';
 import Container from '../components/Container';
 import styles from './page.module.css';
-import { Popup } from './score';
+import { useSession } from 'next-auth/react';
+import prisma from "../../lib/prisma";
 
 interface Quiz {
-    Id: number;
-    Title: string;
+    id: number;
+    title: string;
+    points: number;
     questions: {
         question: string;
         options: string[];
         correctAnswer: string;
-
     }[];
-    points: number;
 }
 
+interface UserAnswers {
+    answers: {
+        id: number;
+        answer: string;
+        isCorrect: boolean;
+    }[];
+}
+
+type UserData = {
+    id: number;
+    email: string;
+    password: string;
+    bio: string;
+    points: number;
+    profilePhoto: "MALE" | "FEMALE";
+    profilePhotoUrl?: string;
+    firstName: string;
+    lastName: string;
+    username: string;
+    registrationDate: string;
+};
+
 const Page: React.FC = () => {
-    const [quiz, setQuiz] = useState<Quiz | null>(null);
+    const { data: session } = useSession();
+    // const [userId, setUserId] = useState<number | null>();
+    const [user, setUserData] = useState<UserData | null>();
+    const [quiz, setQuiz] = useState<Quiz>();
     const [currentQuestion, setCurrentQuestion] = useState(0);
-    const [score, setScore] = useState(0);
     const [showScore, setShowScore] = useState(false);
-    const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+    const [selectedAnswer, setSelectedAnswer] = useState<UserAnswers | null>(null);
     const [progress, setProgress] = useState(0);
-    const [isPopupVisible, setPopupVisible] = useState(false);
+    const [points, setPoints] = useState(0);
 
     useEffect(() => {
-        fetchQuiz("1");
-    }, []);
+        fetchQuiz(1);
 
-    const fetchQuiz = async (Id: string) => {
+        if (session?.user?.id) {
+            fetchUser(session?.user?.id);
+        }
+    }, [session]);
+
+    const fetchQuiz = async (Id: number) => {
         try {
-            const response = await fetch(`/api/quiz?id=1`);
+            const response = await fetch(`/api/quizzes/fetchById?id=${Id}`);
             if (!response.ok) throw new Error("Failed to fetch quiz");
 
-            const data = await response.json();
-            setQuiz(data); // Assuming the API returns the entire quiz data
-
+            const data: { quiz: Quiz } = await response.json();
+            setQuiz(data.quiz); // Assuming the API returns the entire quiz data
         } catch (error) {
             console.error('Fetch quiz error:', error);
             // Handle error, e.g., show an error message to the user
         }
     };
-    const togglePopup = (score: number) => {
-        setScore(score);
+
+    const fetchUser = async (userId: number) => {
+        try {
+            const response = await fetch(`/api/quizzes/fetchUser?id=${userId}`);
+            if (!response.ok) throw new Error("Failed to fetch user data");
+
+            const data: { user: UserData } = await response.json();
+            setUserData(data.user);
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+        }
     };
 
-    const handleAnswerClick = (answer: string) => {
-        setSelectedAnswer(answer);
+    const rewardPoints = async () => {
+        try {
+            const response = await fetch('/api/quizzes/rewardPoints', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id: user?.id,
+                    earnedPoints: points,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to update points');
+            }
+
+            const result = await response.json();
+            console.log(result.message);
+        } catch (error) {
+            console.error('Error updating points:', error);
+        }
+    };
+
+    const saveToQuizUsers = async () => {
+        try {
+            const response = await fetch("api/quizUser", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    quizId: quiz?.id,
+                    userId: Number(session?.user?.id),
+                    isCompleted: true,
+                    pointsScored: points,
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to add bug and/or user data");
+            }
+        } catch (error) {
+            console.error("Error updating bug and/or user data:", error);
+        }
+    };
+
+    const handleAnswerClick = (userAnswer: string) => {
+        const currentAnswers = selectedAnswer ? [...selectedAnswer.answers] : [];
+
+        const answerExists = currentAnswers.some(answer => answer.id === currentQuestion);
+
+        if (!answerExists) {
+            const newAnswer = {
+                id: currentQuestion,
+                answer: userAnswer,
+                isCorrect: userAnswer === quiz?.questions[currentQuestion].correctAnswer
+            };
+
+            setSelectedAnswer({
+                answers: [...currentAnswers, newAnswer],
+            });
+        } else {
+            const updatedAnswers = [...currentAnswers];
+
+            updatedAnswers[currentQuestion] = {
+                id: currentQuestion,
+                answer: userAnswer,
+                isCorrect: userAnswer === quiz?.questions[currentQuestion].correctAnswer
+            };
+
+            setSelectedAnswer({ answers: updatedAnswers });
+        }
     };
 
     const handlePreviousClick = () => {
@@ -57,63 +164,65 @@ const Page: React.FC = () => {
     };
 
     const handleNextClick = () => {
-        if (selectedAnswer === quiz?.questions[currentQuestion].correctAnswer) {
-            setScore(score + 1);
-        }
-
-        setSelectedAnswer(null);
-
-        if (currentQuestion < quiz?.questions.length - 1) {
+        if (currentQuestion + 1 < (quiz?.questions.length ?? 0)) {
             setCurrentQuestion(currentQuestion + 1);
-            const newProgress = ((currentQuestion + 1) / quiz?.questions.length) * 100;
+            const newProgress = ((currentQuestion + 1) / (quiz?.questions.length ?? 0)) * 100;
             setProgress(newProgress);
         } else {
+            const pointsEarned = selectedAnswer?.answers?.reduce((count, answer) => count + (answer.isCorrect ? 1 : 0), 0);
+            setPoints(pointsEarned ?? 0);
             setShowScore(true);
         }
     };
 
     const finishQuiz = () => {
-        setPopupVisible(true);
+        rewardPoints();
+        saveToQuizUsers();
+        // window.location.href = '/dashboard';
     };
 
     return (
         <Container title="Quiz">
-
-            {isPopupVisible && (
-                <Popup isPopupVisible={isPopupVisible} togglePopup={() => setPopupVisible(false)} score={score} />
-            )}
             <div className={styles.quizContainer}>
                 <div className={styles.quizContent}>
                     <div>
                         {showScore ? (
                             <div>
-                                <h2>Score: {score}</h2>
-                                <h3>Answers:</h3>
+                                <h2>Score: {selectedAnswer?.answers?.reduce((count, answer) => count + (answer.isCorrect ? 1 : 0), 0)}/{quiz?.questions.length}</h2>
                                 <ul>
                                     {quiz?.questions.map((quiz, index) => (
                                         <li key={index}>
                                             <strong>{quiz.question}</strong>:
                                             <p>
-                                                {selectedAnswer === quiz.correctAnswer
-                                                    ? 'Correct'
+                                                {selectedAnswer?.answers[index]?.answer === quiz.correctAnswer
+                                                    ? `Correct (jouw antwoord: ${selectedAnswer?.answers[index]?.answer})`
                                                     : selectedAnswer
-                                                        ? `Incorrect (Your answer: ${selectedAnswer}, Correct answer: ${quiz.correctAnswer})`
-                                                        : `Not answered (Correct answer: ${quiz.correctAnswer})`}
+                                                        ? `Incorrect (jouw antwoord: ${selectedAnswer?.answers[index]?.answer ?? "-"}, juiste answer: ${quiz.correctAnswer})`
+                                                        : `Niet beantwoord (jouw antwoord: ${quiz.correctAnswer})`}
                                             </p>
                                         </li>
                                     ))}
                                 </ul>
                                 <div className={styles.buttonContainer}>
-                                    {!isPopupVisible && <button onClick={finishQuiz}>Finish</button>}
+                                    <button onClick={finishQuiz}>Terug naar home</button>
                                 </div>
                             </div>
                         ) : (
                             <div>
                                 <h2>{quiz?.questions[currentQuestion].question}</h2>
-                                <ul>
-                                    {quiz?.questions[currentQuestion].options.map((option, qIndex) => (
-                                        <li key={qIndex}>
-                                            <button onClick={() => handleAnswerClick(option)}>{option}</button>
+                                <ul className={styles.answerList}>
+                                    {quiz?.questions[currentQuestion].options.map((option, index) => (
+                                        <li key={index}>
+                                            <label>
+                                                <input
+                                                    type="radio"
+                                                    name="answer"
+                                                    value={option}
+                                                    checked={selectedAnswer?.answers[currentQuestion]?.answer === option}
+                                                    onChange={() => handleAnswerClick(option)}
+                                                />
+                                                {option}
+                                            </label>
                                         </li>
                                     ))}
                                 </ul>
@@ -122,11 +231,11 @@ const Page: React.FC = () => {
                     </div>
                 </div>
 
-                {!showScore && !isPopupVisible && (
+                {!showScore && (
                     <div className={styles.buttonContainer}>
-                        {currentQuestion > 0 && <button onClick={handlePreviousClick}>Previous</button>}
+                        {currentQuestion > 0 && <button onClick={handlePreviousClick}>Vorige</button>}
                         <button onClick={handleNextClick}>
-                            {currentQuestion < quiz?.questions.length - 1 ? 'Next' : 'Submit'}
+                            {currentQuestion + 1 < (quiz?.questions.length ?? 0) ? 'Volgende' : 'Afronden'}
                         </button>
                     </div>
                 )}
