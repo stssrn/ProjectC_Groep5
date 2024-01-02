@@ -238,3 +238,39 @@ const seed = async () => {
 // Run the seed function
 seed();
 */
+
+/*
+//educatie module seeder
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+async function main() {
+  // Seed data
+  const moduleData = [
+    { title: 'Angststoornis', description: 'Beschrijving van het herkennen van een angststoornis' },
+    { title: 'Burn out', description: 'Beschrijving van burn out klachten' },
+    { title: 'Psychose', description: 'Beschrijving van een psychose' },
+    { title: 'Educatie module 4', description: 'Beschrijving van  een educatie module' },
+    { title: 'Educatie module 5', description: 'Beschrijving van nog een educatie module' }
+    // Add more modules as needed
+  ];
+
+  // Insert data into the database
+  for (const data of moduleData) {
+    await prisma.educatie_modules.create({
+      data,
+    });
+  }
+
+  console.log('Seed data inserted successfully');
+}
+
+main()
+  .catch((e) => {
+    throw e;
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
+*/

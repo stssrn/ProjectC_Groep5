@@ -8,7 +8,8 @@ const Page = () => {
     { text: "Accounts Beheren", href: "/admin/accountbeheer", symbol: "person_search" },
     { text: "Agenda Aanpassen", href: "", symbol: "edit_calendar" },
     { text: "Forum Moderatie", href: "", symbol: "shield" },
-    { text: "Bug Meldingen", href: "/admin/bugmeldingenbeheer", symbol: "bug_report" }
+    { text: "Bug Meldingen", href: "/admin/bugmeldingenbeheer", symbol: "bug_report" },
+    { text: "Educatie modules", href: "/admin/educatiemodules", symbol: "book_4" }
   ]
   return (
     <Container title="Admin">

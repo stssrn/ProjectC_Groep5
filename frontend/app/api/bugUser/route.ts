@@ -62,8 +62,8 @@ export async function POST(request: Request): Promise<NextResponse> {
                 return new NextResponse(
                     JSON.stringify({
                         message: "Successfully created a new bugUser entry",
-                        agendaUserId: newBugUser.id,
-                        eventId: newBugUser.bugId,
+                        bugUserId: newBugUser.id,
+                        bugId: newBugUser.bugId,
                         userId: newBugUser.userId,
                     }),
                     { status: 201 } // 201 Created status code for successful creation
