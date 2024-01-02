@@ -229,7 +229,7 @@ const Page = () => {
                     value={sortCriteria}
                     onChange={(e) => setSortCriteria(e.target.value)}
                 >
-                    <option value="id">ID</option>
+                    <option value="ID">ID</option>
                     <option value="title">Titel</option>
                 </select>
                 <select
