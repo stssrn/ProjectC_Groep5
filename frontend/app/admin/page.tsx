@@ -7,7 +7,8 @@ const Page = () => {
   const actions = [
     {text: "Accounts Beheren", href: "/admin/accountbeheer", symbol: "person_search"},
     {text: "Agenda Aanpassen", href: "", symbol: "edit_calendar"},
-    {text: "Forum Moderatie", href:  "", symbol: "shield"}
+    {text: "Forum Moderatie", href:  "", symbol: "shield"},
+    { text: "Casussen Beheren", href: "/admin/casussenbeheer", symbol: "cases"}
   ]
   return (
     <Container title="Admin">
