@@ -21,6 +21,7 @@ const Page: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [modules, setModules] = useState<Module[]>([]);
     const [selectedModule, setSelectedModule] = useState<Module>();
+    const [showContent, setShowContent] = useState(true);
 
 
     const fetchEducatieModules = async () => {
@@ -42,6 +43,8 @@ const Page: React.FC = () => {
     };
     const handleModuleClick = (module: Module) => {
         setSelectedModule(module);
+        setIsMenuOpen(false);
+        setShowContent(true);
     };
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,7 +56,9 @@ const Page: React.FC = () => {
     );
 
     const handleMenuToggle = () => {
+        console.log("menu");
         setIsMenuOpen((prevIsMenuOpen) => !prevIsMenuOpen);
+        setShowContent((prevIsContentShown) => !prevIsContentShown);
     };
 
     useEffect(() => {
@@ -89,7 +94,8 @@ const Page: React.FC = () => {
         <Container title="Educatie">
             <div className={styles.container}>
 
-                <div className={styles.hamburgerIcon} onClick={handleMenuToggle}>
+                <div className={styles.hamburgerIcon}
+                    onClick={handleMenuToggle}>
                     <Image
                         src={hamburgerMenu}
                         alt=""
@@ -97,7 +103,7 @@ const Page: React.FC = () => {
                         height={50}
                     />
                 </div>
-                {(isMenuOpen || windowWidth >= 451) && (
+                {(isMenuOpen || windowWidth >= 751) && (
                     <div className={styles.searchBar}>
                         <div>
                             <Image className={styles.searchIcon} src={searchIcon} alt="" />
@@ -113,7 +119,7 @@ const Page: React.FC = () => {
                 )}
 
                 <div className={styles.contentContainer}>
-                    {(isMenuOpen || windowWidth >= 451) && (
+                    {(isMenuOpen || windowWidth >= 751) && (
                         <div className={styles.moduleList}>
                             {filteredModules.map((module) => (
                                 <div
@@ -126,11 +132,13 @@ const Page: React.FC = () => {
                             ))}
                         </div>
                     )}
+                    {(showContent) && (
+                        <div>
+                            <div className={styles.moduleTitle}>{selectedModule?.title}</div>
+                            <div className={styles.moduleInfo}>{selectedModule?.description}</div>
+                        </div>
+                    )}
 
-                    <div>
-                        <div className={styles.moduleTitle}>{selectedModule?.title}</div>
-                        <div className={styles.moduleInfo}>{selectedModule?.description}</div>
-                    </div>
                 </div>
 
             </div>

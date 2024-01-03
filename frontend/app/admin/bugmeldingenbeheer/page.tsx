@@ -35,6 +35,7 @@ const Page = () => {
     const [currentUserId, setCurrentUserId] = useState(0);
     const [titleIsEmpty, setTitleIsEmpty] = useState(false);
     const [descIsEmpty, setDescIsEmpty] = useState(false);
+    const [showMessage, setShowMessage] = useState(false);
 
 
 
@@ -171,6 +172,9 @@ const Page = () => {
 
         setBugReportsWithUserId(combinedData);
         setBugReportsWithUserIdUnfiltered(combinedData);
+        if (window.innerWidth < 650) {
+            setShowMessage(true);
+        }
         setIsLoading(false);
     };
     const sortData = () => {
@@ -249,6 +253,10 @@ const Page = () => {
 
     if (isLoading) {
         return <div>Laden...</div>;
+    }
+
+    if (showMessage) {
+        return <h1>Deze pagina is alleen toegangelijk op een groter beeldscherm</h1>
     }
     return (
         <Container title="Bug meldingen beheer">

@@ -350,13 +350,14 @@ const Page = () => {
             </div>
           </div>
         </div>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <div className={styles.tourDiv}>
+          <Link href="/tour">
+            <span className={styles.tourButton}>Ga naar de tour</span>
+          </Link>
+        </div>
       </div>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      <div className={styles.tourDiv}>
-        <Link href="/tour">
-          <span className={styles.tourButton}>Ga naar de tour</span>
-        </Link>
-      </div>
+
     </Container>
   );
 };

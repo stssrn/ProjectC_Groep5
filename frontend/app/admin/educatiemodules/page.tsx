@@ -21,6 +21,7 @@ const Page = () => {
     const [descIsEmpty, setDescIsEmpty] = useState(false);
     const [showCreateModule, setShowCreateModule] = useState(false);
     const [newModule, setNewModule] = useState<EducatieModule>({ id: 0, title: '', description: '' });
+    const [showMessage, setShowMessage] = useState(false);
 
 
     const dialogTitle = useId();
@@ -109,6 +110,20 @@ const Page = () => {
         setEducatieModules(sortedData);
     };
 
+
+    const sortArray = () => {
+        const sortedModules = [...educatieModules];
+        sortedModules.sort((a, b) => {
+            if (sortOrder === 'asc') {
+                return (a?.id || 0) - (b?.id || 0);
+            } else {
+                return (b?.id || 0) - (a?.id || 0);
+            }
+        });
+
+        setEducatieModules(sortedModules);
+    };
+
     const filterData = () => {
         const filteredData = educatieModulesUnfiltered.filter((module) =>
             module?.id?.toString().includes(searchQuery.toLowerCase()) ||
@@ -167,12 +182,17 @@ const Page = () => {
     };
 
 
+
     useEffect(() => {
         const fetchData = async () => {
             const modules = await fetchEducatieModules();
             if (modules) {
                 setEducatieModules(modules);
                 setEducatieModulesUnfiltered(modules);
+            }
+
+            if (window.innerWidth < 650) {
+                setShowMessage(true);
             }
             setIsLoading(false);
         };
@@ -181,7 +201,8 @@ const Page = () => {
 
     useEffect(() => {
         if (educatieModules.length > 0) {
-            sortData();
+            if (sortCriteria === 'id') sortArray();
+            else sortData();
         }
     }, [educatieModules, sortCriteria, sortOrder]);
 
@@ -195,6 +216,10 @@ const Page = () => {
 
     if (isLoading) {
         return <div>Laden...</div>;
+    }
+
+    if (showMessage) {
+        return <h1>Deze pagina is alleen toegangelijk op een groter beeldscherm</h1>
     }
 
     return (
@@ -259,7 +284,7 @@ const Page = () => {
                                     className={styles.edit}
                                     onClick={() => {
                                         setCurrentModule(module);
-                                        setShowDialog(true)
+                                        setShowDialog(true);
                                     }}
                                 >
                                     <i className="symbol">edit</i>

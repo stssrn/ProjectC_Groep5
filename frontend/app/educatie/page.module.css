@@ -8,7 +8,7 @@
     padding: 15px;
     border-bottom: 1px solid var(--g500);
     display: flex;
-    align-items: center; 
+    align-items: center;
 }
 
 .inputBox {
@@ -46,15 +46,16 @@
     transition: background-color 0.3s ease;
 }
 
-    .moduleItem:hover {
-        background-color: rgba(0, 0, 0, 0.05);
-    }
+.moduleItem:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
 
 .moduleInfo {
     padding: 20px;
     flex: 2;
     margin-left: 40px;
     font-size: 20px;
+
 }
 
 .moduleTitle {
@@ -62,6 +63,7 @@
     flex: 2;
     text-align: center;
     font-size: 40px;
+
 }
 
 @media (max-width: 450px) {
@@ -72,11 +74,26 @@
     .searchIcon {
         display: none;
     }
+
+    .hamburgerIcon {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+
+    }
+
+    .moduleInfo {
+        overflow-wrap: break-word;
+    }
+
+    .moduleTitle {
+        overflow-wrap: break-word;
+    }
 }
 
 
-@media (min-width: 451px)
-{
+@media (min-width: 751px) {
     .hamburgerIcon {
         display: none;
     }
