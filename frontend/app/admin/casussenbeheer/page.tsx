@@ -2,6 +2,7 @@
 import styles from "./page.module.css";
 import Container from "@/app/components/Container";
 import { useState, useEffect, useId } from "react";
+import TextareaAutosize from 'react-textarea-autosize';
 
 interface Casus {
     id?: number;
@@ -14,8 +15,11 @@ interface Casus {
 const Page = () => {
     const [currentCasus, setCurrentCasus] = useState<Casus | undefined>();
     const [casussen, setCasussen] = useState<Casus[]>([]);
+    const [filteredCasussen, setFilteredCasussen] = useState<Casus[]>([]);
+    const [filterType, setFilterType] = useState("name");
     const [isLoading, setIsLoading] = useState(true);
     const [showDialog, setShowDialog] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
 
     const dialogName = useId();
     const dialogDescription = useId();
@@ -32,8 +36,22 @@ const Page = () => {
         }
         const data = await response.json();
         setCasussen(data);
+        setFilteredCasussen(data);
         setIsLoading(false);
     };
+
+    const handleSearch = (event: any) => {
+        setSearchTerm(event.target.value);
+        let filtered;
+        if (filterType === "id") {
+            const searchId = parseInt(event.target.value, 10);
+            filtered = casussen.filter(casus => casus.id === searchId);
+        } else {
+            filtered = casussen.filter(casus => casus.name.toLowerCase().includes(event.target.value.toLowerCase()));
+        }
+        setFilteredCasussen(filtered);
+    };
+
 
     const openNewCasusDialog = () => {
         setCurrentCasus({ name: '', description: '', treatment: '', url: '' });
@@ -75,6 +93,12 @@ const Page = () => {
             console.error('Error: No ID provided for deletion.');
             return;
         }
+
+        if (!window.confirm("Weet je zeker dat je deze casus wilt verwijderen?")) {
+            return;
+        }
+
+
         const response = await fetch(`/api/casussenBeheer?id=${id}`, { method: 'DELETE' });
         if (!response.ok) {
             console.error('Failed to delete casus');
@@ -94,7 +118,21 @@ const Page = () => {
     return (
         <Container title="Casussen Beheer">
             <div className={styles.filterOptions}>
-                {/*ik zal hier nog filter etc toevoegen*/}
+                <select
+                    className={styles.select}
+                    value={filterType}
+                    onChange={(e) => setFilterType(e.target.value)}
+                >
+                    <option value="name">Naam</option>
+                    <option value="id">ID</option>
+                </select>
+                <input
+                    type={filterType === "id" ? "number" : "text"}
+                    placeholder={`Zoek op ${filterType === "id" ? "ID" : "naam"}...`}
+                    className={styles.search}
+                    value={searchTerm}
+                    onChange={handleSearch}
+                />
             </div>
             <button className={styles.add} onClick={openNewCasusDialog}>
                 Nieuwe Casus Toevoegen
@@ -111,7 +149,7 @@ const Page = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {casussen.map((casus) => (
+                    {filteredCasussen.map((casus) => (
                         <tr key={casus.id}>
                             <td>{casus.id}</td>
                             <td>{casus.name}</td>
@@ -133,29 +171,27 @@ const Page = () => {
                 <div className={styles.dialogBackdrop}>
                     <div className={styles.dialog}>
                         <label htmlFor={dialogName}>Naam</label>
-                        <input
-                            type="text"
+                        <textarea
                             id={dialogName}
                             value={currentCasus?.name || ""}
                             onChange={(e) => updateField('name', e.target.value)}
                         />
                         <label htmlFor={dialogDescription}>Beschrijving</label>
-                        <input
-                            type="text"
+                        <TextareaAutosize
+                            maxRows={5}
                             id={dialogDescription}
                             value={currentCasus?.description || ""}
                             onChange={(e) => updateField('description', e.target.value)}
                         />
                         <label htmlFor={dialogTreatment}>Behandeling</label>
-                        <input
-                            type="text"
+                        <TextareaAutosize
+                            maxRows={5}
                             id={dialogTreatment}
                             value={currentCasus?.treatment || ""}
                             onChange={(e) => updateField('treatment', e.target.value)}
                         />
                         <label htmlFor={dialogUrl}>URL</label>
-                        <input
-                            type="text"
+                        <textarea
                             id={dialogUrl}
                             value={currentCasus?.url || ""}
                             onChange={(e) => updateField('url', e.target.value)}

@@ -173,4 +173,14 @@
     font-weight: bold;
     text-transform: uppercase;
   }
+
+  .filterOptions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .search {
+    margin-right: 0;
+    width: 100%;
+  }
 }
