@@ -43,15 +43,20 @@ const Page = () => {
     const handleSearch = (event: any) => {
         setSearchTerm(event.target.value);
         let filtered;
+
         if (filterType === "id") {
-            const searchId = parseInt(event.target.value, 10);
-            filtered = casussen.filter(casus => casus.id === searchId);
+            if (event.target.value.trim() === "") {
+                filtered = casussen;
+            } else {
+                const searchId = parseInt(event.target.value, 10);
+                filtered = casussen.filter(casus => casus.id === searchId);
+            }
         } else {
             filtered = casussen.filter(casus => casus.name.toLowerCase().includes(event.target.value.toLowerCase()));
         }
+
         setFilteredCasussen(filtered);
     };
-
 
     const openNewCasusDialog = () => {
         setCurrentCasus({ name: '', description: '', treatment: '', url: '' });
