@@ -45,19 +45,23 @@
 }
 
 .bugMelden {
-    margin-top: 15px;
-    display: block;
-    color: var(--g100);
-    background-color: var(--p500);
-    text-align: center;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 25px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin-top: 15px;
+  display: block;
+  color: var(--g100);
+  background-color: var(--p500);
+  text-align: center;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-.bugButton{
-    text-align: center;
-    font-size: 30px;
-    color: white;
+.bugButton {
+  text-align: center;
+  font-size: 30px;
+  color: white;
+  display: block;
+  /* Make the anchor tag a block-level element to fill the entire container */
+  text-decoration: none;
+  /* Remove default underline */
 }

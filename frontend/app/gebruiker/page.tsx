@@ -7,6 +7,8 @@ import { useSession } from 'next-auth/react';
 
 import MaleDefaultPhoto from "./male.svg";
 import FemaleDefaultPhoto from "./female.svg";
+import { Router } from "react-router-dom";
+import Link from "next/link";
 
 type UserData = {
   id: number;
@@ -348,8 +350,14 @@ const Page = () => {
             </div>
           </div>
         </div>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <div className={styles.tourDiv}>
+          <Link href="/tour">
+            <span className={styles.tourButton}>Ga naar de tour</span>
+          </Link>
+        </div>
       </div>
-      {error && <p style={{ color: "red" }}>{error}</p>}
+
     </Container>
   );
 };

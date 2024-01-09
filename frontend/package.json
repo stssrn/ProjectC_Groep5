@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "prisma generate && next dev",
-    "build": "prisma generate && prisma db push && prisma db seed && next build",
+    "build": "prisma generate && prisma db push && next build",
     "fortesting": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint"
@@ -41,7 +41,7 @@
     "@types/react-dom": "^18.2.15",
     "eslint": "^8",
     "eslint-config-next": "13.5.4",
-    "prisma": "^5.7.0",
+    "prisma": "^5.7.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   }
