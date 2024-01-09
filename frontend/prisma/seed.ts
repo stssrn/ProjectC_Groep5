@@ -1,3 +1,4 @@
+/*
 import { PrismaClient } from '@prisma/client';
 import { hashPassword } from '../lib/passwordUtils';
 import getRandomAccounts from '../lib/accounts';
@@ -175,8 +176,8 @@ seed()
     prisma.$disconnect();
     process.exit(1);
   });
-  
- /*
+  */
+/*
 import { PrismaClient, Event } from '@prisma/client';
 
 // Instantiate the PrismaClient
@@ -184,45 +185,118 @@ const prisma = new PrismaClient();
 
 // Function to generate a random date within the year 2024
 const getRandomDateIn2024 = () => {
-  const startDate = new Date('2024-01-01T00:00:00Z').getTime();
-  const endDate = new Date('2024-12-31T23:59:59Z').getTime();
-  const randomTime = startDate + Math.random() * (endDate - startDate);
-  return new Date(randomTime);
+ const startDate = new Date('2024-01-01T00:00:00Z').getTime();
+ const endDate = new Date('2024-12-31T23:59:59Z').getTime();
+ const randomTime = startDate + Math.random() * (endDate - startDate);
+ return new Date(randomTime);
 };
 
 // Define the data for the Event model (excluding 'id' field)
 const eventData: Omit<Event, 'id'>[] = [
-  {
-    date: getRandomDateIn2024(),
-    name: 'Project Kickoff',
-    description: 'Kickoff meeting for the new project.',
-  },
-  {
-    date: getRandomDateIn2024(),
-    name: 'Company Anniversary Celebration',
-    description: 'Celebrating our successful years!',
-  },
+ {
+   date: getRandomDateIn2024(),
+   name: 'Project Kickoff',
+   description: 'Kickoff meeting for the new project.',
+ },
+ {
+   date: getRandomDateIn2024(),
+   name: 'Company Anniversary Celebration',
+   description: 'Celebrating our successful years!',
+ },
 ];
 
 // Define the seeding function
 const seed = async () => {
-  try {
-    // Seed data for the Event model
-    for (const data of eventData) {
-      await prisma.event.create({
-        data,
-      });
-    }
+ try {
+   // Seed data for the Event model
+   for (const data of eventData) {
+     await prisma.event.create({
+       data,
+     });
+   }
 
-    console.log('Seeding completed successfully.');
-  } catch (error) {
-    console.error('Error seeding data:', error);
-  } finally {
-    // Disconnect the PrismaClient after seeding
-    await prisma.$disconnect();
-  }
+   console.log('Seeding completed successfully.');
+ } catch (error) {
+   console.error('Error seeding data:', error);
+ } finally {
+   // Disconnect the PrismaClient after seeding
+   await prisma.$disconnect();
+ }
 };
 
 // Execute the seeding function
 seed();
+*/
+/*
+// Import necessary modules
+import { PrismaClient } from '@prisma/client';
+
+// Instantiate PrismaClient
+const prisma = new PrismaClient();
+
+// Define the seed function
+const seed = async () => {
+  try {
+    // Seed data
+    const bugData = [
+      { date: new Date(), title: 'Bug 1', description: 'Description for Bug 1' },
+      { date: new Date(), title: 'Bug 2', description: 'Description for Bug 2' },
+      { date: new Date(), title: 'Bug 3', description: 'Description for Bug 3' },
+      // Add more entries as needed
+    ];
+
+    // Use PrismaClient to create bugs in the database
+    await Promise.all(
+      bugData.map(async (bug) => {
+        await prisma.bug.create({ data: bug });
+      })
+    );
+
+    console.log('Seed completed successfully!');
+  } catch (error) {
+    console.error('Error seeding database:', error);
+  } finally {
+    // Disconnect PrismaClient to avoid resource leaks
+    await prisma.$disconnect();
+  }
+};
+
+// Run the seed function
+seed();
+*/
+
+/*
+//educatie module seeder
+import { PrismaClient } from '@prisma/client';
+
+const prisma = new PrismaClient();
+
+async function main() {
+  // Seed data
+  const moduleData = [
+    { title: 'Angststoornis', description: 'Beschrijving van het herkennen van een angststoornis' },
+    { title: 'Burn out', description: 'Beschrijving van burn out klachten' },
+    { title: 'Psychose', description: 'Beschrijving van een psychose' },
+    { title: 'Educatie module 4', description: 'Beschrijving van  een educatie module' },
+    { title: 'Educatie module 5', description: 'Beschrijving van nog een educatie module' }
+    // Add more modules as needed
+  ];
+
+  // Insert data into the database
+  for (const data of moduleData) {
+    await prisma.educatie_modules.create({
+      data,
+    });
+  }
+
+  console.log('Seed data inserted successfully');
+}
+
+main()
+  .catch((e) => {
+    throw e;
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
 */

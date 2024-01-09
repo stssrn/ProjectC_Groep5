@@ -34,15 +34,15 @@
   width: 100%;
 }
 
-.userInfo > div {
+.userInfo>div {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 10px;
 }
 
-.userInfo > div > p,
-.userInfo > div > label {
+.userInfo>div>p,
+.userInfo>div>label {
   text-align: left;
   margin: 0;
 }
@@ -77,7 +77,9 @@
 
 .editButton:hover,
 .saveButton:hover,
-.cancelButton:hover {
+.cancelButton:hover,
+.tourButton:hover,
+.tourDiv:hover {
   background-color: rgb(172, 255, 47);
   color: black;
 }
@@ -130,6 +132,27 @@
   resize: vertical;
 }
 
+.tourDiv {
+  margin-top: 15px;
+  display: block;
+  color: var(--g100);
+  background-color: var(--p500);
+  text-align: center;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 15%;
+  margin-right: 5%;
+}
+
+.tourButton {
+  text-align: center;
+  color: white;
+  display: block;
+  text-decoration: none;
+}
+
 @media (max-width: 600px) {
   .circularProfilePhotoContainer {
     width: min-content;
@@ -140,14 +163,14 @@
     align-items: flex-start;
   }
 
-  .userInfo > div {
+  .userInfo>div {
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
   }
 
-  .userInfo > div > p,
-  .userInfo > div > label {
+  .userInfo>div>p,
+  .userInfo>div>label {
     text-align: left;
     width: 100%;
   }
@@ -169,5 +192,20 @@
   .inputField,
   .textareaField {
     width: 100%;
+  }
+
+  .tourDiv {
+    width: 60%;
+    margin-right: 0;
+  }
+
+  .tourButton {
+    display: flex;
+    justify-content: center;
+    color: white;
+    text-decoration: none;
+    padding: 8px;
+    height: 100%;
+    box-sizing: border-box;
   }
 }
