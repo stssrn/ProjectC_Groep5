@@ -48,7 +48,6 @@ const Page = () => {
   const [loading, setLoading] = useState(false);
 
   const checkboxId = useId();
-  const router = useRouter();
 
   const [showPopup, setShowPopup] = useState(false);
   const [userData, setUserData] = useState<UserData>(defaultData);
