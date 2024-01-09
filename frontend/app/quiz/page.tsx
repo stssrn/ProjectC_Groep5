@@ -1,9 +1,10 @@
 'use client'
+
 import { useEffect, useState } from 'react';
 import Container from '../components/Container';
 import styles from './page.module.css';
 import { useSession } from 'next-auth/react';
-import prisma from "../../lib/prisma";
+import prisma from '../../lib/prisma';
 
 interface Quiz {
     id: number;
@@ -24,63 +25,71 @@ interface UserAnswers {
     }[];
 }
 
-type UserData = {
+interface UserData {
     id: number;
     email: string;
     password: string;
     bio: string;
     points: number;
-    profilePhoto: "MALE" | "FEMALE";
+    profilePhoto: 'MALE' | 'FEMALE';
     profilePhotoUrl?: string;
     firstName: string;
     lastName: string;
     username: string;
     registrationDate: string;
-};
+}
 
 const Page: React.FC = () => {
     const { data: session } = useSession();
-    // const [userId, setUserId] = useState<number | null>();
     const [user, setUserData] = useState<UserData | null>();
     const [quiz, setQuiz] = useState<Quiz>();
+    const [quizUserId, setQuizUserId] = useState<number | null>(null);
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [showScore, setShowScore] = useState(false);
     const [selectedAnswer, setSelectedAnswer] = useState<UserAnswers | null>(null);
     const [progress, setProgress] = useState(0);
     const [points, setPoints] = useState(0);
+    const [quizUserCreated, setQuizUserCreated] = useState(false);
 
     useEffect(() => {
-        fetchQuiz(1);
+        const fetchQuizAndUser = async () => {
+            try {
+                if (session?.user?.id) {
+                    const userResponse = await fetch(`/api/quizzes/fetchUser?id=${session?.user?.id}`);
+                    if (!userResponse.ok) throw new Error('Failed to fetch user data');
+                    const userData: { user: UserData } = await userResponse.json();
+                    setUserData(userData.user);
 
-        if (session?.user?.id) {
-            fetchUser(session?.user?.id);
-        }
+                    const quizResponse = await fetch(`/api/quizzes/fetchById?userId=${session?.user?.id}`);
+                    if (quizResponse.status === 404) {
+                        console.log("All quizzes completed")
+                    }
+                    if (!quizResponse.ok && quizResponse.status !== 404) throw new Error('Failed to fetch quiz');
+                    const data: { quiz: Quiz } = await quizResponse.json();
+                    setQuiz(data.quiz);
+                }
+            } catch (error) {
+                console.error('Fetch data error:', error);
+            }
+        };
+
+        fetchQuizAndUser();
     }, [session]);
 
-    const fetchQuiz = async (Id: number) => {
-        try {
-            const response = await fetch(`/api/quizzes/fetchById?id=${Id}`);
-            if (!response.ok) throw new Error("Failed to fetch quiz");
+    useEffect(() => {
+        const initializeQuizUser = async () => {
+            try {
+                if (quiz && user && !quizUserCreated) {
+                    await createQuizUser();
+                    setQuizUserCreated(true);
+                }
+            } catch (error) {
+                console.error('Initialize quiz user error:', error);
+            }
+        };
 
-            const data: { quiz: Quiz } = await response.json();
-            setQuiz(data.quiz); // Assuming the API returns the entire quiz data
-        } catch (error) {
-            console.error('Fetch quiz error:', error);
-            // Handle error, e.g., show an error message to the user
-        }
-    };
-
-    const fetchUser = async (userId: number) => {
-        try {
-            const response = await fetch(`/api/quizzes/fetchUser?id=${userId}`);
-            if (!response.ok) throw new Error("Failed to fetch user data");
-
-            const data: { user: UserData } = await response.json();
-            setUserData(data.user);
-        } catch (error) {
-            console.error("Error fetching user data:", error);
-        }
-    };
+        initializeQuizUser();
+    }, [quiz, user, quizUserCreated]);
 
     const rewardPoints = async () => {
         try {
@@ -102,43 +111,88 @@ const Page: React.FC = () => {
             const result = await response.json();
             console.log(result.message);
         } catch (error) {
-            console.error('Error updating points:', error);
+            console.error('Reward points error:', error);
         }
     };
 
-    const saveToQuizUsers = async () => {
+    const createQuizUser = async () => {
         try {
-            const response = await fetch("api/quizUser", {
-                method: "POST",
+            if (!quiz || !user) return;
+
+            const response = await fetch('api/quizUser', {
+                method: 'POST',
                 headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
                     quizId: quiz?.id,
                     userId: Number(session?.user?.id),
-                    isCompleted: true,
-                    pointsScored: points,
+                    isCompleted: false,
+                    pointsScored: 0,
                 }),
             });
 
-            if (!response.ok) {
-                throw new Error("Failed to add bug and/or user data");
+            if (response.ok) {
+                const createdQuizUser = await response.json();
+                console.log('Created quizUser entry:', createdQuizUser);
+
+                if (createdQuizUser.quizUserId) {
+                    setQuizUserId(createdQuizUser.quizUserId);
+                } else {
+                    console.error('quizUserId not found in the response.');
+                }
+            } else if (response.status === 409) {
+                const existingQuizUser = await response.json();
+                console.log('Existing quizUser entry:', existingQuizUser);
+
+                if (existingQuizUser.quizUserId) {
+                    setQuizUserId(existingQuizUser.quizUserId);
+                } else {
+                    console.error('quizUserId not found in the response.');
+                }
+            } else {
+                throw new Error('Failed to add quizUser');
             }
         } catch (error) {
-            console.error("Error updating bug and/or user data:", error);
+            console.error('Create quizUser error:', error);
+        }
+    };
+
+    const updateQuizUser = async () => {
+        try {
+            const response = await fetch(`api/quizUser`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id: quizUserId,
+                    userId: Number(session?.user?.id),
+                    quizId: quiz?.id,
+                    earnedPoints: points,
+                }),
+            });
+
+            if (response.ok) {
+                const updatedQuizUser = await response.json();
+                console.log('Updated quizUser entry:', updatedQuizUser);
+            } else {
+                throw new Error('Failed to update quizUser data');
+            }
+        } catch (error) {
+            console.error('Update quizUser error:', error);
         }
     };
 
     const handleAnswerClick = (userAnswer: string) => {
         const currentAnswers = selectedAnswer ? [...selectedAnswer.answers] : [];
-
-        const answerExists = currentAnswers.some(answer => answer.id === currentQuestion);
+        const answerExists = currentAnswers.some((answer) => answer.id === currentQuestion);
 
         if (!answerExists) {
             const newAnswer = {
                 id: currentQuestion,
                 answer: userAnswer,
-                isCorrect: userAnswer === quiz?.questions[currentQuestion].correctAnswer
+                isCorrect: userAnswer === quiz?.questions[currentQuestion].correctAnswer,
             };
 
             setSelectedAnswer({
@@ -150,7 +204,7 @@ const Page: React.FC = () => {
             updatedAnswers[currentQuestion] = {
                 id: currentQuestion,
                 answer: userAnswer,
-                isCorrect: userAnswer === quiz?.questions[currentQuestion].correctAnswer
+                isCorrect: userAnswer === quiz?.questions[currentQuestion].correctAnswer,
             };
 
             setSelectedAnswer({ answers: updatedAnswers });
@@ -169,15 +223,15 @@ const Page: React.FC = () => {
             const newProgress = ((currentQuestion + 1) / (quiz?.questions.length ?? 0)) * 100;
             setProgress(newProgress);
         } else {
-            const pointsEarned = selectedAnswer?.answers?.reduce((count, answer) => count + (answer.isCorrect ? 1 : 0), 0);
-            setPoints(pointsEarned ?? 0);
+            const pointsEarned = selectedAnswer?.answers?.reduce((count, answer) => count + (answer.isCorrect ? 1 : 0), 0) ?? 0;
+            setPoints(quiz?.points ?? 100 / pointsEarned * (quiz?.questions.length ?? 10) ?? 0);
             setShowScore(true);
         }
     };
 
     const finishQuiz = () => {
         rewardPoints();
-        saveToQuizUsers();
+        updateQuizUser();
         // window.location.href = '/dashboard';
     };
 
@@ -188,7 +242,9 @@ const Page: React.FC = () => {
                     <div>
                         {showScore ? (
                             <div>
-                                <h2>Score: {selectedAnswer?.answers?.reduce((count, answer) => count + (answer.isCorrect ? 1 : 0), 0)}/{quiz?.questions.length}</h2>
+                                <h2>
+                                    Score: {selectedAnswer?.answers?.reduce((count, answer) => count + (answer.isCorrect ? 1 : 0), 0)}/{quiz?.questions.length}
+                                </h2>
                                 <ul>
                                     {quiz?.questions.map((quiz, index) => (
                                         <li key={index}>
@@ -197,7 +253,7 @@ const Page: React.FC = () => {
                                                 {selectedAnswer?.answers[index]?.answer === quiz.correctAnswer
                                                     ? `Correct (jouw antwoord: ${selectedAnswer?.answers[index]?.answer})`
                                                     : selectedAnswer
-                                                        ? `Incorrect (jouw antwoord: ${selectedAnswer?.answers[index]?.answer ?? "-"}, juiste answer: ${quiz.correctAnswer})`
+                                                        ? `Incorrect (jouw antwoord: ${selectedAnswer?.answers[index]?.answer ?? '-'}, juiste answer: ${quiz.correctAnswer})`
                                                         : `Niet beantwoord (jouw antwoord: ${quiz.correctAnswer})`}
                                             </p>
                                         </li>

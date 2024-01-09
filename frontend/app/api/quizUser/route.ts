@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../lib/prisma';
+import { equal } from 'assert';
 
 export async function GET(request: Request): Promise<NextResponse> {
     try {
@@ -53,28 +54,41 @@ export async function POST(request: Request): Promise<NextResponse> {
         if (request.method === "POST") {
             const body = await request.json();
             const { quizId, userId, isCompleted, pointsScored } = body;
-            try {
-                // Create a new AgendaUser entry
-                const newQuizUser = await prisma.quizUser.create({
-                    data: { quizId, userId, isCompleted, pointsScored },
-                });
 
+            // Check if an entry already exists for the given user and quiz
+            const existingQuizUser = await prisma.quizUser.findFirst({
+                where: {
+                    userId: Number(userId),
+                    quizId: Number(quizId),
+                },
+            });
+
+            if (existingQuizUser) {
+                // Entry already exists, you may want to update it or return an error
                 return new NextResponse(
                     JSON.stringify({
-                        quizUserId: newQuizUser.id,
-                        quizId: newQuizUser.quizId,
-                        userId: newQuizUser.userId,
-                        isCompleted: newQuizUser.isCompleted,
-                        pointsScored: newQuizUser.pointsScored,
+                        message: 'QuizUser entry already exists',
+                        quizUserId: existingQuizUser.id
                     }),
-                    { status: 201 } // 201 Created status code for successful creation
+                    { status: 409 } // 409 Conflict status code for resource conflict
                 );
-            } catch (error) {
-                console.error("Create bugUser error:", error);
-                return new NextResponse(JSON.stringify({ message: "Server error" }), {
-                    status: 500,
-                });
             }
+
+            // Create a new QuizUser entry
+            const newQuizUser = await prisma.quizUser.create({
+                data: { quizId, userId, isCompleted, pointsScored },
+            });
+
+            return new NextResponse(
+                JSON.stringify({
+                    quizUserId: newQuizUser.id,
+                    quizId: newQuizUser.quizId,
+                    userId: newQuizUser.userId,
+                    isCompleted: newQuizUser.isCompleted,
+                    pointsScored: newQuizUser.pointsScored,
+                }),
+                { status: 201 } // 201 Created status code for successful creation
+            );
         } else {
             return new NextResponse(
                 JSON.stringify({ message: 'Method error' }),
@@ -82,10 +96,56 @@ export async function POST(request: Request): Promise<NextResponse> {
             );
         }
     } catch (error) {
-        console.error("Post error:", error);
+        console.error("Create quizUser error:", error);
         return new NextResponse(JSON.stringify({ message: "Server error" }), {
             status: 500,
         });
+    }
+}
+
+export async function PUT(request: Request): Promise<NextResponse> {
+    try {
+        if (request.method === 'PUT') {
+            const body = await request.json();
+            const { id, userId, quizId, earnedPoints } = body;
+
+            // Find the existing QuizUser entry
+            const existingQuizUser = await prisma.quizUser.findFirst({
+                where: { id, userId, quizId },
+            });
+
+            if (!existingQuizUser) {
+                return new NextResponse(
+                    JSON.stringify({ message: 'QuizUser entry not found' }),
+                    { status: 404 }
+                );
+            }
+
+            // Update the QuizUser entry
+            const updatedQuizUser = await prisma.quizUser.update({
+                where: { id },
+                data: {
+                    pointsScored: earnedPoints,
+                    isCompleted: true,
+                },
+            });
+
+            return new NextResponse(
+                JSON.stringify(updatedQuizUser),
+                { status: 200, headers: { 'Content-Type': 'application/json' } }
+            );
+        } else {
+            return new NextResponse(
+                JSON.stringify({ message: 'Method error' }),
+                { status: 405, headers: { 'Content-Type': 'application/json' } }
+            );
+        }
+    } catch (error) {
+        console.error('Update quizUser error:', error);
+        return new NextResponse(
+            JSON.stringify({ message: 'Server error' }),
+            { status: 500, headers: { 'Content-Type': 'application/json' } }
+        );
     }
 }
 

@@ -1,0 +1,102 @@
+[
+    {
+        "options": [
+            "Cognitieve gedragstherapie",
+            "Elektroconvulsietherapie",
+            "Farmacotherapie",
+            "Psychoanalyse"
+        ],
+        "question": "Welke behandelingsvorm wordt vaak gebruikt bij depressie in de GGZ?",
+        "correctAnswer": "Cognitieve gedragstherapie"
+    },
+    {
+        "options": [
+            "Jaarlijks",
+            "Elke 5 jaar",
+            "Elke 10 jaar",
+            "Bij elke nieuwe behandeling"
+        ],
+        "question": "Hoe vaak wordt een behandelplan in de GGZ doorgaans herzien?",
+        "correctAnswer": "Bij elke nieuwe behandeling"
+    },
+    {
+        "options": [
+            "Psycholoog",
+            "Psychiater",
+            "Huisarts",
+            "Sociaal werker"
+        ],
+        "question": "Wie kan een verwijzing geven voor een GGZ-behandeling in Nederland?",
+        "correctAnswer": "Huisarts"
+    },
+    {
+        "options": [
+            "Medicatie",
+            "Psychotherapie",
+            "Lichaamsbeweging",
+            "Alle bovenstaande antwoorden"
+        ],
+        "question": "Wat kan worden opgenomen in een alomvattend behandelplan voor psychische aandoeningen?",
+        "correctAnswer": "Alle bovenstaande antwoorden"
+    },
+    {
+        "options": [
+            "Stressmanagement",
+            "Angststoornissen",
+            "Relatietherapie",
+            "Alcoholverslaving"
+        ],
+        "question": "Wat kan worden behandeld in de GGZ naast depressie en schizofrenie?",
+        "correctAnswer": "Alle bovenstaande antwoorden"
+    },
+    {
+        "options": [
+            "Klinische psycholoog",
+            "Psychiater",
+            "Orthopedagoog",
+            "Verpleegkundige"
+        ],
+        "question": "Welke professional is gespecialiseerd in het diagnosticeren en behandelen van psychische aandoeningen bij kinderen?",
+        "correctAnswer": "Klinische psycholoog"
+    },
+    {
+        "options": [
+            "Antidepressiva",
+            "Antipsychotica",
+            "Antianxiolytica",
+            "Antihypertensiva"
+        ],
+        "question": "Welk type medicatie kan worden voorgeschreven voor de behandeling van angststoornissen in de GGZ?",
+        "correctAnswer": "Antianxiolytica"
+    },
+    {
+        "options": [
+            "Mindfulness",
+            "Yoga",
+            "Progressieve spierontspanning",
+            "Alle bovenstaande antwoorden"
+        ],
+        "question": "Welke vormen van niet-farmacologische therapie worden vaak gebruikt in de GGZ?",
+        "correctAnswer": "Alle bovenstaande antwoorden"
+    },
+    {
+        "options": [
+            "Wet Bopz",
+            "Wet Zorg en Dwang",
+            "Wet Langdurige Zorg",
+            "Wet Maatschappelijke Ondersteuning"
+        ],
+        "question": "Welke wet regelt gedwongen opname in een psychiatrisch ziekenhuis in Nederland?",
+        "correctAnswer": "Wet Bopz"
+    },
+    {
+        "options": [
+            "Assertiviteitstraining",
+            "Gedragstherapie",
+            "E-health programma's",
+            "Cognitieve gedragstherapie"
+        ],
+        "question": "Welke vorm van therapie wordt vaak gebruikt om sociale vaardigheden te verbeteren?",
+        "correctAnswer": "Assertiviteitstraining"
+    }
+]

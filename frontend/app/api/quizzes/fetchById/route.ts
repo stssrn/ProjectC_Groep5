@@ -3,19 +3,29 @@ import prisma from "../../../../lib/prisma";
 
 export async function GET(request: Request): Promise<NextResponse> {
     const searchParams = new URL(request.url).searchParams;
-    const quizId = searchParams.get("id");
+    const userId = searchParams.get("userId");
 
-    if (!quizId || isNaN(Number(quizId))) {
-        return NextResponse.json({ message: "Invalid quiz ID" }, { status: 400 });
+    if (!userId || isNaN(Number(userId))) {
+        return NextResponse.json({ message: "Invalid user ID" }, { status: 400 });
     }
 
     try {
-        const quiz = await prisma.quiz.findUnique({
-            where: { id: Number(quizId) },
+        // Find the first quiz that the user hasn't finished or hasn't started yet
+        const quiz = await prisma.quiz.findFirst({
+            where: {
+                NOT: {
+                    QuizUser: {
+                        some: {
+                            userId: Number(userId),
+                            isCompleted: true,
+                        },
+                    },
+                },
+            },
         });
 
         if (!quiz) {
-            return NextResponse.json({ message: "Quiz not found" }, { status: 404 });
+            return NextResponse.json({ message: "All quizzes are completed" }, { status: 404 });
         }
 
         return NextResponse.json({ quiz }, { status: 200 });
