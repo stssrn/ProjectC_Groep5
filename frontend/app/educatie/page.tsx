@@ -7,29 +7,44 @@ import searchIcon from "./search_icon.svg";
 import hamburgerMenu from "./menu.png";
 
 interface Module {
-    name: string;
-    info: string;
+    id: number,
+    title: string;
+    description: string;
 }
 
 const Page: React.FC = () => {
-    const modules: Module[] = [
-        { name: "Module", info: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum." },
-        { name: "Test", info: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum." },
-        { name: "Banaan", info: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum." },
-        { name: "Rekenen", info: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum." },
-        { name: "Brein", info: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum." },
 
-    ];
 
-    const [selectedModule, setSelectedModule] = useState(modules[0]);
     const [searchTerm, setSearchTerm] = useState("");
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [windowWidth, setWindowWidth] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
+    const [modules, setModules] = useState<Module[]>([]);
+    const [selectedModule, setSelectedModule] = useState<Module>();
+    const [showContent, setShowContent] = useState(true);
 
 
+    const fetchEducatieModules = async () => {
+        try {
+            setIsLoading(true);
+            const response = await fetch(`/api/educatie?id=${0}`, {
+                method: "GET",
+            });
 
+            if (!response.ok) {
+                throw new Error("Failed to fetch educatie_modules data");
+            }
+
+            const data = await response.json();
+            return data.educatieModules;
+        } catch (error) {
+            console.error("Error fetching educatie_modules data:", error);
+        }
+    };
     const handleModuleClick = (module: Module) => {
         setSelectedModule(module);
+        setIsMenuOpen(false);
+        setShowContent(true);
     };
 
     const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,12 +52,26 @@ const Page: React.FC = () => {
     };
 
     const filteredModules = modules.filter((module) =>
-        module.name.toLowerCase().includes(searchTerm.toLowerCase())
+        module.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const handleMenuToggle = () => {
+        console.log("menu");
         setIsMenuOpen((prevIsMenuOpen) => !prevIsMenuOpen);
+        setShowContent((prevIsContentShown) => !prevIsContentShown);
     };
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const modules = await fetchEducatieModules();
+            if (modules) {
+                setModules(modules);
+                setSelectedModule(modules[0]);
+            }
+            setIsLoading(false);
+        };
+        fetchData();
+    }, []);
 
     useEffect(() => {
         const updateWindowWidth = () => {
@@ -55,21 +84,26 @@ const Page: React.FC = () => {
         return () => {
             window.removeEventListener("resize", updateWindowWidth);
         };
-    }, []); 
+    }, []);
+
+    if (isLoading) {
+        return <div>Laden...</div>;
+    }
 
     return (
         <Container title="Educatie">
             <div className={styles.container}>
 
-                <div className={styles.hamburgerIcon} onClick={handleMenuToggle}>
+                <div className={styles.hamburgerIcon}
+                    onClick={handleMenuToggle}>
                     <Image
                         src={hamburgerMenu}
                         alt=""
-                        width={50} 
-                        height={50} 
+                        width={50}
+                        height={50}
                     />
                 </div>
-                {(isMenuOpen || windowWidth >= 451) && (
+                {(isMenuOpen || windowWidth >= 751) && (
                     <div className={styles.searchBar}>
                         <div>
                             <Image className={styles.searchIcon} src={searchIcon} alt="" />
@@ -85,24 +119,26 @@ const Page: React.FC = () => {
                 )}
 
                 <div className={styles.contentContainer}>
-                    {(isMenuOpen || windowWidth >= 451) && (
+                    {(isMenuOpen || windowWidth >= 751) && (
                         <div className={styles.moduleList}>
                             {filteredModules.map((module) => (
                                 <div
-                                    key={module.name}
+                                    key={module.title}
                                     className={styles.moduleItem}
                                     onClick={() => handleModuleClick(module)}
                                 >
-                                    {module.name}
+                                    {module.title}
                                 </div>
                             ))}
                         </div>
                     )}
+                    {(showContent) && (
+                        <div>
+                            <div className={styles.moduleTitle}>{selectedModule?.title}</div>
+                            <div className={styles.moduleInfo}>{selectedModule?.description}</div>
+                        </div>
+                    )}
 
-                    <div>
-                        <div className={styles.moduleTitle}>{selectedModule.name}</div>
-                        <div className={styles.moduleInfo}>{selectedModule.info}</div>
-                    </div>
                 </div>
 
             </div>

@@ -7,6 +7,8 @@ import { useSession } from 'next-auth/react';
 
 import MaleDefaultPhoto from "./male.svg";
 import FemaleDefaultPhoto from "./female.svg";
+import { Router } from "react-router-dom";
+import Link from "next/link";
 
 type UserData = {
   id: number;
@@ -20,6 +22,7 @@ type UserData = {
   lastName: string;
   username: string;
   registrationDate: string;
+  isFirstTime: boolean;
 };
 
 const Page = () => {
@@ -34,6 +37,7 @@ const Page = () => {
     lastName: "",
     username: "",
     registrationDate: "",
+    isFirstTime: true,
   };
 
   const { data: session } = useSession();
@@ -61,13 +65,6 @@ const Page = () => {
       fetchUserData(session.user.id.toString());
     }
   }, [session]);
-
-  // useEffect(() => {
-  //   const userId = localStorage.getItem("userId");
-  //   if (userId) {
-  //     fetchUserData(userId);
-  //   }
-  // }, []);
 
   const fetchUserData = async (userId: string) => {
     try {
@@ -353,8 +350,13 @@ const Page = () => {
             </div>
           </div>
         </div>
+        {error && <p style={{ color: "red" }}>{error}</p>}
+        <div className={styles.tourDiv}>
+          <Link href="/tour">
+            <span className={styles.tourButton}>Ga naar de tour</span>
+          </Link>
+        </div>
       </div>
-      {error && <p style={{ color: "red" }}>{error}</p>}
     </Container>
   );
 };

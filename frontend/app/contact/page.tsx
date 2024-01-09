@@ -19,9 +19,11 @@ const ContactInfoPage = () => {
         <p>Werkdagen: 08:30 - 17:00 uur</p>
       </div>
 
-          <div className={styles.bugMelden}>
-              <Link href="/bugmelden" className={styles.bugButton } >Bug melden</Link>
-        </div>
+      <div className={styles.bugMelden}>
+        <Link href="/bugmelden">
+          <span className={styles.bugButton}>Bug melden</span>
+        </Link>
+      </div>
     </Container>
   );
 };

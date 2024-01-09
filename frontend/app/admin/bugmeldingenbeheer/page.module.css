@@ -1,0 +1,129 @@
+.filterOptions {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.search,
+.textBox {
+    display: block;
+    min-height: 32px;
+    padding: 0 12px;
+    flex-grow: 1;
+    border: 1px solid var(--bg600);
+}
+
+.select,
+.button,
+.secondaryButton {
+    display: block;
+    border: none;
+    padding: 8px 12px;
+}
+
+.button {
+    background-color: var(--p500);
+    border: none;
+    color: #fff;
+}
+
+.select,
+.secondaryButton {
+    background-color: var(--bg300);
+    color: inherit;
+}
+
+.select {
+    font-size: inherit;
+}
+
+.table {
+    border-spacing: 12px 0;
+    border-collapse: collapse;
+}
+
+.table td,
+.table th {
+    padding: 2px 8px;
+}
+
+.table tr:first-child {
+    color: #fff;
+    text-align: left;
+    background-color: var(--p500);
+}
+
+.table tr:first-child th {
+    font-weight: normal;
+    padding: 4px 8px;
+}
+
+.table tr td:last-child {
+    padding-right: 0;
+}
+
+.tableId {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.edit {
+    background-color: var(--bg300);
+    border: none;
+    padding: 0px 8px;
+    color: inherit;
+    font-size: 20px;
+    display: flex;
+    height: 24px;
+    align-items: center;
+    justify-content: center;
+}
+
+.dialogBackdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #4104;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dialog {
+    display: flex;
+    flex-direction: column;
+    width: fit-content;
+    background-color: var(--bg500);
+    padding: 24px;
+    margin: 64px auto;
+    border: 2px solid var(--g500);
+    border-radius: 24px;
+}
+
+.dialog .button,
+.dialog .secondaryButton {
+    margin-top: 12px;
+}
+
+.sort {
+    margin-left: auto;
+    width: fit-content;
+    margin-bottom: 12px;
+}
+
+.sortSelect {
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: inherit;
+}
+
+.errorBorder {
+    display: block;
+    min-height: 32px;
+    padding: 0 12px;
+    flex-grow: 1;
+    border: 1px solid red;
+}
