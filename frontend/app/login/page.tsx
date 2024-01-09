@@ -39,7 +39,6 @@ const Page = () => {
     username: "",
     registrationDate: "",
     firstLogin: true
-
   };
 
   const { data: session } = useSession();
