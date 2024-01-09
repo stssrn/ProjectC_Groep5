@@ -25,17 +25,18 @@ const materialSymbols = localFont({
 
 
 const navItems = [
-  { path: "gebruiker", symbol: "person", name: "Profiel" },
-  { path: "dashboard", symbol: "dashboard", name: "Dashboard" },
-  { path: "agenda", symbol: "calendar_month", name: "Agenda" },
-  { path: "forum", symbol: "forum", name: "Forum" },
-  { path: "quiz", symbol: "quiz", name: "Quiz" },
-  { path: "winkel", symbol: "shopping_cart", name: "Winkel" },
-  { path: "admin", symbol: "shield", name: "admin" },
-  { path: "casussen", symbol: "book", name: "Casus" },
-  { path: "educatie", symbol: "school", name: "Educatie" },
-  { path: "faq", symbol: "help", name: "FAQ" },
-  { path: "contact", symbol: "call", name: "Contact" }
+    { path: "gebruiker", symbol: "person", name: "Profiel" },
+    { path: "dashboard", symbol: "dashboard", name: "Dashboard" },
+    { path: "agenda", symbol: "calendar_month", name: "Agenda" },
+    { path: "forum", symbol: "forum", name: "Forum" },
+    { path: "quiz", symbol: "quiz", name: "Quiz" },
+    { path: "winkel", symbol: "shopping_cart", name: "Winkel" },
+    { path: "admin", symbol: "shield", name: "admin" },
+    { path: "casussen", symbol: "book", name: "Casus" },
+    { path: "educatie", symbol: "school", name: "Educatie" },
+    { path: "faq", symbol: "help", name: "FAQ" },
+    { path: "contact", symbol: "call", name: "Contact" },
+    { path: "signout", symbol: "logout", name: "Uitloggen" }
 ];
 
 export default function RootLayout({
@@ -69,10 +70,7 @@ export default function RootLayout({
                   )}
                 >
                   <Link href={`/${p.path}`} title={p.path}>
-                    <div className={styles.navItem}>
-                      <span className={styles.hoverText}>{p.name}</span>
-                      <i className="symbol">{p.symbol}</i>
-                    </div>
+                    <i className="symbol">{p.symbol}</i>
                   </Link>
                 </li>
               ))}

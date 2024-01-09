@@ -17,3 +17,101 @@
 .eventName {
   display: block;
 }
+
+.createPopUp {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #4104;
+}
+
+.dialog {
+  background-color: var(--bg500);
+  width: 20%;
+  height: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) translateY(-10%);
+  padding: 24px;
+  align-items: center;
+  justify-content: flex-end;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.content {
+  overflow: auto;
+  align-items: left;
+}
+
+.dialogButtons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.button,
+.secondaryButton {
+  display: block;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.button {
+  background-color: var(--p500);
+  border: none;
+  color: #fff;
+}
+
+.secondaryButton {
+  background-color: var(--bg300);
+  color: inherit;
+}
+
+.h1 {
+  font-size: 36px;
+  text-align: left;
+}
+
+.description {
+  font-size: 20px;
+  align-items: center;
+  margin-top: 15px;
+}
+
+@media (max-width: 700px) {
+  .dialog {
+    width: 80%;
+  }
+}
+
+@media (max-width: 450px) {
+  .dialog {
+    width: 60%;
+  }
+}
+
+.signUp {
+  background-color: transparent;
+  border-color: transparent;
+  font-family: inherit;
+  color: inherit;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.signUp:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  text-decoration: underline;
+}
+
+.timeText {
+  font-size: 30px;
+}
