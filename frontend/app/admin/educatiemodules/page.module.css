@@ -128,16 +128,18 @@
     border: 1px solid red;
 }
 
-.createPost2 {
+.createModule {
     position: fixed;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     background-color: #4104;
+    display: flex;
+    justify-content: center;
 }
 
-.dialog2 {
+.newDialog {
     background-color: var(--bg500);
     width: fit-content;
     position: absolute;
@@ -147,28 +149,28 @@
     padding: 24px;
 }
 
-.dialogButtons2 {
+.newDialogButtons {
     display: flex;
     gap: 16px;
     justify-content: flex-end;
     margin-top: 8px;
 }
 
-.button2,
-.secondaryButton2 {
+.newButton,
+.newSecondaryButton {
     display: block;
     border: none;
     padding: 8px 12px;
     cursor: pointer;
 }
 
-.button2 {
+.newButton {
     background-color: var(--p500);
     border: none;
     color: #fff;
 }
 
-.secondaryButton2 {
+.newSecondaryButton {
     background-color: var(--bg300);
     color: inherit;
 }

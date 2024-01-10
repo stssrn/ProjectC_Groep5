@@ -346,12 +346,13 @@ const Page = () => {
                         onChange={(e) => setCurrentReport({ ...currentReport, title: e.target.value })}
                     />
                     <label htmlFor={dialogDescription}>Beschrijving</label>
-                    <input
-                        type="text"
+                    <textarea
                         name="Beschrijving"
                         id={dialogDescription}
                         value={currentReport?.description || ""}
-                        className={descIsEmpty === false ? styles.textBox : styles.errorBorder}
+                        rows={5}
+                        cols={75}
+                        className={`${styles.textBox} ${descIsEmpty ? styles.errorBorder : ''}`}
                         onChange={(e) => setCurrentReport({ ...currentReport, description: e.target.value })}
                     />
                     <input

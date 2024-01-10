@@ -309,14 +309,16 @@ const Page = () => {
                         onChange={(e) => setCurrentModule({ ...currentModule, title: e.target.value })}
                     />
                     <label htmlFor={dialogDescription}>Beschrijving</label>
-                    <input
-                        type="text"
+                    <textarea
                         name="Beschrijving"
                         id={dialogDescription}
                         value={currentModule?.description || ""}
+                        rows={25}
+                        cols={75} // Set the number of rows you want to display initially
                         className={descIsEmpty === false ? styles.textBox : styles.errorBorder}
                         onChange={(e) => setCurrentModule({ ...currentModule, description: e.target.value })}
                     />
+
                     <input
                         type="button"
                         value="Opslaan"
@@ -352,8 +354,8 @@ const Page = () => {
                 </div>
             </div>
             {showCreateModule && (
-                <div className={styles.createPost2}>
-                    <div className={styles.dialog2}>
+                <div className={styles.createModule}>
+                    <div className={styles.newDialog}>
                         <label htmlFor={dialogDescription}>Titel</label>
                         <input
                             type="text"
@@ -367,26 +369,24 @@ const Page = () => {
                             }}
                         />
                         <label htmlFor={dialogDescription}>Beschrijving</label>
-                        <input
-                            type="text"
+                        <textarea
                             name="Beschrijving"
                             id={dialogDescription}
-                            value={newModule?.description || ""}
-                            className={`${styles.textBox} ${descIsEmpty ? styles.errorBorder : ''}`}
-                            onChange={(e) => {
-                                setNewModule({ ...newModule, description: e.target.value });
-                                setDescIsEmpty(e.target.value.trim() === '');
-                            }}
+                            value={currentModule?.description || ""}
+                            rows={25}
+                            cols={75} // Set the number of rows you want to display initially
+                            className={descIsEmpty === false ? styles.textBox : styles.errorBorder}
+                            onChange={(e) => setCurrentModule({ ...currentModule, description: e.target.value })}
                         />
-                        <div className={styles.dialogButtons2}>
+                        <div className={styles.newDialogButtons}>
                             <div
                                 onClick={() => setShowCreateModule(false)}
-                                className={styles.secondaryButton2}
+                                className={styles.newSecondaryButton}
                             >
                                 Sluiten
                             </div>
                             <div
-                                className={styles.button2}
+                                className={styles.newButton}
                                 onClick={() => {
                                     if (newModule?.title) setTitleIsEmpty(false);
                                     else setTitleIsEmpty(true);

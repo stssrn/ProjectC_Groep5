@@ -38,11 +38,13 @@ const Page = () => {
   };
 
   const [agendaData, setAgendaData] = useState<MonthData>(defaultData);
+  const [isLoading, setIsLoading] = useState(true);
 
 
 
   const fetchEventData = async () => {
     try {
+      setIsLoading(true);
       const response = await fetch(`api/event?id=${0}`, {
         method: "GET",
       });
@@ -104,7 +106,12 @@ const Page = () => {
   };
   useEffect(() => {
     fetchEventData();
+    setIsLoading(false);
   }, []);
+
+  if (isLoading) {
+    return <div>Laden...</div>;
+  }
   // the month a new year starts, and works in case there are no events in
   // January. Assumes there are no events planned more than a year in advance.
   const currentYear = new Date().getFullYear();
