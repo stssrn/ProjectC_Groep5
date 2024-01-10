@@ -192,7 +192,9 @@ const Page: React.FC = () => {
     };
 
     const handleAnswerClick = (userAnswer: string) => {
+        // Ensure selectedAnswer is initialized with an empty array if it's null
         const currentAnswers = selectedAnswer ? [...selectedAnswer.answers] : [];
+
         const answerExists = currentAnswers.some((answer) => answer.id === currentQuestion);
 
         if (!answerExists) {
@@ -225,25 +227,26 @@ const Page: React.FC = () => {
     };
 
     const handleNextClick = () => {
-        if (quizCompleted) {
-            window.location.href = '/dashboard';
-        }
         if (currentQuestion + 1 < (quiz?.questions.length ?? 0)) {
             setCurrentQuestion(currentQuestion + 1);
             const newProgress = ((currentQuestion + 1) / (quiz?.questions.length ?? 0)) * 100;
             setProgress(newProgress);
         } else {
             const pointsEarned = selectedAnswer?.answers?.reduce((count, answer) => count + (answer.isCorrect ? 1 : 0), 0) ?? 0;
-            setPoints((quiz?.points ?? 0) * (pointsEarned / (quiz?.questions.length ?? 1)));
+            setPoints(Math.floor((quiz?.points ?? 0) * (pointsEarned / (quiz?.questions.length ?? 1))));
             setQuizCompleted(true);
             setShowScore(true);
         }
     };
 
-    const finishQuiz = () => {
-        rewardPoints();
-        updateQuizUser();
-        // window.location.href = '/dashboard';
+    const finishQuiz = async () => {
+        try {
+            await rewardPoints();
+            await updateQuizUser();
+            window.location.href = '/dashboard';
+        } catch (error) {
+            console.error('Error finishing quiz:', error);
+        }
     };
 
     return (
