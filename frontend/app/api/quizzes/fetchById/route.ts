@@ -22,6 +22,9 @@ export async function GET(request: Request): Promise<NextResponse> {
                     },
                 },
             },
+            orderBy: {
+                id: 'asc', // Order by quiz ID in ascending order
+            },
         });
 
         if (!quiz) {
