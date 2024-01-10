@@ -357,7 +357,6 @@ const Page = () => {
           </Link>
         </div>
       </div>
-
     </Container>
   );
 };

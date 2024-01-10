@@ -1,0 +1,186 @@
+.filterOptions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.search,
+.textBox {
+  display: block;
+  min-height: 32px;
+  padding: 0 12px;
+  flex-grow: 1;
+  border: 1px solid var(--bg600);
+  border-radius: 4px;
+}
+
+.select,
+.button,
+.secondaryButton,
+.button2,
+.secondaryButton2 {
+  display: block;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button,
+.button2 {
+  background-color: var(--p500);
+  color: #fff;
+}
+
+.button:hover,
+.button2:hover {
+  background-color: var(--p600);
+}
+
+.secondaryButton,
+.secondaryButton2 {
+  background-color: var(--bg300);
+  color: inherit;
+}
+
+.select {
+  font-size: inherit;
+}
+
+.table {
+  width: 100%;
+  border-spacing: 0 12px;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 8px;
+  text-align: left;
+}
+
+.table th {
+  background-color: var(--p500);
+  color: white;
+}
+
+.table td {
+  background-color: var(--bg200);
+  border-bottom: 1px solid var(--bg600);
+}
+
+.tableId {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.edit,
+.delete {
+  background-color: var(--bg300);
+  border: none;
+  padding: 0px 8px;
+  color: inherit;
+  font-size: 20px;
+  display: flex;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit:hover {
+  background-color: var(--p600);
+}
+
+.delete {
+  background-color: var(--r500);
+}
+
+.delete:hover {
+  background-color: var(--r600);
+}
+
+.dialogBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #4104;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dialog {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  background-color: var(--bg500);
+  padding: 24px;
+  margin: 64px auto;
+  border: 2px solid var(--g500);
+  border-radius: 24px;
+}
+
+.dialog .button,
+.dialog .secondaryButton {
+  margin-top: 12px;
+}
+
+.add {
+  background-color: var(--p500);
+  color: #fff;
+  padding: 8px 16px;
+  margin-bottom: 16px;
+  border-radius: 4px;
+  font-size: 16px;
+  align-self: flex-end;
+}
+
+.add:hover {
+  background-color: var(--p600);
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 10px;
+  }
+
+  .flex {
+    flex-direction: column;
+  }
+
+  .table,
+  .table th,
+  .table td {
+    display: block;
+  }
+
+  .table th {
+    display: none;
+  }
+
+  .table td {
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    text-align: right;
+  }
+
+  .table td:before {
+    content: attr(data-label);
+    float: left;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+
+  .filterOptions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .search {
+    margin-right: 0;
+    width: 100%;
+  }
+}

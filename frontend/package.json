@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "prisma generate && next dev",
-    "build": "prisma generate && prisma db push && prisma db seed && next build",
+    "build": "prisma generate && prisma db push && next build",
     "fortesting": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint"
@@ -29,7 +29,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-joyride": "^2.7.0",
-    "react-router-dom": "^6.18.0"
+    "react-router-dom": "^6.18.0",
+    "react-textarea-autosize": "^8.5.3"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
