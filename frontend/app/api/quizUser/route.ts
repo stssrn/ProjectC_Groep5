@@ -107,7 +107,7 @@ export async function PUT(request: Request): Promise<NextResponse> {
     try {
         if (request.method === 'PUT') {
             const body = await request.json();
-            const { id, userId, quizId, earnedPoints } = body;
+            const { id, userId, quizId, isCompleted, earnedPoints } = body;
 
             // Find the existing QuizUser entry
             const existingQuizUser = await prisma.quizUser.findFirst({
@@ -126,7 +126,7 @@ export async function PUT(request: Request): Promise<NextResponse> {
                 where: { id },
                 data: {
                     pointsScored: earnedPoints,
-                    isCompleted: true,
+                    isCompleted: isCompleted,
                 },
             });
 
