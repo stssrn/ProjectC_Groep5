@@ -351,7 +351,7 @@ const Page = () => {
                         id={dialogDescription}
                         value={currentReport?.description || ""}
                         rows={5}
-                        cols={75}
+                        cols={50}
                         className={`${styles.textBox} ${descIsEmpty ? styles.errorBorder : ''}`}
                         onChange={(e) => setCurrentReport({ ...currentReport, description: e.target.value })}
                     />

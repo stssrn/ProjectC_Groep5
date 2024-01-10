@@ -115,3 +115,50 @@
 .timeText {
   font-size: 30px;
 }
+
+.edit {
+  background-color: var(--bg300);
+  border: none;
+  padding: 0px 8px;
+  color: inherit;
+  font-size: 20px;
+  display: flex;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+}
+
+.errorBorder {
+  display: block;
+  min-height: 32px;
+  padding: 0 12px;
+  flex-grow: 1;
+  border: 1px solid red;
+}
+
+.textBox {
+  display: block;
+  min-height: 32px;
+  padding: 0 12px;
+  flex-grow: 1;
+  border: 1px solid var(--bg600);
+  width: 100%;
+}
+
+.editDialogButton,
+.editDialogSecondaryButton {
+  display: block;
+  border: none;
+  padding: 8px 12px;
+}
+
+.editDialogButton {
+  background-color: var(--p500);
+  border: none;
+  color: #fff;
+}
+
+.editDialogSecondaryButton {
+  background-color: var(--bg300);
+  color: inherit;
+}
