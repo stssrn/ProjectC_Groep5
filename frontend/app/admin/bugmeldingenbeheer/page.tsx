@@ -193,7 +193,7 @@ const Page = () => {
 
             return 0;
         });
-
+        delay(5000);
         setBugReportsWithUserId(sortedData);
     };
 
@@ -223,6 +223,10 @@ const Page = () => {
         combineBugReportsAndBugUserData(reports, bugUser);
     };
 
+    function delay(ms: number) {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
     useEffect(() => {
         const fetchData = async () => {
             const reports = await fetchBugReports();
@@ -230,6 +234,7 @@ const Page = () => {
             //console.log("buguser:" + bugUser)
 
             combineBugReportsAndBugUserData(reports, bugUser);
+
         };
 
         fetchData();
@@ -245,6 +250,7 @@ const Page = () => {
         // Check if the search query is empty, and reset data if true
         if (!searchQuery) {
             setBugReportsWithUserId(bugReportsWithUserIdUnfiltered);
+            delay(3000);
             return;
         }
 
