@@ -50,6 +50,8 @@ export const authOptions: NextAuthOptions = {
           id: user.id + "",
           email: user.email,
           name: `${user.firstName} ${user.lastName}`,
+          isAdmin: user.isAdmin,
+          isForumMod: user.isForumMod,
         };
       },
     }),
@@ -58,11 +60,15 @@ export const authOptions: NextAuthOptions = {
     jwt: async ({ token, user }) => {
       if (user) {
         token.uid = user.id as unknown as number;
+        token.isAdmin = user.isAdmin as boolean;
+        token.isForumMod = user.isForumMod as boolean;
       }
       return token;
     },
     session: async ({ session, token }) => {
       session.user.id = token.uid as number;
+      session.user.isAdmin = token.isAdmin as boolean;
+      session.user.isForumMod = token.isForumMod as boolean;
       return session;
     },
   },
