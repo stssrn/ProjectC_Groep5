@@ -1,48 +1,108 @@
 "use client";
 
-import getRandomAccounts, { Account } from "@/lib/accounts";
 import styles from "./page.module.css";
 import Container from "@/app/components/Container";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useState } from "react";
+import type { users } from "@prisma/client";
+import EditUserDialog from "./EditUserDialog";
+import NewUserDialog from "./NewUserDialog";
+import type { Ordering, SearchType } from "@/app/api/user/route";
 
 const Page = () => {
-  const [showDialog, setShowDialog] = useState(false);
-  const [accounts, setAccounts] = useState<Account[]>([]);
-  const [currentAccount, setCurrentAccount] = useState<Account>();
+  const [showEditUserDialog, setShowEditUserDialog] = useState(false);
+  const [showNewUserDialog, setShowNewUserDialog] = useState(false);
+  const [allUsers, setAllUsers] = useState<users[]>();
+  const [currentUser, setCurrentUsers] = useState<users>();
+  const [orderBy, setOrderBy] = useState<Ordering>("id");
+  const [searchFor, setSearchString] = useState("");
+  const [searchType, setSearchType] = useState<SearchType>("name")
+  const [pressedSearch, setPressedSearch] = useState(false);
 
-  const dialogFirstName = useId();
-  const dialogLastName = useId();
+  const fetchUsers = async (
+    orderBy: Ordering = "id",
+    searchType?: SearchType,
+    searchFor?: string
+  ): Promise<users[] | undefined> => {
+    try {
+      let url = `/api/user?orderby=${orderBy}`;
+
+      // checking for truthy value is fine in this case (i hope)
+      if (searchType && searchFor) {
+        url += `&searchFor=${searchFor}&searchType=${searchType}`;
+      }
+
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("Failed to fetch user data");
+
+      return await response.json();
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
 
   useEffect(() => {
-    setAccounts(getRandomAccounts(20));
-  }, []);
+    (async () => {
+      const users = await fetchUsers(orderBy, searchType, searchFor);
+      if (users) {
+        setAllUsers(users);
+      } else {
+        console.error("Failed to fetch accounts :(");
+      }
+      setPressedSearch(false);
+    })();
+  }, [orderBy, pressedSearch]);
 
   return (
     <Container title="Accounts Beheren">
-      <div className={styles.filterOptions}>
-        <select className={styles.select} name="" id="">
-          <option value="">Naam</option>
-          <option value="">ID</option>
+      <form className={styles.filterOptions}>
+        <select
+          className={styles.select}
+          value={searchType}
+          name="search-type"
+          id="search-type"
+          onChange={e => setSearchType(e.target.value as SearchType)}
+        >
+          <option value="name">Naam</option>
+          <option value="id">ID</option>
         </select>
         <input
           className={styles.search}
           type="search"
-          name=""
-          id=""
+          name="contains"
+          id="contains"
           placeholder="Bevat…"
+          value={searchFor}
+          onChange={(e) => setSearchString(e.target.value)}
         />
-        <input className={styles.button} type="button" value="Zoek" />
-      </div>
+        <input
+          className={styles.button}
+          type="submit"
+          value="Zoek"
+          onClick={(e) => {
+            e.preventDefault();
+            setPressedSearch(true);
+          }}
+        />
+      </form>
+      <input
+        className={styles.button}
+        type="button"
+        value="Nieuw account"
+        onClick={() => {
+          setShowNewUserDialog(true);
+        }}
+      />
       <div className={styles.sort}>
         Sorteer op:{" "}
-        <select className={styles.sortSelect}>
-          <option>ID</option>
-          <option>Voornaam</option>
-          <option>Achternaam</option>
-          <option>Registratiedatum</option>
+        <select className={styles.sortSelect}
+          onChange={p => setOrderBy(p.target.value as Ordering)}>
+          <option value={"id"}>ID</option>
+          <option value={"firstName"}>Voornaam</option>
+          <option value={"lastName"}>Achternaam</option>
+          <option value={"registationDate"}>Registratiedatum</option>
         </select>
       </div>
-      <table className={styles.table}>
+      {allUsers ? <table className={styles.table}>
         <tbody>
           <tr>
             <th>ID</th>
@@ -51,18 +111,18 @@ const Page = () => {
             <th>Registratiedatum</th>
             <th></th>
           </tr>
-          {accounts.map((account) => (
-            <tr key={account.id}>
-              <td className={styles.tableId}>{account.id}</td>
-              <td>{account.firstName}</td>
-              <td>{account.lastName}</td>
-              <td>{account.creationDate.toISOString()}</td>
+          {allUsers.map((user) => (
+            <tr key={user.id}>
+              <td className={styles.tableId}>{user.id}</td>
+              <td>{user.firstName}</td>
+              <td>{user.lastName}</td>
+              <td>{user.registationDate.toString()}</td>
               <td>
                 <button
                   className={styles.edit}
                   onClick={() => {
-                    setCurrentAccount(account);
-                    setShowDialog(true);
+                    setCurrentUsers(user);
+                    setShowEditUserDialog(true);
                   }}
                 >
                   <i className="symbol">edit</i>
@@ -72,37 +132,22 @@ const Page = () => {
           ))}
         </tbody>
       </table>
+        : <div>Gebruikersgegevens aan het ophalen...</div>}
       <div
         className={styles.dialogBackdrop}
-        style={{ display: showDialog ? "block" : "none" }}
+        style={{ display: showEditUserDialog ? "block" : "none" }}
       >
-        <div className={styles.dialog}>
-          <label htmlFor={dialogFirstName}>Voornaam</label>
-          <input
-            type="text"
-            name="Voornaam"
-            disabled
-            value={currentAccount?.firstName}
-            id={dialogFirstName}
-            className={styles.textBox}
-          />
-          <label htmlFor={dialogLastName}>Achternaam</label>
-          <input
-            type="text"
-            name="Achternaam"
-            id={dialogLastName}
-            disabled
-            value={currentAccount?.lastName}
-            className={styles.textBox}
-          />
-          <input type="button" value="Opslaan" className={styles.button} />
-          <input
-            type="button"
-            value="Sluiten"
-            className={styles.secondaryButton}
-            onClick={() => setShowDialog(false)}
-          />
-        </div>
+        {showEditUserDialog && (
+          <EditUserDialog user={currentUser!} setShowDialog={setShowEditUserDialog} />
+        )}
+      </div>
+      <div
+        className={styles.dialogBackdrop}
+        style={{ display: showNewUserDialog ? "block" : "none" }}
+      >
+        {showNewUserDialog && (
+          <NewUserDialog setShowDialog={setShowNewUserDialog} />
+        )}
       </div>
     </Container>
   );
