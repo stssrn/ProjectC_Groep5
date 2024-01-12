@@ -23,6 +23,10 @@
     position: relative;
 }
 
+.quizProgressTracker h3 {
+    padding-bottom: 0.5em;
+}
+
 .quizProgressBar {
     height: 24px;
     width: 100%;

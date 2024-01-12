@@ -74,6 +74,18 @@
     font-size: 20px;
 }
 
+.buyButton {
+    background: #AC3B61;
+    color: white;
+    padding: 10px;
+    z-index: 999;
+    margin-left: auto;
+    margin-right: auto;
+    cursor: pointer;
+    width: 90px;
+    text-align: center;
+}
+
 @media screen and (max-width: 420px) {
     .rewards {
         height: 70vh;

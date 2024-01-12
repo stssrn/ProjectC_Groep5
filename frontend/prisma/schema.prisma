@@ -1,41 +1,39 @@
-// learn more about prisma: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
   provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL") // uses connection pooling
-  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model users {
-  id               Int          @id @default(autoincrement())
-  profilePhotoUrl  String?
-  profilePhoto     profilePhoto @default(MALE)
-  email            String       @unique
+  id               Int              @id @default(autoincrement())
+  profilePhoto     profilePhoto     @default(MALE)
+  email            String           @unique
   password         String
   bio              String?
   firstName        String
   lastName         String
   username         String
-  registationDate  DateTime     @default(now())
-  firstLogin       Boolean      @default(true)
-  points           Int          @default(0)
-  isAdmin          Boolean      @default(false)
-  isForumMod       Boolean      @default(false)
+  registationDate  DateTime         @default(now())
+  firstLogin       Boolean          @default(true)
+  profilePhotoUrl  String?
+  isAdmin          Boolean          @default(false)
+  isForumMod       Boolean          @default(false)
+  points           Int              @default(0)
   resetToken       String?
   resetTokenExpiry DateTime?
-
-  posts      Post[]
-  reactions  Reaction[]
-  upvotes    Upvote[]
-  QuizUser   QuizUser[]
-  Forum      Forum[]
-  AgendaUser AgendaUser[]
-  BugUser    BugUser[]
-  PostUpvote PostUpvote[]
+  AgendaUser       AgendaUser[]
+  BugUser          BugUser[]
+  Forum            Forum[]
+  posts            Post[]
+  PostUpvote       PostUpvote[]
+  QuizUser         QuizUser[]
+  reactions        Reaction[]
+  StoreItemsUser   StoreItemsUser[]
+  upvotes          Upvote[]
 }
 
 model educatie_modules {
@@ -48,136 +46,117 @@ model casus {
   id          Int     @unique @default(autoincrement())
   name        String?
   description String?
-  treatment   String?
   url         String?
+  treatment   String?
 }
 
 model Post {
-  id      Int      @id @default(autoincrement())
-  title   String
-  content String
-  userId  Int
-  upvotes Upvote[]
-
-  user         users          @relation(fields: [userId], references: [id])
-  Reaction     Reaction[]
+  id           Int            @id @default(autoincrement())
+  title        String
+  content      String
+  userId       Int
   Forum        Forum[]
-  ReactionPost ReactionPost[]
+  user         users          @relation(fields: [userId], references: [id])
   PostUpvote   PostUpvote[]
+  Reaction     Reaction[]
+  ReactionPost ReactionPost[]
+  upvotes      Upvote[]
 }
 
 model Reaction {
-  id      Int      @id @default(autoincrement())
-  date    DateTime
-  content String
-  postId  Int
-  userId  Int
-
+  id           Int            @id @default(autoincrement())
+  date         DateTime
+  content      String
+  postId       Int
+  userId       Int
   post         Post           @relation(fields: [postId], references: [id])
   user         users          @relation(fields: [userId], references: [id])
-  Upvote       Upvote[]
   ReactionPost ReactionPost[]
+  Upvote       Upvote[]
 }
 
 model Upvote {
   userId     Int
   reactionId Int
-
-  user     users    @relation(fields: [userId], references: [id])
-  reaction Reaction @relation(fields: [reactionId], references: [id])
-  Post     Post?    @relation(fields: [postId], references: [id])
-  postId   Int?
+  postId     Int?
+  Post       Post?    @relation(fields: [postId], references: [id])
+  reaction   Reaction @relation(fields: [reactionId], references: [id])
+  user       users    @relation(fields: [userId], references: [id])
 
   @@id([userId, reactionId])
 }
 
 model Event {
-  id          Int      @id @default(autoincrement())
+  id          Int          @id @default(autoincrement())
   date        DateTime
   name        String
   description String?
-
-  // Relationships
-  AgendaUser AgendaUser[]
+  AgendaUser  AgendaUser[]
 }
 
 model Bug {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   date        DateTime
   title       String
   description String?
-
-  // Relationships
-  BugUser BugUser[]
+  BugUser     BugUser[]
 }
 
 model Quiz {
-  id        Int    @id @default(autoincrement())
+  id        Int        @id @default(autoincrement())
   title     String
   questions Json
   points    Int
-
-  // Relationships
-  QuizUser QuizUser[]
+  QuizUser  QuizUser[]
 }
 
 model QuizUser {
-  id Int @id @default(autoincrement())
-
+  id           Int     @id @default(autoincrement())
   userId       Int
   quizId       Int
   isCompleted  Boolean
   pointsScored Int
-
-  user users @relation(fields: [userId], references: [id])
-  quiz Quiz  @relation(fields: [quizId], references: [id])
+  quiz         Quiz    @relation(fields: [quizId], references: [id])
+  user         users   @relation(fields: [userId], references: [id])
 }
 
 model Forum {
-  id     Int @id @default(autoincrement())
+  id     Int   @id @default(autoincrement())
   userId Int
   postId Int
-
-  user users @relation(fields: [userId], references: [id])
-  post Post  @relation(fields: [postId], references: [id])
+  post   Post  @relation(fields: [postId], references: [id])
+  user   users @relation(fields: [userId], references: [id])
 }
 
 model ReactionPost {
-  id Int @id @default(autoincrement())
-
+  id         Int      @id @default(autoincrement())
   reactionId Int
   postId     Int
-
-  reaction Reaction @relation(fields: [reactionId], references: [id])
-  post     Post     @relation(fields: [postId], references: [id])
+  post       Post     @relation(fields: [postId], references: [id])
+  reaction   Reaction @relation(fields: [reactionId], references: [id])
 }
 
 model AgendaUser {
-  id Int @id @default(autoincrement())
-
+  id      Int   @id @default(autoincrement())
   eventId Int
   userId  Int
-
-  event Event @relation(fields: [eventId], references: [id])
-  user  users @relation(fields: [userId], references: [id])
+  event   Event @relation(fields: [eventId], references: [id])
+  user    users @relation(fields: [userId], references: [id])
 }
 
 model BugUser {
-  id Int @id @default(autoincrement())
-
+  id     Int   @id @default(autoincrement())
   bugId  Int
   userId Int
-
-  bug  Bug   @relation(fields: [bugId], references: [id])
-  user users @relation(fields: [userId], references: [id])
+  bug    Bug   @relation(fields: [bugId], references: [id])
+  user   users @relation(fields: [userId], references: [id])
 }
 
 model PostUpvote {
   postId Int
   userId Int
-
-  post Post  @relation(fields: [postId], references: [id])
-  user users @relation(fields: [userId], references: [id])
+  post   Post  @relation(fields: [postId], references: [id])
+  user   users @relation(fields: [userId], references: [id])
 
   @@id([postId, userId])
 }
@@ -187,6 +166,23 @@ model newsArticles {
   title   String
   content String
   url     String
+}
+
+model storeItems {
+  id             Int              @id @default(autoincrement())
+  title          String
+  genre          String
+  price          Int
+  details        String
+  storeItemsUser StoreItemsUser[]
+}
+
+model StoreItemsUser {
+  id          Int        @id @default(autoincrement())
+  storeItemId Int
+  userId      Int
+  storeItem   storeItems @relation(fields: [storeItemId], references: [id])
+  user        users      @relation(fields: [userId], references: [id])
 }
 
 enum profilePhoto {
