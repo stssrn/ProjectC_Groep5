@@ -36,7 +36,6 @@ const Page = () => {
     const [titleIsEmpty, setTitleIsEmpty] = useState(false);
     const [descIsEmpty, setDescIsEmpty] = useState(false);
     const [showMessage, setShowMessage] = useState(false);
-    const [pressedSearch, setPressedSearch] = useState(false);
 
 
 
@@ -199,7 +198,6 @@ const Page = () => {
     };
 
     const filterDataByTitle = () => {
-        console.log("in the filter data")
         const filteredData = bugReportsWithUserId.filter((report) =>
             report.id.toString().includes(searchQuery.toLowerCase()) ||
             report.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -255,11 +253,8 @@ const Page = () => {
             delay(3000);
             return;
         }
-        if (pressedSearch) {
-            filterDataByTitle();
-            setPressedSearch(false);
-        }
 
+        filterDataByTitle();
     }, [searchQuery, bugReportsWithUserIdUnfiltered]);
 
     if (isLoading) {
@@ -285,14 +280,7 @@ const Page = () => {
                     className={styles.button}
                     type="button"
                     value="Zoek"
-                    onClick={() => {
-                        console.log("clicked")
-                        setPressedSearch(true);
-                        console.log(pressedSearch);
-                        filterDataByTitle;
-                    }
-
-                    }
+                    onClick={filterDataByTitle}
                 />
             </div>
             <div className={styles.sort}>
