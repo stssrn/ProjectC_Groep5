@@ -2,53 +2,99 @@
 import { useState, useRef, useEffect } from "react";
 import Container from "../components/Container";
 import styles from "./page.module.css";
-import { Popup } from "./popup";
-import image from "./reward_image.svg";
 import Image from "next/image";
+import image from "./reward_image.svg";
+import { useSession } from "next-auth/react";
 
-interface Reward {
-    name: string;
-    reward_type: string;
-    prijs: number;
-    info: string;
+interface Item {
+    id: number;
+    title: string;
+    genre: string;
+    price: number;
+    details: string;
 }
 
-const generateReward = (index: number) => {
-    return {
-        name: `Reward ${index + 1}`,
-        image: `Image ${index + 1}`,
-        prijs: Math.floor(Math.random() * 25) + 1,
-        reward_type: "Thema",
-        info: `Short info about Reward ${index + 1}`,
-    };
-};
-
-const rewards = new Array(20).fill(null).map((_, index) => generateReward(index));
+interface UserData {
+    id: number;
+    points: number;
+}
 
 const Page = () => {
+    const { data: session } = useSession();
     const [currentIndex, setCurrentIndex] = useState(0);
     const [windowWidth, setWindowWidth] = useState(0);
-    const [rewardsPerPage, setRewardsPerPage] = useState(4);
+    const [itemsPerPage, setitemsPerPage] = useState(4);
     const [hasMounted, setHasMounted] = useState(false);
-    const [selectedReward, setSelectedReward] = useState<Reward | null>(null);
+    const [items, setitemsData] = useState<Item[] | null>(null);
+    const [itemsLength, setitemsLength] = useState(0);
+    const [user, setUserData] = useState<UserData | null>();
+    const carouselRef = useRef(null);
+    const totalPages = Math.ceil(itemsLength / itemsPerPage);
 
-    const [isPopupVisible, setPopupVisible] = useState(false);
-    const togglePopup = (reward: Reward) => {
-        // If the popup is already open for the selected reward, close it
-        if (selectedReward && selectedReward.name === reward.name) {
-            setSelectedReward(null);
-        } else {
-            // Open the popup for the selected reward
-            setSelectedReward(reward);
+
+    const fetchData = async () => {
+        try {
+            const response = await fetch(`/api/storeItems?userId=${session?.user?.id}`);
+            const data: Item[] = await response.json();
+            setitemsData(data);
+            setitemsLength(data.length);
+        } catch (error) {
+            console.error("Fetch rewards error:", error);
         }
     };
-    const carouselRef = useRef(null);
 
-    const rewardsLength = rewards.length;
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                if (session?.user?.id) {
+                    // Check if quiz is already fetched
+                    if (!user) {
+                        const userResponse = await fetch(`/api/quizzes/fetchUser?id=${session?.user?.id}`);
+                        if (!userResponse.ok) throw new Error('Failed to fetch user data');
+                        const userData: { user: UserData } = await userResponse.json();
+                        setUserData(userData.user);
+                    }
+                }
+            } catch (error) {
+                console.error('Fetch data error:', error);
+            }
+        };
+
+        fetchUser();
+    }, [session]);
+
+    const createStoreItemUser = async (itemId: number) => {
+        try {
+            if (!user || !itemId) return;
+
+            const response = await fetch('api/storeItemsUser', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    storeItemId: itemId,
+                    userId: Number(session?.user?.id),
+                }),
+            });
+
+            if (response.ok) {
+                const createdStoreItemsUser = await response.json();
+                console.log('Created storeItemsUser entry:', createdStoreItemsUser);
+            } else if (response.status === 409) {
+                const existingStoreItemsUser = await response.json();
+                console.log('Existing storeItemsUser entry:', existingStoreItemsUser);
+            } else {
+                throw new Error('Failed to add storeItemsUser');
+            }
+        } catch (error) {
+            console.error('Create quizUser error:', error);
+        }
+    };
 
     useEffect(() => {
         setHasMounted(true);
-        // Update the windowWidth state after component mounts
+        fetchData(); // Call the fetchData function to fetch rewards data
         setWindowWidth(window.innerWidth);
 
         const handleResize = () => {
@@ -65,18 +111,17 @@ const Page = () => {
     useEffect(() => {
         setHasMounted(true);
         if (windowWidth <= 420) {
-            setRewardsPerPage(rewardsLength);
+            setitemsPerPage(itemsLength);
         } else {
-            setRewardsPerPage(4);
+            setitemsPerPage(4);
         }
-    }, [windowWidth, rewardsLength]);
+    }, [windowWidth, itemsLength]);
 
-
-    const loadRewards = rewards.slice(currentIndex, currentIndex + rewardsPerPage);
+    const loadRewards = items?.slice(currentIndex, currentIndex + itemsPerPage);
 
     const showItems = (direction: "next" | "previous") => {
-        const totalItems = rewardsLength;
-        const itemsPerPage = rewardsPerPage;
+        const totalItems = itemsLength;
+        // const itemsPerPage = itemsPerPage;
         const totalPages = Math.ceil(totalItems / itemsPerPage);
 
         if (direction === "next") {
@@ -94,40 +139,89 @@ const Page = () => {
         }
     }
 
+    const handlePurchase = async (item: Item) => {
+        try {
+            if (user) {
+                if (user?.points >= item.price) {
+                    await createStoreItemUser(item.id);
+                    await userPayPoints(item);
+                    console.log(`Purchased: ${item.title}`);
+
+                    // Remove the purchased item from the list
+                    setitemsData((prevItems: Item[] | null) => {
+                        if (!prevItems) return prevItems;
+
+                        return prevItems.filter((i) => i.id !== item.id);
+                    });
+                } else {
+                    console.log("not enough points");
+                }
+            }
+        } catch (error) {
+            console.error('Handle purchase error:', error);
+        }
+    };
+
+
+    const userPayPoints = async (item: Item) => {
+        try {
+            if (!user || !item) return;
+
+            const response = await fetch('api/storeItems/handlePurchase', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    id: Number(session?.user?.id),
+                    points: user.points - item.price,
+                }),
+            });
+
+            if (response.ok) {
+                console.log('Points updated');
+            } else if (response.status === 409) {
+                console.log('purchase already made');
+            } else {
+                throw new Error('Failed to update points');
+            }
+        } catch (error) {
+            console.error('Update user points error:', error);
+        }
+    };
+
     return (
         <Container title="Punten winkel">
-            {hasMounted && (<div className={styles.rewardsContainer} ref={carouselRef}>
+            {hasMounted && (
                 <div className={styles.rewardsContainer} ref={carouselRef}>
                     <div className={styles.rewards}>
-                        {loadRewards.map((reward, i) => (
+                        {loadRewards && loadRewards.map((item, i) => (
                             <article key={i} className={styles.reward}>
                                 <div className={styles.rewardLeft}>
                                     <div className={styles.postImage}>
-                                        <Image src={image} alt="" />
+                                        <Image src={image} alt="" width={100} height={100} />
                                     </div>
                                 </div>
                                 <div className={styles.rewardRight}>
-                                    <h2 className={styles.rewardName}>{reward.name}</h2>
-                                    <p className={styles.rewardInfo}><b>type:</b> {reward.reward_type}</p>
-                                    <p className={styles.rewardInfo}><b>prijs:</b> {reward.prijs}</p>
-                                    <p className={styles.rewardInfo}><b>info:</b> {reward.info}</p>
-                                    <Popup
-                                        isPopupVisible={selectedReward !== null && selectedReward.name === reward.name}
-                                        togglePopup={() => togglePopup(reward)}
-                                        name={reward.name}
-                                        reward_type={reward.reward_type}
-                                        prijs={reward.prijs}
-                                        info={reward.info}
-                                    />
+                                    <h2 className={styles.rewardName}>{item.title}</h2>
+                                    <p className={styles.rewardInfo}><b>genre:</b> {item.genre}</p>
+                                    <p className={styles.rewardInfo}><b>price:</b> {item.price}</p>
+                                    <p className={styles.rewardInfo}><b>details:</b> {item.details}</p>
+                                    <button className={styles.buyButton} onClick={() => handlePurchase(item)}>
+                                        Kopen
+                                    </button>
                                 </div>
                             </article>
                         ))}
                     </div>
                 </div>
-            </div>)}
-            <button className={styles.showPrev} onClick={() => showItems("previous")}>&lt;</button>
-            <button className={styles.showNext} onClick={() => showItems("next")}>&gt;</button>
-
+            )}
+            {totalPages > 1 && (
+                <>
+                    <button className={styles.showPrev} onClick={() => showItems("previous")}>&lt;</button>
+                    <button className={styles.showNext} onClick={() => showItems("next")}>&gt;</button>
+                </>
+            )}
         </Container>
     );
 };
