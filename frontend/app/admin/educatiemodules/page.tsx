@@ -22,6 +22,7 @@ const Page = () => {
     const [showCreateModule, setShowCreateModule] = useState(false);
     const [newModule, setNewModule] = useState<EducatieModule>({ id: 0, title: '', description: '' });
     const [showMessage, setShowMessage] = useState(false);
+    const [usingSort, setUsingSort] = useState(false);
 
 
     const dialogTitle = useId();
@@ -108,8 +109,8 @@ const Page = () => {
         });
 
         setEducatieModules(sortedData);
+        setUsingSort(false);
     };
-
 
     const sortArray = () => {
         const sortedModules = [...educatieModules];
@@ -122,16 +123,21 @@ const Page = () => {
         });
 
         setEducatieModules(sortedModules);
+        setUsingSort(false);
     };
 
     const filterData = () => {
-        const filteredData = educatieModulesUnfiltered.filter((module) =>
-            module?.id?.toString().includes(searchQuery.toLowerCase()) ||
-            module?.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            module?.description?.toLowerCase().includes(searchQuery.toLowerCase())
-        );
+        const searchInput = document.getElementById('searchInput') as HTMLInputElement | null;
+        if (searchInput) {
+            const query = searchInput.value;
+            const filteredData = educatieModulesUnfiltered.filter((module) =>
+                module.id?.toString().includes(query.toLowerCase()) ||
+                module.title?.toLowerCase().includes(query.toLowerCase()) ||
+                module.description?.toLowerCase().includes(query.toLowerCase())
+            );
 
-        setEducatieModules(filteredData);
+            setEducatieModules(filteredData);
+        }
     };
 
     const addModule = async (moduleID: number, title: string, desc: string) => {
@@ -181,8 +187,6 @@ const Page = () => {
         }
     };
 
-
-
     useEffect(() => {
         const fetchData = async () => {
             const modules = await fetchEducatieModules();
@@ -200,19 +204,13 @@ const Page = () => {
     }, []);
 
     useEffect(() => {
-        if (educatieModules.length > 0) {
+        if (educatieModules.length > 0 && usingSort) {
             if (sortCriteria === 'id') sortArray();
             else sortData();
         }
     }, [educatieModules, sortCriteria, sortOrder]);
 
-    useEffect(() => {
-        if (!searchQuery) {
-            setEducatieModules(educatieModulesUnfiltered);
-        } else {
-            filterData();
-        }
-    }, [searchQuery, educatieModulesUnfiltered]);
+
 
     if (isLoading) {
         return <div>Laden...</div>;
@@ -229,10 +227,9 @@ const Page = () => {
                     className={styles.search}
                     type="search"
                     name=""
-                    id=""
+                    id="searchInput"
                     placeholder="Bevat…"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    defaultValue={searchQuery}
                 />
                 <input
                     className={styles.button}
@@ -252,7 +249,10 @@ const Page = () => {
                 <select
                     className={styles.sortSelect}
                     value={sortCriteria}
-                    onChange={(e) => setSortCriteria(e.target.value)}
+                    onChange={(e) => {
+                        setUsingSort(true);
+                        setSortCriteria(e.target.value);
+                    }}
                 >
                     <option value="ID">ID</option>
                     <option value="title">Titel</option>
@@ -260,7 +260,10 @@ const Page = () => {
                 <select
                     className={styles.sortSelect}
                     value={sortOrder}
-                    onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
+                    onChange={(e) => {
+                        setUsingSort(true);
+                        setSortOrder(e.target.value as 'asc' | 'desc');
+                    }}
                 >
                     <option value="asc">Oplopend</option>
                     <option value="desc">Aflopend</option>

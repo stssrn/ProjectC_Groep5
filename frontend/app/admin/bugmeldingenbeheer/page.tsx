@@ -36,6 +36,7 @@ const Page = () => {
     const [titleIsEmpty, setTitleIsEmpty] = useState(false);
     const [descIsEmpty, setDescIsEmpty] = useState(false);
     const [showMessage, setShowMessage] = useState(false);
+    const [usingSort, setUsingSort] = useState(false);
 
 
 
@@ -193,21 +194,27 @@ const Page = () => {
 
             return 0;
         });
-        delay(5000);
         setBugReportsWithUserId(sortedData);
+        setUsingSort(false);
     };
 
-    const filterDataByTitle = () => {
-        const filteredData = bugReportsWithUserId.filter((report) =>
-            report.id.toString().includes(searchQuery.toLowerCase()) ||
-            report.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            report.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            report.userId.toString().includes(searchQuery.toLowerCase()) ||
-            new Date(report.date).toISOString().includes(searchQuery.toLowerCase())
-        );
+    const filterData = () => {
+        const searchInput = document.getElementById('searchInput') as HTMLInputElement | null;
+        if (searchInput) {
+            const query = searchInput.value;
+            const filteredData = bugReportsWithUserIdUnfiltered.filter((report) =>
+                report.id.toString().includes(query.toLowerCase()) ||
+                report.title.toLowerCase().includes(query.toLowerCase()) ||
+                report.description.toLowerCase().includes(query.toLowerCase()) ||
+                report.userId.toString().includes(query.toLowerCase()) ||
+                new Date(report.date).toISOString().includes(query.toLowerCase())
+            );
 
-        setBugReportsWithUserId(filteredData);
+            setBugReportsWithUserId(filteredData);
+        }
     };
+
+
 
     const saveAndClose = async () => {
         if (!currentReport) return;
@@ -223,39 +230,24 @@ const Page = () => {
         combineBugReportsAndBugUserData(reports, bugUser);
     };
 
-    function delay(ms: number) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+
 
     useEffect(() => {
         const fetchData = async () => {
             const reports = await fetchBugReports();
             const bugUser = await fetchBugUserData();
-            //console.log("buguser:" + bugUser)
-
             combineBugReportsAndBugUserData(reports, bugUser);
-
         };
-
         fetchData();
     }, []);
 
     useEffect(() => {
-        if (bugReportsWithUserId.length > 0) {
+        if (bugReportsWithUserId.length > 0 && usingSort) {
             sortData();
         }
     }, [bugReportsWithUserId, sortCriteria, sortOrder]);
 
-    useEffect(() => {
-        // Check if the search query is empty, and reset data if true
-        if (!searchQuery) {
-            setBugReportsWithUserId(bugReportsWithUserIdUnfiltered);
-            delay(3000);
-            return;
-        }
 
-        filterDataByTitle();
-    }, [searchQuery, bugReportsWithUserIdUnfiltered]);
 
     if (isLoading) {
         return <div>Laden...</div>;
@@ -271,16 +263,15 @@ const Page = () => {
                     className={styles.search}
                     type="search"
                     name=""
-                    id=""
+                    id="searchInput"
                     placeholder="Bevat…"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    defaultValue={searchQuery}
                 />
                 <input
                     className={styles.button}
                     type="button"
                     value="Zoek"
-                    onClick={filterDataByTitle}
+                    onClick={filterData}
                 />
             </div>
             <div className={styles.sort}>
@@ -288,7 +279,10 @@ const Page = () => {
                 <select
                     className={styles.sortSelect}
                     value={sortCriteria}
-                    onChange={(e) => setSortCriteria(e.target.value)}
+                    onChange={(e) => {
+                        setUsingSort(true);
+                        setSortCriteria(e.target.value);
+                    }}
                 >
                     <option value="id">ID</option>
                     <option value="title">Titel</option>
@@ -298,7 +292,10 @@ const Page = () => {
                 <select
                     className={styles.sortSelect}
                     value={sortOrder}
-                    onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
+                    onChange={(e) => {
+                        setUsingSort(true);
+                        setSortOrder(e.target.value as 'asc' | 'desc');
+                    }}
                 >
                     <option value="asc">Oplopend</option>
                     <option value="desc">Aflopend</option>

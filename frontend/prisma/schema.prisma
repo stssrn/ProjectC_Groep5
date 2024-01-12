@@ -28,14 +28,15 @@ model users {
   resetToken       String?
   resetTokenExpiry DateTime?
 
-  posts      Post[]
-  reactions  Reaction[]
-  upvotes    Upvote[]
-  QuizUser   QuizUser[]
-  Forum      Forum[]
-  AgendaUser AgendaUser[]
-  BugUser    BugUser[]
-  PostUpvote PostUpvote[]
+  posts          Post[]
+  reactions      Reaction[]
+  upvotes        Upvote[]
+  QuizUser       QuizUser[]
+  Forum          Forum[]
+  AgendaUser     AgendaUser[]
+  BugUser        BugUser[]
+  PostUpvote     PostUpvote[]
+  StoreItemsUser StoreItemsUser[]
 }
 
 model educatie_modules {
@@ -187,6 +188,27 @@ model newsArticles {
   title   String
   content String
   url     String
+}
+
+model storeItems {
+  id      Int    @id @default(autoincrement())
+  title   String
+  genre   String
+  price   Int
+  details String
+
+  // Relationships
+  storeItemsUser StoreItemsUser[]
+}
+
+model StoreItemsUser {
+  id Int @id @default(autoincrement())
+
+  storeItemId Int
+  userId      Int
+
+  storeItem storeItems @relation(fields: [storeItemId], references: [id])
+  user      users      @relation(fields: [userId], references: [id])
 }
 
 enum profilePhoto {
