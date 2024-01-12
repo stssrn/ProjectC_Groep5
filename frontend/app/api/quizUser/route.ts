@@ -7,40 +7,76 @@ export async function GET(request: Request): Promise<NextResponse> {
         if (request.method === 'GET') {
             const searchParams = new URL(request.url).searchParams;
             const userId = searchParams.get("userId");
-            const quizId = searchParams.get("bugId");
+            const quizId = searchParams.get("quizId");
             const id = searchParams.get("id");
-            if (!searchParams) {
-                return new NextResponse(
-                    JSON.stringify({ message: 'Missing IDs in the request body' }),
-                    { status: 400 }
-                );
+
+            if (userId || quizId || id) {
+                // At least one of userId, quizId, or id is provided
+
+                if (userId) {
+                    const quizUserData = await prisma.quizUser.findMany({
+                        where: {
+                            userId: Number(userId),
+                        },
+                    });
+
+                    if (quizUserData.length === 0) {
+                        return new NextResponse(
+                            JSON.stringify({ message: 'No entries found for the given userId', quizUserData: [] }),
+                            { status: 404 }
+                        );
+                    }
+
+                    return NextResponse.json({ quizUserData: quizUserData }, { status: 200 });
+                } else if (quizId) {
+                    // Handle quizId similarly as userId (you can customize this part)
+                    const quizUserData = await prisma.quizUser.findMany({
+                        where: {
+                            quizId: Number(quizId),
+                        },
+                    });
+
+                    if (quizUserData.length === 0) {
+                        return new NextResponse(
+                            JSON.stringify({ message: 'No entries found for the given quizId', quizUserData: [] }),
+                            { status: 404 }
+                        );
+                    }
+
+                    return NextResponse.json({ quizUserData: quizUserData }, { status: 200 });
+                } else if (id) {
+                    // Handle id similarly as userId (you can customize this part)
+                    const quizUserEntry = await prisma.quizUser.findFirst({
+                        where: {
+                            id: Number(id),
+                        },
+                    });
+
+                    if (!quizUserEntry) {
+                        return new NextResponse(
+                            JSON.stringify({ message: 'No entry found for the given id', entry: null }),
+                            { status: 404 }
+                        );
+                    }
+
+                    return NextResponse.json({ entry: quizUserEntry }, { status: 200 });
+                }
+            } else {
+                // None of userId, quizId, or id is provided, return all items
+                const allQuizUserData = await prisma.quizUser.findMany();
+
+                return NextResponse.json({ quizUserData: allQuizUserData }, { status: 200 });
             }
-            if (Number(id) === 0) {
-                const quizUserData = await prisma.quizUser.findMany();
-
-                return NextResponse.json({ quizUserData: quizUserData }, { status: 200 });
-            }
-
-            const quizUserEntry = await prisma.quizUser.findFirst({
-                where: {
-                    userId: Number(userId),
-                    quizId: Number(quizId),
-                },
-            });
-            if (!quizUserEntry) {
-                return new NextResponse(
-                    JSON.stringify({ message: 'No entries found', entry: null })
-
-                );
-            }
-
-            return NextResponse.json({ entry: quizUserEntry }, { status: 200 });
         } else {
             return new NextResponse(
                 JSON.stringify({ message: 'Method error' }),
                 { status: 405 }
             );
         }
+        return new NextResponse(
+            JSON.stringify({ message: 'Invalid request' }),
+            { status: 400 }
+        );
     } catch (error: any) {
         console.error("Get error:", error);
         return new NextResponse(JSON.stringify({ message: "Server error" }), {

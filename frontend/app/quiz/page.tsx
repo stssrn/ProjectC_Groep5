@@ -51,8 +51,30 @@ const Page: React.FC = () => {
     const [progress, setProgress] = useState(0);
     const [points, setPoints] = useState(0);
     const [quizUserCreated, setQuizUserCreated] = useState(false);
+    const [totalQuizzes, setTotalQuizzes] = useState<number | null>(null);
+    const [userQuizzesCompleted, setUserQuizzesCompleted] = useState<number | null>(null);
 
     useEffect(() => {
+        const fetchQuizzes = async () => {
+            try {
+                const response = await fetch(`/api/quizzes`);
+                const data = await response.json();
+                setTotalQuizzes(data.length); // Adjust this based on your API response structure
+            } catch (error) {
+                console.error('Error fetching quizzes:', error);
+            }
+        }
+        const fetchData = async () => {
+            try {
+                if (session?.user.id) {
+                    const response = await fetch(`/api/quizUser?userId=${session.user.id}`);
+                    const data = await response.json();
+                    setUserQuizzesCompleted(data.quizUserData.length); // Adjust this based on your API response structure
+                }
+            } catch (error) {
+                console.error('Error fetching quiz data:', error);
+            }
+        };
         const fetchQuizAndUser = async () => {
             try {
                 if (session?.user?.id) {
@@ -79,6 +101,8 @@ const Page: React.FC = () => {
             }
         };
 
+        fetchQuizzes();
+        fetchData();
         fetchQuizAndUser();
     }, [session]);
 
@@ -318,7 +342,15 @@ const Page: React.FC = () => {
                     )}
                 </div>
             ) : (
-                <h2>alle quizzes zijn gedaan</h2>
+                <div>
+                    {totalQuizzes === null || userQuizzesCompleted === null ? (
+                        <h3>Loading...</h3>
+                    ) : totalQuizzes === userQuizzesCompleted ? (
+                        <h3>Je hebt al de quizzen gedaan.</h3>
+                    ) : (
+                        <h3>Loading...</h3>
+                    )}
+                </div>
             )}
         </Container>
     );
