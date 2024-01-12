@@ -1,37 +1,63 @@
+'use client'
+import React, { useEffect, useState } from 'react';
 import styles from "./QuizSection.module.css";
 import Container from "../components/Container";
 import clsx from "clsx";
-
-interface CurrentQuiz {
-    topic: string;
-    questions: number;
-    questionsAnswered: number;
-}
-
-const currentQuiz: CurrentQuiz = {
-    topic:
-        "Onderwerp: casussen",
-    questions: 10,
-    questionsAnswered: 5,
-};
+import { useSession } from 'next-auth/react';
 
 const QuizBlock: React.FC<{
     className?: string;
 }> = ({ className }) => {
+    const [quizzesDone, setQuizzesDone] = useState(0);
+    const [quizzes, setQuizzes] = useState(0);
+    const { data: session } = useSession();
+
+
+    useEffect(() => {
+        // Fetch data from your API endpoint
+        const fetchQuizzes = async () => {
+            try {
+                const response = await fetch(`/api/quizzes`);
+                const data = await response.json();
+                setQuizzes(data.length); // Adjust this based on your API response structure
+            } catch (error) {
+                console.error('Error fetching quizzes:', error);
+            }
+        }
+        const fetchData = async () => {
+            try {
+                if (session?.user.id) {
+                    const response = await fetch(`/api/quizUser?userId=${session.user.id}`);
+                    const data = await response.json();
+                    setQuizzesDone(data.quizUserData.length); // Adjust this based on your API response structure
+                }
+            } catch (error) {
+                console.error('Error fetching quiz data:', error);
+            }
+        };
+
+        fetchQuizzes();
+        fetchData();
+    }, [session]);
+
+    if (!quizzesDone) {
+        return <p>Loading...</p>;
+    }
+
+    const progress = (quizzesDone / quizzes) * 100;
+
     return (
         <section className={className}>
-            <Container padding={12} title="Quiz nummer: #">
+            <Container padding={12} title={`Volgende quiz: ${quizzesDone + 1}`}>
                 <div className={styles.quizes}>
                     <article className={styles.quiz}>
-                        <div className={styles.top}>
-                            <div className={styles.topOverlay}></div>
-                            <p className={styles.quizTopic}>{currentQuiz.topic}</p>
-                        </div>
                         <div className={styles.quizProgressTracker}>
-                            <h2>{(currentQuiz.questionsAnswered / currentQuiz.questions) * 100}%</h2>
-
+                            <h3>Afgeronde quizzen: {quizzesDone}/{quizzes}</h3>
                             <div className={styles.quizProgressBar}>
-                                <div className={styles.quizProgress}></div>
+                                <div
+                                    className={styles.quizProgress}
+                                    style={{ width: `${progress}%` }}
+                                ></div>
                             </div>
                         </div>
                     </article>
@@ -40,4 +66,5 @@ const QuizBlock: React.FC<{
         </section>
     );
 };
+
 export default QuizBlock;
