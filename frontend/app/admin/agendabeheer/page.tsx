@@ -9,8 +9,6 @@ import next from "next";
 
 
 
-
-
 interface AgendaEvent {
     id: number,
     date: Date,
@@ -40,7 +38,7 @@ const Page = () => {
     const [agendaData, setAgendaData] = useState<MonthData>(defaultData);
     const [isLoading, setIsLoading] = useState(true);
 
-
+    
 
     const fetchEventData = async () => {
         try {

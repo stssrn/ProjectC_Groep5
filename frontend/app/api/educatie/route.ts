@@ -126,7 +126,6 @@ export async function DELETE(request: Request): Promise<NextResponse> {
         if (request.method === "DELETE") {
             const searchParams = new URL(request.url).searchParams;
             const id = Number(searchParams.get("id"));
-            console.log
             if (!searchParams) {
                 return new NextResponse(
                     JSON.stringify({ message: 'Missing ID in the request body' }),
@@ -146,7 +145,7 @@ export async function DELETE(request: Request): Promise<NextResponse> {
                     );
                 }
 
-                await prisma.bug.delete({
+                await prisma.educatie_modules.delete({
                     where: { id: educatieModule.id },
                 });
 

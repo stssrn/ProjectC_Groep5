@@ -4,15 +4,18 @@ import prisma from '../../../lib/prisma';
 export async function GET(request: Request): Promise<NextResponse> {
     try {
         if (request.method === 'GET') {
-            const searchParams = new URL(request.url).searchParams;
-            const userId = searchParams.get("userId");
-            const eventId = searchParams.get("eventId");
-            if (!searchParams) {
-                return new NextResponse(
-                    JSON.stringify({ message: 'Missing IDs in the request body' }),
-                    { status: 400 }
-                );
+            const body = await request.json();
+            const { userId, eventId } = body;
+
+            if (Number(userId) === 0) {
+                const agendaUserEntries = await prisma.agendaUser.findMany({
+                    where: {
+                        eventId: Number(eventId)
+                    },
+                });
+                return NextResponse.json({ entries: agendaUserEntries }, { status: 200 });
             }
+
             const agendaUserEntry = await prisma.agendaUser.findFirst({
                 where: {
                     userId: Number(userId),

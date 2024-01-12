@@ -217,11 +217,14 @@ const Page = () => {
 
 
     const saveAndClose = async () => {
-        if (!currentReport) return;
+        if (!currentReport || !currentReport.title?.trim() || !currentReport.description?.trim()) {
+            // If title or description is empty, do nothing
+            return;
+        }
 
-        await saveEditedData(currentReport.title, currentReport.description);
+        await saveEditedData(currentReport.title || '', currentReport.description || '');
         setShowDialog(false);
-        refreshBugReports();
+        await refreshBugReports();
     };
 
     const refreshBugReports = async () => {
@@ -334,65 +337,62 @@ const Page = () => {
                     )}
                 </tbody>
             </table>
-            <div
-                className={styles.dialogBackdrop}
-                style={{ display: showDialog ? "block" : "none" }}
-            >
-                <div className={styles.dialog}>
-                    <label htmlFor={dialogTitle}>Titel</label>
-                    <input
-                        type="text"
-                        name="Titel"
-                        value={currentReport?.title || ""}
-                        id={dialogTitle}
-                        className={titleIsEmpty === false ? styles.textBox : styles.errorBorder}
-                        onChange={(e) => setCurrentReport({ ...currentReport, title: e.target.value })}
-                    />
-                    <label htmlFor={dialogDescription}>Beschrijving</label>
-                    <textarea
-                        name="Beschrijving"
-                        id={dialogDescription}
-                        value={currentReport?.description || ""}
-                        rows={5}
-                        cols={50}
-                        className={`${styles.textBox} ${descIsEmpty ? styles.errorBorder : ''}`}
-                        onChange={(e) => setCurrentReport({ ...currentReport, description: e.target.value })}
-                    />
-                    <input
-                        type="button"
-                        value="Opslaan"
-                        className={styles.button}
-                        onClick={() => {
-                            if (currentReport?.title) setTitleIsEmpty(false);
-                            else setTitleIsEmpty(true);
-                            if (currentReport?.description) {
+            {showDialog && (
+                <div className={styles.dialogBackdrop}>
+                    <div className={styles.dialog}>
+                        <label htmlFor={dialogTitle}>Titel</label>
+                        <input
+                            type="text"
+                            name="Titel"
+                            value={currentReport?.title || ""}
+                            id={dialogTitle}
+                            className={titleIsEmpty === false ? styles.textBox : styles.errorBorder}
+                            onChange={(e) => setCurrentReport({ ...currentReport, title: e.target.value })}
+                        />
+                        <label htmlFor={dialogDescription}>Beschrijving</label>
+                        <textarea
+                            name="Beschrijving"
+                            id={dialogDescription}
+                            value={currentReport?.description || ""}
+                            rows={5}
+                            cols={50}
+                            className={`${styles.textBox} ${descIsEmpty ? styles.errorBorder : ''}`}
+                            onChange={(e) => setCurrentReport({ ...currentReport, description: e.target.value })}
+                        />
+                        <input
+                            type="button"
+                            value="Opslaan"
+                            className={styles.button}
+                            onClick={() => {
+                                if (currentReport?.title) setTitleIsEmpty(false);
+                                else setTitleIsEmpty(true);
+                                if (currentReport?.description) {
+                                    setDescIsEmpty(false);
+                                    saveAndClose();
+                                } else setDescIsEmpty(true);
+                            }}
+                        />
+
+                        <input
+                            type="button"
+                            value="Verwijderen"
+                            className={styles.button}
+                            onClick={() => {
+                                deleteBugReportHandler(currentReport?.id, currentUserId)
+                            }}
+                        />
+                        <input
+                            type="button"
+                            value="Sluiten"
+                            className={styles.secondaryButton}
+                            onClick={() => {
+                                setShowDialog(false);
                                 setDescIsEmpty(false);
-                                saveAndClose();
-                            }
-                            else setDescIsEmpty(true);
-
-                        }}
-                    />
-
-                    <input
-                        type="button"
-                        value="Verwijderen"
-                        className={styles.button}
-                        onClick={() => {
-                            deleteBugReportHandler(currentReport?.id, currentUserId)
-                        }}
-                    />
-                    <input
-                        type="button"
-                        value="Sluiten"
-                        className={styles.secondaryButton}
-                        onClick={() => {
-                            setShowDialog(false);
-                            setDescIsEmpty(false);
-                            setTitleIsEmpty(false);
-                        }} />
+                                setTitleIsEmpty(false);
+                            }} />
+                    </div>
                 </div>
-            </div>
+            )}
         </Container >
     );
 };

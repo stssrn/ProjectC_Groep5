@@ -13,6 +13,12 @@ type EventData = {
     description: string;
 };
 
+interface AgendaUser {
+    id: number,
+    EventId: number,
+    userId: number,
+}
+
 
 const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
 
@@ -22,11 +28,14 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
     const dialogDescription = useId();
     const { data: session } = useSession();
     const [showEdit, setShowEdit] = useState(false);
-    const [signedIn, setSignIn] = useState(false);
-    const [userId, setUserId] = useState(0);
     const [titleIsEmpty, setTitleIsEmpty] = useState(false);
     const [descIsEmpty, setDescIsEmpty] = useState(false);
     const [dateIsEmpty, setDateIsEmpty] = useState(false);
+    const [agendaUserByEvent, setAgendaUserByEvent] = useState<AgendaUser[]>([]);
+
+    const [eventName, setEventName] = useState<string>(event.name || "");
+    const [eventDate, setEventDate] = useState<Date>(new Date(event.date)); // Use new Date()
+    const [eventDescription, setEventDescription] = useState<string>(event.description || "");
 
 
     const [eventData, setEventData] = useState<EventData>({
@@ -36,18 +45,41 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
         description: ""
     });
 
-    const handleSignUp = async () => {
-        if (signedIn) {
-            await saveSignOut(userId, event.id);
-            setSignIn(false);
-
+    const deleteEvent = async (eventId: any) => {
+        try {
+            const response = await fetch(`/api/event?id=${eventId}`, {
+                method: "DELETE",
+            });
+            if (!response.ok) {
+                throw new Error("Failed delete to event data");
+            }
+        } catch (error) {
+            console.error("Error deleting event data:", error);
         }
-        else {
-            await saveSignIn(userId, event.id);
-            setSignIn(true);
+    }
 
+    const fetchAgendaUserByEventId = async (eventID: any) => {
+        try {
+            const response = await fetch(`/api/event`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    eventId: eventID,
+                    userId: 0
+                }),
+            });
+            if (!response.ok) {
+                throw new Error("Failed fetch to agendaUser data");
+            }
+            const data = await response.json();
+            setAgendaUserByEvent(data.entries);
+        } catch (error) {
+            console.error("Error fetching agendaUser data:", error);
         }
-    };
+    }
+
 
     const fetchEventData = async (eventId: number, userID: number) => {
         try {
@@ -56,10 +88,6 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
             });
             if (!response.ok) throw new Error("Failed to fetch agenda data");
             const data = await response.json();
-            //console.log("data: ");
-            //console.log(data);
-            await fetchAgendaUserData(userID, eventId);
-            setUserId(userID);
             setEventData({ ...eventData, ...data });
 
         } catch (error) {
@@ -67,62 +95,6 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
         }
     };
 
-    const fetchAgendaUserData = async (userID: number, eventId: number) => {
-        try {
-            const response = await fetch(`../api/agendaUser?userId=${userID}&eventId=${eventId}`, {
-                method: "GET",
-            });
-            if (!response.ok) throw new Error("Failed to fetch agenda user data");
-            const data = await response.json();
-            if (data.entry !== null) await setSignIn(true);
-            else await setSignIn(false);
-        } catch (error) {
-            console.error("Error fetching agenda user data:", error);
-        }
-    };
-
-    const saveSignIn = async (userID: number, eventId: number) => {
-        try {
-            //console.log("save sign in");
-            const response = await fetch("../api/agendaUser", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    eventId: eventId,
-                    userId: Number(userID)
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to add event and/or user data");
-            }
-        } catch (error) {
-            console.error("Error updating event and/or user data:", error);
-        }
-    }
-    const saveSignOut = async (userID: number, eventId: number) => {
-        try {
-            //console.log("save sign out");
-            const response = await fetch("api/agendaUser", {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    eventId: eventId,
-                    userId: Number(userID)
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to delete event and/or user data");
-            }
-        } catch (error) {
-            console.error("Error deleting event and/or user data:", error);
-        }
-    }
 
     const saveEditedData = async (title: string, desc: string, date: Date) => {
         try {
@@ -148,25 +120,29 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
         }
     };
 
-    const saveAndClose = async () => {
-        if (!event) return;
+    const isValidDate = (date: Date) => {
+        return date instanceof Date && !isNaN(date.getTime());
+    };
 
-        // Validate the date
+    const saveAndClose = async () => {
+        console.log(eventName, eventDescription)
+        if (!eventName || !eventDescription) {
+            setTitleIsEmpty(!eventName);
+            setDescIsEmpty(!eventDescription);
+            return;
+        }
+        console.log(event.date)
         if (!isValidDate(event.date)) {
             setDateIsEmpty(true);
-            return; // Stop execution if the date is invalid
+            return;
         } else {
             setDateIsEmpty(false);
         }
 
-        await saveEditedData(event.name || '', event.description || '', event.date || Date.now());
+        await saveEditedData(eventName, eventDescription, event.date);
         setShowEdit(false);
         const router = useRouter();
         router.push('/admin/agendabeheer');
-    };
-
-    const isValidDate = (date: Date) => {
-        return !isNaN(date.getTime()); // Check if the date is a valid JavaScript Date object
     };
 
 
@@ -188,12 +164,14 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
                         {new Date(event.date).getDate()}
                     </time>
                     <div className={styles.eventName}>{event.name}</div>
-
                 </div>
                 <button
                     className={styles.edit}
                     onClick={() => {
                         setShowEdit(true);
+                        setEventName(event.name || "");
+                        setEventDate(event.date || new Date());
+                        setEventDescription(event.description || "");
                     }}
                 >
                     <i className="symbol">edit</i>
@@ -208,11 +186,12 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
                             <input
                                 type="text"
                                 name="Titel"
-                                value={event.name || ""}
+                                value={eventName}
                                 id={dialogTitle}
                                 className={titleIsEmpty === false ? styles.textBox : styles.errorBorder}
-                                onChange={(e) => (event.name = e.target.value)}
+                                onChange={(e) => setEventName(e.target.value)}
                             />
+
                             <label htmlFor={dialogDate}>Datum</label>
                             <input
                                 type="text"
@@ -223,20 +202,24 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
                                     month: 'long',
                                     hour: 'numeric',
                                     minute: 'numeric',
-                                }) || ""}
-                                id={dialogTitle}
+                                    timeZone: 'UTC',
+                                })}
+                                id={dialogDate}
                                 className={dateIsEmpty === false ? styles.textBox : styles.errorBorder}
-                                onChange={(e) => (event.date = new Date(e.target.value))}
+                                onChange={(e) => setEventDate(new Date(e.target.value))}
                             />
+
+
+
                             <label htmlFor={dialogDescription}>Beschrijving</label>
                             <textarea
                                 name="Beschrijving"
-                                value={event.description || ""}
-                                id={dialogTitle}
+                                value={eventDescription}
+                                id={dialogDescription}
                                 rows={5}
                                 cols={50}
                                 className={descIsEmpty === false ? styles.textBox : styles.errorBorder}
-                                onChange={(e) => (event.description = e.target.value)}
+                                onChange={(e) => setEventDescription(e.target.value)}
                             />
 
                         </div>

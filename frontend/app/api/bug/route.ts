@@ -129,7 +129,7 @@ export async function PUT(request: Request): Promise<NextResponse> {
 
     }
     catch (error) {
-        console.error("Update bug report error:", error);
+        console.error("Update error:", error);
         return new NextResponse(JSON.stringify({ message: "Server error" }), {
             status: 500,
         });
@@ -141,7 +141,6 @@ export async function DELETE(request: Request): Promise<NextResponse> {
         if (request.method === "DELETE") {
             const searchParams = new URL(request.url).searchParams;
             const id = Number(searchParams.get("id"));
-            console.log
             if (!searchParams) {
                 return new NextResponse(
                     JSON.stringify({ message: 'Missing ID in the request body' }),
@@ -168,7 +167,7 @@ export async function DELETE(request: Request): Promise<NextResponse> {
                 return new NextResponse(
                     JSON.stringify({
                         message: "Successfully deleted the Bug entry",
-                        deletedBugUserId: bugEntry.id,
+                        deletedBugId: bugEntry.id,
                         title: bugEntry.title,
                         description: bugEntry.description,
                     }),
@@ -187,7 +186,7 @@ export async function DELETE(request: Request): Promise<NextResponse> {
             );
         }
     } catch (error) {
-        console.error("Fetch error:", error);
+        console.error("Delete error:", error);
         return new NextResponse(JSON.stringify({ message: "Server error" }), {
             status: 500,
         });
