@@ -40,6 +40,8 @@ const Page = () => {
     isFirstTime: true,
   };
 
+  const [isLoading, setIsLoading] = useState(true);
+
   const { data: session } = useSession();
   const [userData, setUserData] = useState<UserData>(defaultData);
   const inputFileRef = useRef<HTMLInputElement>(null);
@@ -62,7 +64,9 @@ const Page = () => {
 
   useEffect(() => {
     if (session?.user?.id) {
-      fetchUserData(session.user.id.toString());
+      fetchUserData(session.user.id.toString()).then(() => {
+        setIsLoading(false);
+      });
     }
   }, [session]);
 
@@ -77,6 +81,10 @@ const Page = () => {
       console.error("Error fetching user data:", error);
     }
   };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   const handlePhotoChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
