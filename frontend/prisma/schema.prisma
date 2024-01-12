@@ -182,6 +182,13 @@ model PostUpvote {
   @@id([postId, userId])
 }
 
+model newsArticles {
+  id      Int    @id @default(autoincrement())
+  title   String
+  content String
+  url     String
+}
+
 enum profilePhoto {
   MALE
   FEMALE

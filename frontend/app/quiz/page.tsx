@@ -46,6 +46,7 @@ const Page: React.FC = () => {
     const [quizUserId, setQuizUserId] = useState<number | null>(null);
     const [currentQuestion, setCurrentQuestion] = useState(0);
     const [quizCompleted, setQuizCompleted] = useState(false);
+    const [quizCompleted, setQuizCompleted] = useState(false);
     const [showScore, setShowScore] = useState(false);
     const [selectedAnswer, setSelectedAnswer] = useState<UserAnswers | null>(null);
     const [progress, setProgress] = useState(0);
@@ -95,6 +96,23 @@ const Page: React.FC = () => {
 
                         setQuiz(data.quiz);
                     }
+                    // Check if quiz is already fetched
+                    if (!user) {
+                        const userResponse = await fetch(`/api/quizzes/fetchUser?id=${session?.user?.id}`);
+                        if (!userResponse.ok) throw new Error('Failed to fetch user data');
+                        const userData: { user: UserData } = await userResponse.json();
+                        setUserData(userData.user);
+                    }
+                    if (!quiz) {
+                        const quizResponse = await fetch(`/api/quizzes/fetchById?userId=${session?.user?.id}`);
+                        if (quizResponse.status === 404) {
+                            console.log("All quizzes completed");
+                        }
+                        if (!quizResponse.ok && quizResponse.status !== 404) throw new Error('Failed to fetch quiz');
+                        const data: { quiz: Quiz } = await quizResponse.json();
+
+                        setQuiz(data.quiz);
+                    }
                 }
             } catch (error) {
                 console.error('Fetch data error:', error);
@@ -111,6 +129,7 @@ const Page: React.FC = () => {
             try {
                 if (quiz && user && !quizUserCreated) {
                     setQuizUserCreated(true);
+                    await createQuizUser();
                     await createQuizUser();
                 }
             } catch (error) {
@@ -200,6 +219,7 @@ const Page: React.FC = () => {
                     userId: Number(session?.user?.id),
                     quizId: quiz?.id,
                     isCompleted: quizCompleted,
+                    isCompleted: quizCompleted,
                     earnedPoints: points,
                 }),
             });
@@ -217,7 +237,9 @@ const Page: React.FC = () => {
 
     const handleAnswerClick = (userAnswer: string) => {
         // Ensure selectedAnswer is initialized with an empty array if it's null
+        // Ensure selectedAnswer is initialized with an empty array if it's null
         const currentAnswers = selectedAnswer ? [...selectedAnswer.answers] : [];
+
 
         const answerExists = currentAnswers.some((answer) => answer.id === currentQuestion);
 
@@ -259,6 +281,8 @@ const Page: React.FC = () => {
             const pointsEarned = selectedAnswer?.answers?.reduce((count, answer) => count + (answer.isCorrect ? 1 : 0), 0) ?? 0;
             setPoints(Math.floor((quiz?.points ?? 0) * (pointsEarned / (quiz?.questions.length ?? 1))));
             setQuizCompleted(true);
+            setPoints(Math.floor((quiz?.points ?? 0) * (pointsEarned / (quiz?.questions.length ?? 1))));
+            setQuizCompleted(true);
             setShowScore(true);
         }
     };
@@ -271,89 +295,97 @@ const Page: React.FC = () => {
         } catch (error) {
             console.error('Error finishing quiz:', error);
         }
+        const finishQuiz = async () => {
+            try {
+                await rewardPoints();
+                await updateQuizUser();
+                window.location.href = '/dashboard';
+            } catch (error) {
+                console.error('Error finishing quiz:', error);
+            }
+        };
+
+        return (
+            <Container title="Quiz">
+                {quiz ? (
+                    <div className={styles.quizContainer}>
+                        <div className={styles.quizContent}>
+                            <div>
+                                {showScore ? (
+                                    <div>
+                                        <h2>
+                                            Score: {selectedAnswer?.answers?.reduce((count, answer) => count + (answer.isCorrect ? 1 : 0), 0)}/{quiz?.questions.length}
+                                        </h2>
+                                        <h3>Punten verdiend: {points}</h3>
+                                        <ul>
+                                            {quiz?.questions.map((quiz, index) => (
+                                                <li key={index}>
+                                                    <strong>{quiz.question}</strong>:
+                                                    <p>
+                                                        {selectedAnswer?.answers[index]?.answer === quiz.correctAnswer
+                                                            ? `Correct (jouw antwoord: ${selectedAnswer?.answers[index]?.answer})`
+                                                            : selectedAnswer
+                                                                ? `Incorrect (jouw antwoord: ${selectedAnswer?.answers[index]?.answer ?? '-'}, juiste answer: ${quiz.correctAnswer})`
+                                                                : `Niet beantwoord (jouw antwoord: ${quiz.correctAnswer})`}
+                                                    </p>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                        <div className={styles.buttonContainer}>
+                                            <button onClick={finishQuiz}>Terug naar home</button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div>
+                                        <h2>{quiz?.questions[currentQuestion].question}</h2>
+                                        <ul className={styles.answerList}>
+                                            {quiz?.questions[currentQuestion].options.map((option, index) => (
+                                                <li key={index}>
+                                                    <label>
+                                                        <input
+                                                            type="radio"
+                                                            name="answer"
+                                                            value={option}
+                                                            checked={selectedAnswer?.answers[currentQuestion]?.answer === option}
+                                                            onChange={() => handleAnswerClick(option)}
+                                                        />
+                                                        {option}
+                                                    </label>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        {!showScore && (
+                            <div className={styles.buttonContainer}>
+                                {currentQuestion > 0 && <button onClick={handlePreviousClick}>Vorige</button>}
+                                <button onClick={handleNextClick}>
+                                    {currentQuestion + 1 < (quiz?.questions.length ?? 0) ? 'Volgende' : 'Afronden'}
+                                </button>
+                            </div>
+                        )}
+                        {!showScore && (
+                            <div className={styles.progressBar}>
+                                <progress className={styles.progress} value={progress} max="100" />
+                                <span style={{ marginLeft: '10px' }}>{progress.toFixed()}%</span>
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <div>
+                        {totalQuizzes === null || userQuizzesCompleted === null ? (
+                            <h3>Loading...</h3>
+                        ) : totalQuizzes === userQuizzesCompleted ? (
+                            <h3>Je hebt al de quizzen gedaan.</h3>
+                        ) : (
+                            <h3>Loading...</h3>
+                        )}
+                    </div>
+                )}
+            </Container>
+        );
     };
 
-    return (
-        <Container title="Quiz">
-            {quiz ? (
-                <div className={styles.quizContainer}>
-                    <div className={styles.quizContent}>
-                        <div>
-                            {showScore ? (
-                                <div>
-                                    <h2>
-                                        Score: {selectedAnswer?.answers?.reduce((count, answer) => count + (answer.isCorrect ? 1 : 0), 0)}/{quiz?.questions.length}
-                                    </h2>
-                                    <h3>Punten verdiend: {points}</h3>
-                                    <ul>
-                                        {quiz?.questions.map((quiz, index) => (
-                                            <li key={index}>
-                                                <strong>{quiz.question}</strong>:
-                                                <p>
-                                                    {selectedAnswer?.answers[index]?.answer === quiz.correctAnswer
-                                                        ? `Correct (jouw antwoord: ${selectedAnswer?.answers[index]?.answer})`
-                                                        : selectedAnswer
-                                                            ? `Incorrect (jouw antwoord: ${selectedAnswer?.answers[index]?.answer ?? '-'}, juiste answer: ${quiz.correctAnswer})`
-                                                            : `Niet beantwoord (jouw antwoord: ${quiz.correctAnswer})`}
-                                                </p>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    <div className={styles.buttonContainer}>
-                                        <button onClick={finishQuiz}>Terug naar home</button>
-                                    </div>
-                                </div>
-                            ) : (
-                                <div>
-                                    <h2>{quiz?.questions[currentQuestion].question}</h2>
-                                    <ul className={styles.answerList}>
-                                        {quiz?.questions[currentQuestion].options.map((option, index) => (
-                                            <li key={index}>
-                                                <label>
-                                                    <input
-                                                        type="radio"
-                                                        name="answer"
-                                                        value={option}
-                                                        checked={selectedAnswer?.answers[currentQuestion]?.answer === option}
-                                                        onChange={() => handleAnswerClick(option)}
-                                                    />
-                                                    {option}
-                                                </label>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                    {!showScore && (
-                        <div className={styles.buttonContainer}>
-                            {currentQuestion > 0 && <button onClick={handlePreviousClick}>Vorige</button>}
-                            <button onClick={handleNextClick}>
-                                {currentQuestion + 1 < (quiz?.questions.length ?? 0) ? 'Volgende' : 'Afronden'}
-                            </button>
-                        </div>
-                    )}
-                    {!showScore && (
-                        <div className={styles.progressBar}>
-                            <progress className={styles.progress} value={progress} max="100" />
-                            <span style={{ marginLeft: '10px' }}>{progress.toFixed()}%</span>
-                        </div>
-                    )}
-                </div>
-            ) : (
-                <div>
-                    {totalQuizzes === null || userQuizzesCompleted === null ? (
-                        <h3>Loading...</h3>
-                    ) : totalQuizzes === userQuizzesCompleted ? (
-                        <h3>Je hebt al de quizzen gedaan.</h3>
-                    ) : (
-                        <h3>Loading...</h3>
-                    )}
-                </div>
-            )}
-        </Container>
-    );
-};
-
-export default Page;
+    export default Page;
