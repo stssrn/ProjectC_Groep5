@@ -1,84 +1,102 @@
 .forgotPassword .stepOne,
 .forgotPassword .stepTwo,
 .forgotPassword .stepThree {
-    background-color: var(--bg500);
-    border: 2px solid var(--g600);
-    border-radius: 64px;
-    box-shadow: 8px 8px 0px rgba(0, 0, 0, 10%);
-    display: flex;
-    padding: 40px 64px 64px 64px;
-    width: 50vw;
-    max-width: 100%;
-    margin: auto;
-    margin-top: 64px;
-    gap: 32px;
-    align-items: center;
+  background-color: var(--bg500);
+  border: 2px solid var(--g600);
+  border-radius: 64px;
+  box-shadow: 8px 8px 0px rgba(0, 0, 0, 10%);
+  display: flex;
+  padding: 40px 64px 64px 64px;
+  width: 50vw;
+  max-width: 100%;
+  margin: auto;
+  margin-top: 64px;
+  gap: 32px;
+  align-items: center;
 }
 
 .loginTitle {
-    font-weight: 600;
+  font-weight: 600;
 }
 
 .left {
-    width: 256px;
-    max-width: 100%;
-    flex-shrink: 0;
+  width: 256px;
+  max-width: 100%;
+  flex-shrink: 0;
 }
 
 .form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
 }
 
 .image {
-    width: 100%;
-    object-position: right bottom;
-    object-fit: contain;
+  width: 100%;
+  object-position: right bottom;
+  object-fit: contain;
 }
 
 .textbox {
-    display: block;
-    width: 100%;
-    height: 32px;
-    border: 2px solid var(--b500);
-    padding: 4px 12px;
+  display: block;
+  width: 100%;
+  height: 32px;
+  border: 2px solid var(--b500);
+  padding: 4px 12px;
 }
 
 .textbox::placeholder {
-    color: inherit;
+  color: inherit;
 }
 
 .forgotPassword {
-    color: var(--b500);
-    font-style: italic;
-    font-weight: 300;
+  color: var(--b500);
+  font-style: italic;
+  font-weight: 300;
 }
 
 .checkboxWrapper {
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-    justify-content: start;
-    gap: 12px;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: start;
+  gap: 12px;
 }
 
 .checkbox {
-    width: 24px;
-    height: 24px;
+  width: 24px;
+  height: 24px;
 }
 
 .label {
-    font-weight: 600;
+  font-weight: 600;
 }
 
 .continuePasswordChange {
-    border: none;
-    display: block;
-    color: var(--g100);
-    background-color: var(--p500);
-    text-align: center;
-    padding: 8px;
-    cursor: pointer;
+  border: none;
+  display: block;
+  color: var(--g100);
+  background-color: var(--p500);
+  text-align: center;
+  padding: 8px;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .forgotPassword .stepOne,
+  .forgotPassword .stepTwo,
+  .forgotPassword .stepThree {
+    padding: 40px 32px 32px 32px;
+  }
+
+  .left {
+    width: 100%;
+  }
+
+  .forgotPassword .stepOne,
+  .forgotPassword .stepTwo,
+  .forgotPassword .stepThree {
+    width: 100%;
+  }
 }

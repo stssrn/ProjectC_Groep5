@@ -24,6 +24,7 @@
   width: 100%;
   padding: 16px;
   margin-bottom: 8px;
+  font-weight: bold;
   background: none;
   border: none;
   text-align: left;
@@ -32,25 +33,18 @@
   animation: fadeIn 0.5s ease;
 }
 
-.casusButton:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-}
-
-.casusButton:active {
-  transform: scale(0.98);
-}
-
 .casusContentDiv {
   flex: 3;
   padding: 16px;
-  border-left: 1px solid #ddd;
+  border-left: 1px solid #000000;
   overflow-y: auto;
 }
 
 .casusPageLayout {
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: column;
   width: 100%;
+  color: #000000;
   height: auto;
   background-color: #edc7b7;
 }

@@ -112,8 +112,20 @@ const Page = () => {
     }
   };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (currentStep === 1) {
+      handleRequestReset();
+    } else if (currentStep === 2) {
+      validateResetToken();
+    } else if (currentStep === 3) {
+      handleResetPassword();
+    }
+  };
+
   return (
     <main className={styles.forgotPassword}>
+      <form onSubmit={handleSubmit}>
       {currentStep === 1 && (
         <div className={styles.stepOne}>
           <div className={styles.left}>
@@ -156,8 +168,9 @@ const Page = () => {
               <button
                 className={styles.continuePasswordChange}
                 onClick={validateResetToken}
+                disabled={loading}
               >
-                Volgende stap
+                {loading ? 'Validating...' : 'Validate'}
               </button>
             </div>
           </div>
@@ -202,6 +215,7 @@ const Page = () => {
       )}
 
       {error && <p style={{ color: "red" }}>{error}</p>}
+      </form>
     </main>
   );
 };
