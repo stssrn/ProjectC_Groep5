@@ -10,6 +10,10 @@ export async function GET(request: Request): Promise<NextResponse> {
   }
 
   try {
+    if (Number(userId) === 0) {
+      const users = await prisma.users.findMany();
+      return NextResponse.json({ users: users }, { status: 200 });
+    }
     const user = await prisma.users.findUnique({
       where: { id: Number(userId) },
     });

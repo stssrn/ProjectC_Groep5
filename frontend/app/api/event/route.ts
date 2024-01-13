@@ -63,9 +63,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         if (request.method === "POST") {
             const body = await request.json();
             const { date, name, description } = body;
-
             try {
-                // Create a new AgendaUser entry
                 const newEvent = await prisma.event.create({
                     data: { date, name, description },
                 });

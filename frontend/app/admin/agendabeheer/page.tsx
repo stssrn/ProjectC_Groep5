@@ -1,13 +1,21 @@
 "use client";
 import styles from "../../agenda/page.module.css";
+import eventStyles from "../../agenda/Event.module.css";
 import Container from "../../components/Container";
 import Event from "./event";
 import clsx from "clsx";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useId } from "react";
 import { monthNames } from "@/lib/agenda";
-import next from "next";
+import DateTimePicker from 'react-datetime-picker';
+import { Tillana } from "next/font/google";
 
 
+type EventData = {
+    id: number;
+    date: Date;
+    name: string;
+    description: string;
+};
 
 interface AgendaEvent {
     id: number,
@@ -35,10 +43,58 @@ const Page = () => {
         december: [],
     };
 
+    const defaultEvent: EventData = {
+        id: 0,
+        date: new Date(),
+        name: "",
+        description: ""
+    };
+
+    const dialogTitle = useId();
+    const dialogDate = useId();
+    const dialogDescription = useId();
     const [agendaData, setAgendaData] = useState<MonthData>(defaultData);
     const [isLoading, setIsLoading] = useState(true);
+    const [createEvent, setCreateEvent] = useState(false);
+    const [newEvent, setNewEvent] = useState<EventData>(defaultEvent);
+    const [titleIsEmpty, setTitleIsEmpty] = useState(true);
+    const [descIsEmpty, setDescIsEmpty] = useState(true);
 
-    
+
+
+    const addEventHandler = async (date: Date, name: string, description: string) => {
+        await addEvent(date, name, description);
+        newEvent.id = 0;
+        newEvent.date = new Date();
+        newEvent.name = "";
+        newEvent.description = "";
+        setDescIsEmpty(true);
+        setTitleIsEmpty(true);
+        await fetchEventData();
+        window.location.reload();
+    }
+
+    const addEvent = async (date: Date, title: string, desc: string) => {
+        try {
+            const response = await fetch(`/api/event`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    date,
+                    name: title,
+                    description: desc,
+                }),
+            });
+            setCreateEvent(false);
+            if (!response.ok) {
+                throw new Error("Failed to add event data");
+            }
+        } catch (error) {
+            console.error("Error adding event data:", error);
+        }
+    }
 
     const fetchEventData = async () => {
         try {
@@ -207,7 +263,90 @@ const Page = () => {
 
     return (
         <Container title="Agenda beheer">
+            <div className={styles.addDiv}>
+                <button
+                    className={styles.add}
+                    onClick={() => setCreateEvent(true)}
+                >
+                    <i className="symbol">add</i>
+                </button>
+            </div>
             <div className={styles.months}>{eventElements}</div>
+
+            {createEvent && (
+                <div className={eventStyles.createPopUp}>
+                    <div className={eventStyles.dialog}>
+                        <div className={eventStyles.content}>
+                            <label htmlFor={dialogTitle}>Titel</label>
+                            <input
+                                type="text"
+                                name="Titel"
+                                value={newEvent.name}
+                                id={dialogTitle}
+                                className={titleIsEmpty === false ? eventStyles.textBox : eventStyles.errorBorder}
+                                onChange={(e) => {
+                                    setNewEvent({ ...newEvent, name: e.target.value });
+                                }}
+                            />
+
+                            <label htmlFor={dialogDescription}>Beschrijving</label>
+                            <textarea
+                                name="Beschrijving"
+                                value={newEvent.description}
+                                id={dialogDescription}
+                                rows={5}
+                                cols={50}
+                                className={descIsEmpty === false ? eventStyles.textBox : eventStyles.errorBorder}
+                                onChange={(e) => {
+                                    setNewEvent({ ...newEvent, description: e.target.value });
+                                }}
+                            />
+
+                            <label htmlFor={dialogDate}>Datum</label><br />
+                            <DateTimePicker
+                                className={eventStyles.dateBox}
+                                onChange={(e: Date | null) => {
+                                    // Ensure a default value when e is null
+                                    const selectedDate = e || new Date();
+                                    setNewEvent({ ...newEvent, date: selectedDate });
+                                }}
+                                value={newEvent.date || null}
+                                locale="en-GB"
+                                calendarIcon={null}
+                                clearIcon={null}
+                                disableCalendar={true}
+                                disableClock={true}
+                                required={true}
+                            />
+                        </div>
+                        <div className={eventStyles.adminDialogButtons}>
+                            <input
+                                type="button"
+                                value="Sluiten"
+                                className={eventStyles.adminSecondaryButton}
+                                onClick={() => {
+                                    setCreateEvent(false);
+                                    setDescIsEmpty(false);
+                                    setTitleIsEmpty(false);
+                                }}
+                            />
+                            <input
+                                type="button"
+                                value="Opslaan"
+                                className={eventStyles.adminButton}
+                                onClick={() => {
+                                    if (newEvent.name) setTitleIsEmpty(false);
+                                    else setTitleIsEmpty(true);
+                                    if (newEvent.description) {
+                                        setDescIsEmpty(false);
+                                    } else setDescIsEmpty(true);
+                                    if (newEvent.name && newEvent.description) addEventHandler(newEvent.date, newEvent.name, newEvent.description);
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
         </Container>
     );
 };

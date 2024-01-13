@@ -4,9 +4,15 @@ import prisma from '../../../lib/prisma';
 export async function GET(request: Request): Promise<NextResponse> {
     try {
         if (request.method === 'GET') {
-            const body = await request.json();
-            const { userId, eventId } = body;
-
+            const searchParams = new URL(request.url).searchParams;
+            const userId = searchParams.get("userId");
+            const eventId = searchParams.get("eventId");
+            if (!searchParams) {
+                return new NextResponse(
+                    JSON.stringify({ message: 'Missing IDs in the request body' }),
+                    { status: 400 }
+                );
+            }
             if (Number(userId) === 0) {
                 const agendaUserEntries = await prisma.agendaUser.findMany({
                     where: {

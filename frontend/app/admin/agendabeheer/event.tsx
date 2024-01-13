@@ -2,9 +2,8 @@
 import { useState, useEffect, useId } from "react";
 import styles from "../../agenda/Event.module.css";
 import { useSession } from "next-auth/react";
-import { DateTime } from 'luxon';
-import { useRouter } from 'next/router';
-
+import 'react-datetime-picker/dist/DateTimePicker.css';
+import DateTimePicker from 'react-datetime-picker';
 
 type EventData = {
     id: number;
@@ -19,9 +18,22 @@ interface AgendaUser {
     userId: number,
 }
 
+type UserData = {
+    id: number;
+    email: string;
+    password: string;
+    bio: string;
+    points: number;
+    profilePhoto: "MALE" | "FEMALE";
+    profilePhotoUrl?: string;
+    firstName: string;
+    lastName: string;
+    username: string;
+    registrationDate: string;
+    firstLogin: boolean;
+};
 
 const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
-
 
     const dialogTitle = useId();
     const dialogDate = useId();
@@ -30,13 +42,15 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
     const [showEdit, setShowEdit] = useState(false);
     const [titleIsEmpty, setTitleIsEmpty] = useState(false);
     const [descIsEmpty, setDescIsEmpty] = useState(false);
-    const [dateIsEmpty, setDateIsEmpty] = useState(false);
     const [agendaUserByEvent, setAgendaUserByEvent] = useState<AgendaUser[]>([]);
-
     const [eventName, setEventName] = useState<string>(event.name || "");
-    const [eventDate, setEventDate] = useState<Date>(new Date(event.date)); // Use new Date()
+    const [eventDate, setEventDate] = useState<Date | null>(event.date ? new Date(event.date) : null);
     const [eventDescription, setEventDescription] = useState<string>(event.description || "");
-
+    const [showUsers, setShowUsers] = useState(false);
+    const [allUsers, setAllUsers] = useState<UserData[]>([]);
+    const [filteredUsers, setFilteredUsers] = useState<UserData[]>([]);
+    const [editUserSignIn, setEditUserSignIn] = useState(false);
+    const [currentUser, setCurrentUser] = useState<UserData>();
 
     const [eventData, setEventData] = useState<EventData>({
         id: 0,
@@ -45,43 +59,64 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
         description: ""
     });
 
+    const deleteEventHandler = async (eventId: any) => {
+        //delete all agenda users with this id maybe with id 0??
+        await deleteEvent(eventId);
+        setShowEdit(false);
+        fetchEventData();
+        window.location.reload();
+    }
     const deleteEvent = async (eventId: any) => {
         try {
             const response = await fetch(`/api/event?id=${eventId}`, {
                 method: "DELETE",
             });
             if (!response.ok) {
-                throw new Error("Failed delete to event data");
+                throw new Error("Failed to delete event data");
             }
         } catch (error) {
             console.error("Error deleting event data:", error);
         }
     }
+    const deleteAgendaUsersByEventId = async (eventID: any) => {
 
-    const fetchAgendaUserByEventId = async (eventID: any) => {
+    }
+
+    const fetchAllUsers = async () => {
         try {
-            const response = await fetch(`/api/event`, {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    eventId: eventID,
-                    userId: 0
-                }),
-            });
-            if (!response.ok) {
-                throw new Error("Failed fetch to agendaUser data");
-            }
+            const response = await fetch(`/api/user/fetchFromUserId?id=${0}`);
+            if (!response.ok) throw new Error("Failed to fetch user data");
+
             const data = await response.json();
-            setAgendaUserByEvent(data.entries);
+            return data.users;
         } catch (error) {
-            console.error("Error fetching agendaUser data:", error);
+            console.error("Error fetching user data:", error);
+        }
+    }
+    const fetchAgendaUserByEventId = async (userID: any, eventId: any) => {
+        try {
+            const response = await fetch(`/api/agendaUser?userId=${userID}&eventId=${eventId}`, {
+                method: "GET",
+            });
+            if (!response.ok) throw new Error("Failed to fetch agenda user data");
+            const data = await response.json();
+            return data.entries;
+        } catch (error) {
+            console.error("Error fetching agenda user data:", error);
         }
     }
 
 
-    const fetchEventData = async (eventId: number, userID: number) => {
+    const filterUsersHandler = async () => {
+        const agendaUsers: AgendaUser[] = await fetchAgendaUserByEventId(0, event.id);
+        const allusers: UserData[] = await fetchAllUsers();
+        setAgendaUserByEvent(agendaUsers);
+        setAllUsers({ ...allUsers, ...allusers });
+        const filteredUsers = allusers.filter(user => agendaUsers.some(agendaUser => agendaUser.userId === user.id));
+        setFilteredUsers(filteredUsers);
+    }
+
+    const fetchEventData = async () => {
         try {
             const response = await fetch(`../api/event?id=${0}`, {
                 method: "GET",
@@ -89,14 +124,14 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
             if (!response.ok) throw new Error("Failed to fetch agenda data");
             const data = await response.json();
             setEventData({ ...eventData, ...data });
+            setEventDate(new Date(event.date));
 
         } catch (error) {
             console.error("Error fetching agenda data:", error);
         }
     };
 
-
-    const saveEditedData = async (title: string, desc: string, date: Date) => {
+    const saveEditedData = async (title: string, desc: string, date: Date | null) => {
         try {
             const response = await fetch(`../api/event`, {
                 method: "PUT",
@@ -105,60 +140,44 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
                 },
                 body: JSON.stringify({
                     id: Number(event.id),
-                    date,
-                    title,
+                    date: date?.toISOString(),
+                    name: title,
                     description: desc
-
                 }),
             });
 
             if (!response.ok) {
-                throw new Error("Failed to update educatie_modules data");
+                throw new Error("Failed to update event data");
             }
         } catch (error) {
-            console.error("Error updating educatie_modules data:", error);
+            console.error("Error updating event data:", error);
         }
     };
 
-    const isValidDate = (date: Date) => {
-        return date instanceof Date && !isNaN(date.getTime());
-    };
-
     const saveAndClose = async () => {
-        console.log(eventName, eventDescription)
         if (!eventName || !eventDescription) {
             setTitleIsEmpty(!eventName);
             setDescIsEmpty(!eventDescription);
             return;
         }
-        console.log(event.date)
-        if (!isValidDate(event.date)) {
-            setDateIsEmpty(true);
-            return;
-        } else {
-            setDateIsEmpty(false);
-        }
 
-        await saveEditedData(eventName, eventDescription, event.date);
+        await saveEditedData(eventName, eventDescription, eventDate);
         setShowEdit(false);
-        const router = useRouter();
-        router.push('/admin/agendabeheer');
+        fetchEventData();
+        window.location.reload();
     };
 
 
-
     useEffect(() => {
-        const eventId = event.id;
         if (session?.user?.id) {
-            fetchEventData(eventId, session?.user.id);
+            fetchEventData();
         }
     }, [event.id, session]);
-
-
 
     return (
         <main>
             <div key={new Date(event.date).getMilliseconds()} className={styles.event}>
+
                 <div className={styles.info}>
                     <time dateTime={new Date(event.date).toISOString()} className={styles.eventDay}>
                         {new Date(event.date).getDate()}
@@ -170,7 +189,7 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
                     onClick={() => {
                         setShowEdit(true);
                         setEventName(event.name || "");
-                        setEventDate(event.date || new Date());
+                        setEventDate(event.date ? new Date(event.date) : null);
                         setEventDescription(event.description || "");
                     }}
                 >
@@ -192,25 +211,6 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
                                 onChange={(e) => setEventName(e.target.value)}
                             />
 
-                            <label htmlFor={dialogDate}>Datum</label>
-                            <input
-                                type="text"
-                                name="Datum"
-                                value={new Date(event.date).toLocaleDateString('nl-NL', {
-                                    weekday: 'long',
-                                    day: 'numeric',
-                                    month: 'long',
-                                    hour: 'numeric',
-                                    minute: 'numeric',
-                                    timeZone: 'UTC',
-                                })}
-                                id={dialogDate}
-                                className={dateIsEmpty === false ? styles.textBox : styles.errorBorder}
-                                onChange={(e) => setEventDate(new Date(e.target.value))}
-                            />
-
-
-
                             <label htmlFor={dialogDescription}>Beschrijving</label>
                             <textarea
                                 name="Beschrijving"
@@ -222,47 +222,112 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
                                 onChange={(e) => setEventDescription(e.target.value)}
                             />
 
+                            <label htmlFor={dialogDate}>Datum</label><br />
+                            <DateTimePicker
+                                className={styles.dateBox}
+                                onChange={(date: Date | null) => setEventDate(date)}
+                                value={eventDate}
+                                locale="en-GB"
+                                calendarIcon={null}
+                                clearIcon={null}
+                                disableCalendar={true}
+                                disableClock={true}
+                                required={true}
+                            />
+                            <button
+                                className={styles.group}
+                                onClick={() => {
+                                    setShowUsers(true);
+                                    filterUsersHandler();
+                                }}
+                            >
+                                <i className="symbol">group</i>
+                                inschrijvingen
+                            </button>
                         </div>
-                        <div>
+                        <div className={styles.adminDialogButtons}>
+                            <input
+                                type="button"
+                                value="Sluiten"
+                                className={styles.adminSecondaryButton}
+                                onClick={() => {
+                                    setShowEdit(false);
+                                    setDescIsEmpty(false);
+                                    setTitleIsEmpty(false);
+                                }}
+                            />
+                            <input
+                                type="button"
+                                value="Verwijderen"
+                                className={styles.adminButton}
+                                onClick={() => deleteEventHandler(event.id)}
+                            />
                             <input
                                 type="button"
                                 value="Opslaan"
-                                className={styles.button}
+                                className={styles.adminButton}
                                 onClick={() => {
                                     if (event.name) setTitleIsEmpty(false);
                                     else setTitleIsEmpty(true);
                                     if (event.description) {
                                         setDescIsEmpty(false);
                                         saveAndClose();
-                                    }
-                                    else setDescIsEmpty(true);
-
+                                    } else setDescIsEmpty(true);
                                 }}
                             />
-                            <input
-                                type="button"
-                                value="Verwijderen"
-                                className={styles.button}
-                                onClick={() => {
-
-                                }}
-                            />
-                            <input
-                                type="button"
-                                value="Sluiten"
-                                className={styles.secondaryButton}
-                                onClick={() => {
-                                    setShowEdit(false);
-                                    setDescIsEmpty(false);
-                                    setTitleIsEmpty(false);
-                                    setDateIsEmpty(false);
-                                }} />
                         </div>
                     </div>
                 </div>
             )}
+            {showUsers && (
+                <div className={styles.createPopUp}>
+                    <div className={styles.dialog}>
+                        <div className={styles.content}>
+                            <button
+                                className={styles.exit}
+                                onClick={() => {
+                                    setShowUsers(false);
+                                }}
+                            >
+                                <i className="symbol">close</i>
+                            </button><br></br>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Voornaam</th>
+                                        <th>Achternaam</th>
+                                        <th></th>
+                                    </tr>
+                                    {filteredUsers.map((user) =>
+                                        <tr key={user.id}>
+                                            <td className={styles.tableId}>{user.id}</td>
+                                            <td>{user.firstName}</td>
+                                            <td>{user.lastName}</td>
+                                            <td>
+                                                <button
+                                                    className={styles.editGroup}
+                                                    onClick={() => {
+                                                        setCurrentUser(user);
+                                                        setEditUserSignIn(true);
+                                                    }}
+                                                >
+                                                    <i className="symbol">edit</i>
+                                                </button>
+                                            </td>
+                                        </tr>
+
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
+                </div>
+            )}
         </main>
-    )
+    );
 };
+
 
 export default EventComponent;

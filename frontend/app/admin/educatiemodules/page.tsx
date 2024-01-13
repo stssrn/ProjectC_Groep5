@@ -152,10 +152,10 @@ const Page = () => {
             });
             setShowCreateModule(false);
             if (!response.ok) {
-                throw new Error("Failed to delete educatie_modules data");
+                throw new Error("Failed to add educatie_modules data");
             }
         } catch (error) {
-            console.error("Error deleting educatie_modules data:", error);
+            console.error("Error adding educatie_modules data:", error);
         }
     }
 
