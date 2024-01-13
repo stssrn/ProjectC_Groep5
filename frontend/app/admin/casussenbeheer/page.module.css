@@ -67,7 +67,7 @@
 
 .table td {
   background-color: var(--bg200);
-  border-bottom: 1px solid var(--bg600);
+  border-bottom: 1px solid #000000;
 }
 
 .tableId {
