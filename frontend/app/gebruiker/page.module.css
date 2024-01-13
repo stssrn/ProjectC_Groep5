@@ -1,5 +1,4 @@
-.parentContainer {
-  display: flex;
+.widthAanpassing {
   width: 70vw;
 }
 
@@ -9,28 +8,6 @@
   object-fit: cover;
   border-radius: 100%;
   border: 2px solid #2f2e41;
-}
-
-.userInfo {
-  display: flex;
-  object-fit: cover;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  border-bottom: 1px solid #000000;
-}
-
-.userInfo > div {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 10px;
-}
-
-.userInfo > div > p,
-.userInfo > div > label {
-  text-align: left;
-  margin: 0;
 }
 
 .editButton,
@@ -134,9 +111,8 @@
 }
 
 @media (max-width: 600px) {
-  .parentContainer {
-    width: 100vw;
-    padding: 10px;
+  .widthAanpassing {
+    width: 100%;
   }
 
   .profileContainer,
