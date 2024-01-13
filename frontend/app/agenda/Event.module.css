@@ -116,8 +116,7 @@
   font-size: 30px;
 }
 
-.edit,
-.editGroup {
+.edit {
   background-color: var(--bg300);
   border: none;
   padding: 0px 8px;
@@ -143,11 +142,6 @@
   border-radius: 5px;
 }
 
-@media (min-width: 450px) {
-  .group {
-    margin-top: 5px;
-  }
-}
 
 .exit {
   background-color: var(--bg300);
@@ -169,31 +163,54 @@
 .table {
   border-spacing: 12px 0;
   border-collapse: collapse;
+  width: 100%;
 }
 
 .table td,
 .table th {
-  padding: 2px 8px;
+  padding: 8px 12px;
+  border: 1px solid var(--bg600);
 }
 
-.table tr:first-child {
+.table th {
+  background-color: red;
+  /* Red background for all th elements */
   color: #fff;
-  text-align: left;
-  background-color: var(--p500);
+  /* White text color for all th elements */
+}
+
+.table tr:first-child th {
+  background-color: red;
+  color: #fff;
 }
 
 .table tr:first-child th {
   font-weight: normal;
-  padding: 4px 8px;
-}
-
-.table tr td:last-child {
-  padding-right: 0;
+  padding: 8px 12px;
 }
 
 .tableId {
   text-align: right;
   font-variant-numeric: tabular-nums;
+}
+
+.editGroup {
+  background-color: var(--bg300);
+  border: none;
+  padding: 0px 8px;
+  color: inherit;
+  font-size: 20px;
+  display: flex;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+}
+
+@media (min-width: 450px) {
+  .group {
+    margin-top: 5px;
+  }
 }
 
 
@@ -275,4 +292,21 @@
   .adminSecondaryButton {
     width: 175%;
   }
+}
+
+.add {
+  background-color: var(--bg300);
+  border: none;
+  padding: 0px 8px;
+  color: inherit;
+  font-size: 20px;
+  display: flex;
+  height: 35px;
+  align-items: center;
+  justify-content: center;
+}
+
+.addDiv {
+  display: flex;
+  justify-content: right;
 }

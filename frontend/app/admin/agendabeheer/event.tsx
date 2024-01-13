@@ -1,9 +1,12 @@
 "use client";
-import { useState, useEffect, useId } from "react";
+// EventComponent.jsx
+
+import React, { useState, useEffect, useId } from "react";
 import styles from "../../agenda/Event.module.css";
 import { useSession } from "next-auth/react";
 import 'react-datetime-picker/dist/DateTimePicker.css';
 import DateTimePicker from 'react-datetime-picker';
+import UsersComponent from "./UsersComponent";
 
 type EventData = {
     id: number;
@@ -12,29 +15,10 @@ type EventData = {
     description: string;
 };
 
-interface AgendaUser {
-    id: number,
-    EventId: number,
-    userId: number,
-}
-
-type UserData = {
-    id: number;
-    email: string;
-    password: string;
-    bio: string;
-    points: number;
-    profilePhoto: "MALE" | "FEMALE";
-    profilePhotoUrl?: string;
-    firstName: string;
-    lastName: string;
-    username: string;
-    registrationDate: string;
-    firstLogin: boolean;
-};
+type ValuePiece = Date | null;
+type Value = ValuePiece;
 
 const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
-
     const dialogTitle = useId();
     const dialogDate = useId();
     const dialogDescription = useId();
@@ -42,22 +26,14 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
     const [showEdit, setShowEdit] = useState(false);
     const [titleIsEmpty, setTitleIsEmpty] = useState(false);
     const [descIsEmpty, setDescIsEmpty] = useState(false);
-    const [agendaUserByEvent, setAgendaUserByEvent] = useState<AgendaUser[]>([]);
     const [eventName, setEventName] = useState<string>(event.name || "");
-    const [eventDate, setEventDate] = useState<Date | null>(event.date ? new Date(event.date) : null);
+
+    const [value, onChange] = useState<Value>(event.date ? new Date(event.date) : null);
+    //const [eventDate, setEventDate] = useState<Date | null>(event.date ? new Date(event.date) : null);
     const [eventDescription, setEventDescription] = useState<string>(event.description || "");
     const [showUsers, setShowUsers] = useState(false);
-    const [allUsers, setAllUsers] = useState<UserData[]>([]);
-    const [filteredUsers, setFilteredUsers] = useState<UserData[]>([]);
-    const [editUserSignIn, setEditUserSignIn] = useState(false);
-    const [currentUser, setCurrentUser] = useState<UserData>();
 
-    const [eventData, setEventData] = useState<EventData>({
-        id: 0,
-        date: new Date(),
-        name: "",
-        description: ""
-    });
+
 
     const deleteEventHandler = async (eventId: any) => {
         //delete all agenda users with this id maybe with id 0??
@@ -82,50 +58,16 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
 
     }
 
-    const fetchAllUsers = async () => {
-        try {
-            const response = await fetch(`/api/user/fetchFromUserId?id=${0}`);
-            if (!response.ok) throw new Error("Failed to fetch user data");
-
-            const data = await response.json();
-            return data.users;
-        } catch (error) {
-            console.error("Error fetching user data:", error);
-        }
-    }
-    const fetchAgendaUserByEventId = async (userID: any, eventId: any) => {
-        try {
-            const response = await fetch(`/api/agendaUser?userId=${userID}&eventId=${eventId}`, {
-                method: "GET",
-            });
-            if (!response.ok) throw new Error("Failed to fetch agenda user data");
-            const data = await response.json();
-            return data.entries;
-        } catch (error) {
-            console.error("Error fetching agenda user data:", error);
-        }
-    }
-
-
-    const filterUsersHandler = async () => {
-        const agendaUsers: AgendaUser[] = await fetchAgendaUserByEventId(0, event.id);
-        const allusers: UserData[] = await fetchAllUsers();
-        setAgendaUserByEvent(agendaUsers);
-        setAllUsers({ ...allUsers, ...allusers });
-        const filteredUsers = allusers.filter(user => agendaUsers.some(agendaUser => agendaUser.userId === user.id));
-        setFilteredUsers(filteredUsers);
-    }
-
     const fetchEventData = async () => {
         try {
-            const response = await fetch(`../api/event?id=${0}`, {
+            const response = await fetch(`../api/event?id=${event.id}`, {
                 method: "GET",
             });
             if (!response.ok) throw new Error("Failed to fetch agenda data");
             const data = await response.json();
-            setEventData({ ...eventData, ...data });
-            setEventDate(new Date(event.date));
-
+            onChange(new Date(data.date));
+            setEventDescription(data.description);
+            setEventName(data.name);
         } catch (error) {
             console.error("Error fetching agenda data:", error);
         }
@@ -139,7 +81,7 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    id: Number(event.id),
+                    id: event.id,
                     date: date?.toISOString(),
                     name: title,
                     description: desc
@@ -161,23 +103,21 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
             return;
         }
 
-        await saveEditedData(eventName, eventDescription, eventDate);
+        await saveEditedData(eventName, eventDescription, value);
         setShowEdit(false);
         fetchEventData();
         window.location.reload();
     };
 
-
     useEffect(() => {
         if (session?.user?.id) {
-            fetchEventData();
+            if (showEdit === false) fetchEventData();
         }
     }, [event.id, session]);
 
     return (
         <main>
             <div key={new Date(event.date).getMilliseconds()} className={styles.event}>
-
                 <div className={styles.info}>
                     <time dateTime={new Date(event.date).toISOString()} className={styles.eventDay}>
                         {new Date(event.date).getDate()}
@@ -189,7 +129,7 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
                     onClick={() => {
                         setShowEdit(true);
                         setEventName(event.name || "");
-                        setEventDate(event.date ? new Date(event.date) : null);
+                        onChange(new Date(event.date));
                         setEventDescription(event.description || "");
                     }}
                 >
@@ -225,8 +165,8 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
                             <label htmlFor={dialogDate}>Datum</label><br />
                             <DateTimePicker
                                 className={styles.dateBox}
-                                onChange={(date: Date | null) => setEventDate(date)}
-                                value={eventDate}
+                                onChange={onChange}
+                                value={value}
                                 locale="en-GB"
                                 calendarIcon={null}
                                 clearIcon={null}
@@ -238,7 +178,6 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
                                 className={styles.group}
                                 onClick={() => {
                                     setShowUsers(true);
-                                    filterUsersHandler();
                                 }}
                             >
                                 <i className="symbol">group</i>
@@ -280,54 +219,10 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
                 </div>
             )}
             {showUsers && (
-                <div className={styles.createPopUp}>
-                    <div className={styles.dialog}>
-                        <div className={styles.content}>
-                            <button
-                                className={styles.exit}
-                                onClick={() => {
-                                    setShowUsers(false);
-                                }}
-                            >
-                                <i className="symbol">close</i>
-                            </button><br></br>
-                            <table>
-                                <tbody>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Voornaam</th>
-                                        <th>Achternaam</th>
-                                        <th></th>
-                                    </tr>
-                                    {filteredUsers.map((user) =>
-                                        <tr key={user.id}>
-                                            <td className={styles.tableId}>{user.id}</td>
-                                            <td>{user.firstName}</td>
-                                            <td>{user.lastName}</td>
-                                            <td>
-                                                <button
-                                                    className={styles.editGroup}
-                                                    onClick={() => {
-                                                        setCurrentUser(user);
-                                                        setEditUserSignIn(true);
-                                                    }}
-                                                >
-                                                    <i className="symbol">edit</i>
-                                                </button>
-                                            </td>
-                                        </tr>
-
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </div>
-                </div>
+                <UsersComponent event={event} setShowUsers={setShowUsers} />
             )}
         </main>
     );
 };
-
 
 export default EventComponent;
