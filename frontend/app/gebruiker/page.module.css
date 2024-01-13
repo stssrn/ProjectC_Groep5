@@ -1,21 +1,6 @@
 .parentContainer {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
-  justify-content: center;
   width: 70vw;
-}
-
-.profileContainer {
-  display: flex;
-  align-items: start;
-  gap: 20px;
-  width: 100%;
-}
-
-.circularProfilePhotoContainer {
-  flex-shrink: 0;
 }
 
 .circularProfilePhoto {
@@ -32,17 +17,18 @@
   flex-direction: column;
   gap: 10px;
   width: 100%;
+  border-bottom: 1px solid #000000;
 }
 
-.userInfo>div {
+.userInfo > div {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 10px;
 }
 
-.userInfo>div>p,
-.userInfo>div>label {
+.userInfo > div > p,
+.userInfo > div > label {
   text-align: left;
   margin: 0;
 }
@@ -58,6 +44,7 @@
 }
 
 .editButton {
+  margin-top: 1%;
   background-color: var(--p500);
   color: white;
   transition: background-color 0.3s;
@@ -75,48 +62,26 @@
   transition: background-color 0.3s;
 }
 
-.editButton:hover,
-.saveButton:hover,
-.cancelButton:hover,
-.tourButton:hover,
-.tourDiv:hover {
-  background-color: rgb(172, 255, 47);
-  color: black;
+.passwordChangeContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 50%;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #000000;
 }
 
-.passwordChangeSection {
-  margin-left: 10px;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.passwordChangeLabel {
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 
-.passwordChangeSection button {
-  padding: 5px 15px;
-  background-color: var(--p500);
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.passwordChangeSection button:hover {
-  background-color: rgb(172, 255, 47);
-  color: black;
-}
-
-.passwordChangeSection label,
-.passwordChangeSection input {
-  width: 100%;
-}
-
-.passwordChangeSection input {
-  margin: 5px 0;
-  padding: 5px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.passwordChangeInputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 50%;
 }
 
 .inputField,
@@ -153,59 +118,75 @@
   text-decoration: none;
 }
 
+.editButton i.symbol,
+.saveButton i.symbol,
+.cancelButton i.symbol {
+  margin-right: 5px;
+}
+
+.detailRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 0;
+  border-bottom: 1px solid #000000;
+}
+
 @media (max-width: 600px) {
+  .parentContainer {
+    width: 100vw;
+    padding: 10px;
+  }
+
+  .profileContainer,
   .circularProfilePhotoContainer {
-    width: min-content;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
   }
 
-  .profileContainer {
-    flex-direction: column;
-    align-items: flex-start;
+  .circularProfilePhoto {
+    width: 80px;
+    height: 80px;
   }
 
-  .userInfo>div {
+  .detailRow {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     width: 100%;
   }
 
-  .userInfo>div>p,
-  .userInfo>div>label {
-    text-align: left;
+  .detailLabel,
+  .detailContent {
+    text-align: center;
     width: 100%;
-  }
-
-  .editButton,
-  .saveButton,
-  .cancelButton {
-    margin-top: 5px;
-  }
-
-  .passwordChangeSection {
-    margin-left: -10px;
-    padding: 5px 10px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
   }
 
   .inputField,
   .textareaField {
     width: 100%;
+    margin: 5px 0;
+  }
+
+  .editButton,
+  .saveButton,
+  .cancelButton {
+    padding: 12px;
+    margin-top: 10px;
+  }
+
+  .passwordChangeContainer,
+  .passwordChangeInputs {
+    width: 100%;
   }
 
   .tourDiv {
-    width: 60%;
-    margin-right: 0;
+    width: 100%;
+    margin: 20px 0;
   }
 
   .tourButton {
-    display: flex;
-    justify-content: center;
-    color: white;
-    text-decoration: none;
-    padding: 8px;
-    height: 100%;
-    box-sizing: border-box;
+    padding: 5px;
   }
 }
