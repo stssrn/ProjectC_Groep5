@@ -15,26 +15,29 @@ const YouTubeVideo: React.FC<{ url: string }> = ({ url }) => (
   <iframe
     className={styles.iframe}
     src={`https://www.youtube.com/embed/${url}`}
-    frameBorder="0"
     allowFullScreen
   ></iframe>
 );
 
 const CasusPage: React.FC = () => {
   const [casusData, setCasusData] = useState<Casus[]>([]);
-  const [selectedCasus, setSelectedCasus] = useState<Casus | null>(null);
+  const [selectedCasusId, setSelectedCasusId] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch('/api/casussen');
       const data: Casus[] = await response.json();
       setCasusData(data);
-      setSelectedCasus(data[0] || null);
+      setSelectedCasusId(data[0]?.id || null);
     };
     fetchData();
   }, []);
 
-  const onSelect = (casus: Casus) => setSelectedCasus(casus);
+  const onSelect = (casusId: string) => {
+    setSelectedCasusId(prevId => prevId === casusId ? null : casusId);
+  };
+
+  const isSelected = (casusId: string) => selectedCasusId === casusId;
 
   return (
     <Container title="Casussen">
@@ -44,13 +47,13 @@ const CasusPage: React.FC = () => {
             <button
               key={casus.id}
               className={styles.casusButton}
-              onClick={() => onSelect(casus)}
+              onClick={() => onSelect(casus.id)}
             >
-              {casus.name}
+              <i className="symbol">{isSelected(casus.id) ? "-" : "+"}</i> {casus.name}
             </button>
           ))}
         </div>
-        {selectedCasus && <CasusContent casus={selectedCasus} />}
+        {selectedCasusId && <CasusContent casus={casusData.find(c => c.id === selectedCasusId)!} />}
       </div>
     </Container>
   );
@@ -60,7 +63,7 @@ const CasusContent: React.FC<{ casus: Casus }> = ({ casus }) => (
   <div className={styles.casusContentDiv}>
     <h1>{casus.name}</h1>
     <p>{casus.description}</p>
-    <details className={styles.detailsknop}>
+    <details className={styles.detailsknop} open>
       <summary>Behandeling</summary>
       <p>{casus.treatment}</p>
       <YouTubeVideo url={casus.url ?? ''} />
