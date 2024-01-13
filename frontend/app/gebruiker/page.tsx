@@ -373,6 +373,92 @@ const Page = () => {
             <span className={styles.tourButton}>Ga Naar Tour</span>
           </Link>
         </div>
+      )}
+
+      {/* Bio Sectie */}
+      {editMode.bio ? (
+        <div className={styles.detailRow}>
+          <span className={styles.detailLabel}>Bio:</span>
+          <textarea
+            className={styles.textareaField}
+            value={tempData.bio}
+            onChange={(e) => setTempData({ ...tempData, bio: e.target.value })}
+          />
+          <button
+            className={styles.saveButton}
+            onClick={() => handleSave("bio")}
+          >
+            Opslaan
+          </button>
+          <button
+            className={styles.cancelButton}
+            onClick={() => handleCancel("bio")}
+          >
+            Annuleer
+          </button>
+        </div>
+      ) : (
+        <div className={styles.detailRow}>
+          <span className={styles.detailLabel}>Bio:</span>
+          <span className={styles.detailContent}>{userData.bio}</span>
+          <button
+            className={styles.editButton}
+            onClick={() => handleEdit("bio")}
+          >
+            <i className="symbol">edit</i>
+          </button>
+        </div>
+      )}
+
+      {/* Punten Sectie */}
+      <div className={styles.detailRow}>
+        <span className={styles.detailLabel}>Punten:</span>
+        <span className={styles.detailContent}>{userData.points}</span>
+      </div>
+
+      {/* Wachtwoord Veranderen Sectie */}
+      {showChangePassword && (
+        <div className={styles.passwordChangeContainer}>
+          <div className={styles.passwordChangeLabel}>
+            <span>Nieuwe Wachtwoord:</span>
+          </div>
+          <div className={styles.passwordChangeInputs}>
+            <input
+              type="password"
+              placeholder="Voer nieuw wachtwoord in"
+              className={styles.inputField}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <button
+              className={styles.saveButton}
+              onClick={handleChangePassword}
+            >
+              Opslaan
+            </button>
+          </div>
+        </div>
+      )}
+
+      <div className={styles.detailRow}>
+        <span className={styles.detailLabel}>Wachtwoord:</span>
+        <i className="symbol">password</i>
+        <button
+          onClick={toggleChangePasswordForm}
+          className={styles.editButton}
+        >
+          {showChangePassword ? "Annuleer " : "Wachtwoord Wijzigen "}
+          <i className="symbol">edit</i>
+        </button>
+      </div>
+
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <div className={styles.tourDiv}>
+        <Link href="/tour">
+          <span className={styles.tourButton}>Ga Naar Tour</span>
+        </Link>
       </div>
     </Container>
   );
