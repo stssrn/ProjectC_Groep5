@@ -7,7 +7,6 @@ import { useSession } from 'next-auth/react';
 
 import MaleDefaultPhoto from "./male.svg";
 import FemaleDefaultPhoto from "./female.svg";
-import { Router } from "react-router-dom";
 import Link from "next/link";
 
 type UserData = {
@@ -219,13 +218,16 @@ const Page = () => {
   return (
     <Container title="Profiel">
       <div className={styles.parentContainer}>
-        <div className={styles.profileContainer}>
-          <div className={styles.circularProfilePhotoContainer}>
+        <div className={styles.detailsContainer}>
+          {/* Profiel Foto Sectie */}
+          <div className={styles.detailRow}>
+            <span className={styles.detailLabel}>Foto:</span>
+
             <Image
               src={getImagePath()}
               alt="Profile"
-              width={150}
-              height={150}
+              width={100}
+              height={100}
               className={styles.circularProfilePhoto}
             />
             <input
@@ -239,134 +241,144 @@ const Page = () => {
               className={styles.editButton}
               onClick={() => inputFileRef.current?.click()}
             >
-              Bewerk Foto
+              <i className="symbol">edit</i>
             </button>
           </div>
-          <div className={styles.userInfo}>
-            <div>
-              <label>Naam:</label>
-              <p>
-                {userData.firstName} {userData.lastName}
-              </p>
-            </div>
-            {/* <div>
-              <label>Leeftijd:</label>
-              <p>{userData.age}</p>
-            </div> */}
-            <div>
-              <label>Email:</label>
-              {editMode.email ? (
-                <>
-                  <input
-                    type="text"
-                    value={tempData.email}
-                    onChange={(e) =>
-                      setTempData({ ...tempData, email: e.target.value })
-                    }
-                  />
-                  <button
-                    className={styles.saveButton}
-                    onClick={() => handleSave("email")}
-                  >
-                    Opslaan
-                  </button>
-                  <button
-                    className={styles.cancelButton}
-                    onClick={() => handleCancel("email")}
-                  >
-                    Annuleren
-                  </button>
-                </>
-              ) : (
-                <>
-                  <p>{userData.email}</p>
-                  <button
-                    className={styles.editButton}
-                    onClick={() => handleEdit("email")}
-                  >
-                    Bewerken
-                  </button>
-                </>
-              )}
-            </div>
+        </div>
+      </div>
 
-            <div>
-              <label>Bio:</label>
-              {editMode.bio ? (
-                <>
-                  <textarea
-                    value={tempData.bio}
-                    onChange={(e) =>
-                      setTempData({ ...tempData, bio: e.target.value })
-                    }
-                  />
-                  <button
-                    className={styles.saveButton}
-                    onClick={() => handleSave("bio")}
-                  >
-                    Opslaan
-                  </button>
-                  <button
-                    className={styles.cancelButton}
-                    onClick={() => handleCancel("bio")}
-                  >
-                    Annuleren
-                  </button>
-                </>
-              ) : (
-                <>
-                  <p>{userData.bio}</p>
-                  <button
-                    className={styles.editButton}
-                    onClick={() => handleEdit("bio")}
-                  >
-                    Bewerken
-                  </button>
-                </>
-              )}
-            </div>
-            <div>
-              <label>Punten:</label>
-              <p>{userData.points}</p>
-            </div>
-            <div className={styles.passwordChangeSection}>
-              <button
-                onClick={toggleChangePasswordForm}
-                className={styles.editButton}
-              >
-                {showChangePassword ? "Annuleren" : "Wachtwoord Wijzigen"}
-              </button>
+      {/* Naam Sectie */}
+      <div className={styles.detailRow}>
+        <span className={styles.detailLabel}>Naam:</span>
+        <span className={styles.detailContent}>
+          {userData.firstName} {userData.lastName}
+        </span>
+      </div>
 
-              {showChangePassword && (
-                <div>
-                  <label htmlFor="newPassword">Nieuw Wachtwoord:</label>
-                  <input
-                    type="password"
-                    id="newPassword"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    className={styles.inputField}
-                  />
-                  <button
-                    onClick={handleChangePassword}
-                    className={styles.saveButton}
-                  >
-                    Opslaan
-                  </button>
-                </div>
-              )}
-            </div>
+      {/* Email Sectie */}
+      {editMode.email ? (
+        <div className={styles.detailRow}>
+          <span className={styles.detailLabel}>Email:</span>
+          <input
+            type="text"
+            className={styles.inputField}
+            value={tempData.email}
+            onChange={(e) => setTempData({ ...tempData, email: e.target.value })}
+          />
+          <button
+            className={styles.saveButton}
+            onClick={() => handleSave("email")}
+          >
+            Opslaan
+          </button>
+          <button
+            className={styles.cancelButton}
+            onClick={() => handleCancel("email")}
+          >
+            Annuleer
+          </button>
+        </div>
+      ) : (
+        <div className={styles.detailRow}>
+          <span className={styles.detailLabel}>Email:</span>
+          <span className={styles.detailContent}>{userData.email}</span>
+          <button
+            className={styles.editButton}
+            onClick={() => handleEdit("email")}
+          >
+            <i className="symbol">edit</i>
+          </button>
+        </div>
+      )}
+
+      {/* Bio Sectie */}
+      {editMode.bio ? (
+        <div className={styles.detailRow}>
+          <span className={styles.detailLabel}>Bio:</span>
+          <textarea
+            className={styles.textareaField}
+            value={tempData.bio}
+            onChange={(e) => setTempData({ ...tempData, bio: e.target.value })}
+          />
+          <button
+            className={styles.saveButton}
+            onClick={() => handleSave("bio")}
+          >
+            Opslaan
+          </button>
+          <button
+            className={styles.cancelButton}
+            onClick={() => handleCancel("bio")}
+          >
+            Annuleer
+          </button>
+        </div>
+      ) : (
+        <div className={styles.detailRow}>
+          <span className={styles.detailLabel}>Bio:</span>
+          <span className={styles.detailContent}>{userData.bio}</span>
+          <button
+            className={styles.editButton}
+            onClick={() => handleEdit("bio")}
+          >
+            <i className="symbol">edit</i>
+          </button>
+        </div>
+      )}
+
+      {/* Punten Sectie */}
+      <div className={styles.detailRow}>
+        <span className={styles.detailLabel}>Punten:</span>
+        <span className={styles.detailContent}>{userData.points}</span>
+      </div>
+
+      {/* Wachtwoord Veranderen Sectie */}
+      {showChangePassword && (
+        <div className={styles.passwordChangeContainer}>
+          <div className={styles.passwordChangeLabel}>
+            <span>Nieuwe Wachtwoord:</span>
+          </div>
+          <div className={styles.passwordChangeInputs}>
+            <input
+              type="password"
+              placeholder="Voer nieuw wachtwoord in"
+              className={styles.inputField}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            <button
+              className={styles.saveButton}
+              onClick={handleChangePassword}
+            >
+              Opslaan
+            </button>
           </div>
         </div>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <div className={styles.tourDiv}>
-          <Link href="/tour">
-            <span className={styles.tourButton}>Ga naar de tour</span>
-          </Link>
-        </div>
+      )}
+
+      <div className={styles.detailRow}>
+        <span className={styles.detailLabel}>Wachtwoord:</span>
+        <i className="symbol">password</i>
+        <button
+          onClick={toggleChangePasswordForm}
+          className={styles.editButton}
+        >
+          {showChangePassword ? "Annuleer " : "Wachtwoord Wijzigen "}
+          <i className="symbol">edit</i>
+        </button>
+      </div>
+
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
+
+      <div className={styles.tourDiv}>
+        <Link href="/tour">
+          <span className={styles.tourButton}>Ga Naar Tour</span>
+        </Link>
       </div>
     </Container>
   );
+
 };
 
 export default Page;
