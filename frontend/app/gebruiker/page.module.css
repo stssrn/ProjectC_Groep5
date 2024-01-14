@@ -110,9 +110,67 @@
   border-bottom: 1px solid #000000;
 }
 
+.dialogBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.dialog {
+  background-color: var(--bg500);
+  padding: 20px;
+  margin: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.dialog label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.dialog input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.dialog .saveButton,
+.dialog .cancelButton {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--p500);
+  color: white;
+  cursor: pointer;
+}
+
+.dialog .cancelButton {
+  background-color: var(--p500);
+}
+
 @media (max-width: 600px) {
   .widthAanpassing {
     width: 100%;
+  }
+
+  .dialog {
+    width: 90%;
   }
 
   .profileContainer,

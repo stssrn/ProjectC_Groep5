@@ -254,26 +254,29 @@ const Page = () => {
 
         {/* Email Sectie */}
         {editMode.email ? (
-          <div className={styles.detailRow}>
-            <span className={styles.detailLabel}>Email:</span>
-            <input
-              type="text"
-              className={styles.inputField}
-              value={tempData.email}
-              onChange={(e) => setTempData({ ...tempData, email: e.target.value })}
-            />
-            <button
-              className={styles.saveButton}
-              onClick={() => handleSave("email")}
-            >
-              Opslaan
-            </button>
-            <button
-              className={styles.cancelButton}
-              onClick={() => handleCancel("email")}
-            >
-              Annuleer
-            </button>
+          <div className={styles.dialogBackdrop}>
+            <div className={styles.dialog}>
+              <label htmlFor="email">Email</label>
+              <input
+                type="text"
+                id="email"
+                className={styles.inputField}
+                value={tempData.email}
+                onChange={(e) => setTempData({ ...tempData, email: e.target.value })}
+              />
+              <button
+                className={styles.saveButton}
+                onClick={() => handleSave("email")}
+              >
+                Opslaan
+              </button>
+              <button
+                className={styles.cancelButton}
+                onClick={() => handleCancel("email")}
+              >
+                Annuleren
+              </button>
+            </div>
           </div>
         ) : (
           <div className={styles.detailRow}>
@@ -288,27 +291,32 @@ const Page = () => {
           </div>
         )}
 
+
         {/* Bio Sectie */}
         {editMode.bio ? (
-          <div className={styles.detailRow}>
-            <span className={styles.detailLabel}>Bio:</span>
-            <textarea
-              className={styles.textareaField}
-              value={tempData.bio}
-              onChange={(e) => setTempData({ ...tempData, bio: e.target.value })}
-            />
-            <button
-              className={styles.saveButton}
-              onClick={() => handleSave("bio")}
-            >
-              Opslaan
-            </button>
-            <button
-              className={styles.cancelButton}
-              onClick={() => handleCancel("bio")}
-            >
-              Annuleer
-            </button>
+          <div className={styles.dialogBackdrop}>
+            <div className={styles.dialog}>
+              <label htmlFor="bio">Bio</label>
+              <input
+                type="text"
+                id="bio"
+                className={styles.inputField}
+                value={tempData.bio}
+                onChange={(e) => setTempData({ ...tempData, bio: e.target.value })}
+              />
+              <button
+                className={styles.saveButton}
+                onClick={() => handleSave("bio")}
+              >
+                Opslaan
+              </button>
+              <button
+                className={styles.cancelButton}
+                onClick={() => handleCancel("bio")}
+              >
+                Annuleren
+              </button>
+            </div>
           </div>
         ) : (
           <div className={styles.detailRow}>
@@ -331,13 +339,12 @@ const Page = () => {
 
         {/* Wachtwoord Veranderen Sectie */}
         {showChangePassword && (
-          <div className={styles.passwordChangeContainer}>
-            <div className={styles.passwordChangeLabel}>
-              <span>Nieuwe Wachtwoord:</span>
-            </div>
-            <div className={styles.passwordChangeInputs}>
+          <div className={styles.dialogBackdrop}>
+            <div className={styles.dialog}>
+              <label htmlFor="newPassword">Nieuwe Wachtwoord</label>
               <input
                 type="password"
+                id="newPassword"
                 placeholder="Voer nieuw wachtwoord in"
                 className={styles.inputField}
                 value={newPassword}
@@ -348,6 +355,12 @@ const Page = () => {
                 onClick={handleChangePassword}
               >
                 Opslaan
+              </button>
+              <button
+                className={styles.cancelButton}
+                onClick={() => setShowChangePassword(false)}
+              >
+                Annuleren
               </button>
             </div>
           </div>
