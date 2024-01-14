@@ -51,8 +51,6 @@ const Page = () => {
       if (!response.ok) throw new Error("Failed to fetch agenda data");
 
       const fetchedData = await response.json();
-      //console.log("fetched data:")
-      //console.log(fetchedData);
 
       const organizedData: MonthData = {
         januari: [],
@@ -79,7 +77,6 @@ const Page = () => {
           organizedData[monthName].push(event);
         }
       });
-
       setAgendaData({ ...agendaData, ...organizedData });
     } catch (error) {
       console.error("Error fetching agenda data:", error);
@@ -173,6 +170,7 @@ const Page = () => {
       };
     }).filter(({ sortedEvents }) => sortedEvents.length > 0);
   const combinedEntries = [currentYearEntries, newYearEntries];
+
   const newYearMonth = newYearEntries
     .map(({ month, sortedEvents }) => ({
       month,

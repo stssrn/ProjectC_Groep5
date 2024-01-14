@@ -5,8 +5,8 @@ import clsx from "clsx";
 import { useState, useEffect } from 'react';
 
 interface Article {
-  title: string;
-  content: string;
+  title?: string;
+  content?: string;
   date?: Date;
   url?: URL;
 }
@@ -36,32 +36,33 @@ const fetchRandomArticles = async () => {
     if (getRandomNumber3 === getRandomNumber1 || getRandomNumber3 === getRandomNumber2) {
       getRandomNumber3 = getRandomNumber(0, fetchedData.newsArticles.length);
     }
+    if (fetchedData) {
+      const random_articles = [
+        {
+          title: fetchedData.newsArticles[getRandomNumber1].title,
+          content: fetchedData.newsArticles[getRandomNumber1].content,
+          date: new Date(),
+          url: new URL(fetchedData.newsArticles[getRandomNumber1].url)
+        },
+        {
+          title: fetchedData.newsArticles[getRandomNumber2].title,
+          content: fetchedData.newsArticles[getRandomNumber2].content,
+          date: new Date(),
+          url: new URL(fetchedData.newsArticles[getRandomNumber2].url)
+        },
+        {
+          title: fetchedData.newsArticles[getRandomNumber3].title,
+          content: fetchedData.newsArticles[getRandomNumber3].content,
+          date: new Date(),
+          url: new URL(fetchedData.newsArticles[getRandomNumber3].url)
+        },
+      ];
 
-    const random_articles = [
-      {
-        id: fetchedData.newsArticles[getRandomNumber1].id,
-        title: fetchedData.newsArticles[getRandomNumber1].title,
-        content: fetchedData.newsArticles[getRandomNumber1].content,
-        date: new Date(),
-        url: new URL(fetchedData.newsArticles[getRandomNumber1].url)
-      },
-      {
-        id: fetchedData.newsArticles[getRandomNumber2].id,
-        title: fetchedData.newsArticles[getRandomNumber2].title,
-        content: fetchedData.newsArticles[getRandomNumber2].content,
-        date: new Date(),
-        url: new URL(fetchedData.newsArticles[getRandomNumber2].url)
-      },
-      {
-        id: fetchedData.newsArticles[getRandomNumber3].id,
-        title: fetchedData.newsArticles[getRandomNumber3].title,
-        content: fetchedData.newsArticles[getRandomNumber3].content,
-        date: new Date(),
-        url: new URL(fetchedData.newsArticles[getRandomNumber3].url)
-      },
-    ];
-
-    return random_articles;
+      return random_articles;
+    }
+  else {
+    console.error("Unexpected data structure in API response:", fetchedData);
+  }
   } catch (error) {
     console.error("Error fetching newsArticles data:", error);
   }

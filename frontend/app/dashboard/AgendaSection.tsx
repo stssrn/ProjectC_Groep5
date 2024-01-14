@@ -38,15 +38,12 @@ const Page: React.FC<{
 
     const fetchAgendaData = async () => {
         try {
-            const eventId = 0;
-            const response = await fetch(`api/event?id=${eventId}`, {
+            const response = await fetch(`api/event?id=${0}`, {
                 method: "GET",
             });
             if (!response.ok) throw new Error("Failed to fetch agenda data");
 
             const fetchedData = await response.json();
-            //console.log("fetched data:");
-            //console.log(fetchedData);
             const organizedData: MonthData = {
                 januari: [],
                 februari: [],
@@ -63,16 +60,15 @@ const Page: React.FC<{
             };
 
             fetchedData.formattedEvents.forEach((event: AgendaEvent) => {
-                event.date = new Date(event.date);
 
-                const eventMonth = event.date.getMonth();
+
+                const eventMonth = new Date(event.date).getMonth();
                 const monthName = getMonthName(eventMonth + 1);
 
                 if (organizedData.hasOwnProperty(monthName)) {
                     organizedData[monthName].push(event);
                 }
             });
-
             setAgendaData({ ...agendaData, ...organizedData });
         } catch (error) {
             console.error("Error fetching agenda data:", error);
@@ -98,14 +94,33 @@ const Page: React.FC<{
         return monthNames[monthNumber - 1];
     };
 
-    const today = new Date();
-    const upcomingEvents = Object.entries(agendaData)
-        .flatMap(([month, events]) => events.map((e) => ({ month, ...e })))
-        .filter((x) => x.date.getMonth() === today.getMonth() && x.date.getFullYear() == today.getFullYear())
-        .slice(0, 2)
+    const currentYearEntries = Object.entries(agendaData)
+        .filter(([_, events]) => events.length > 0) // Filter out months with no events
+        .map(([month, events]) => {
+            // Combine month with events
+            const eventsWithMonth = events.map(event => ({ ...event, month }));
 
-    upcomingEvents.sort((a, b) => a.date.getTime() - b.date.getTime());
+            // Sort events by date
+            const sortedEvents = eventsWithMonth.sort((a, b) => {
+                return new Date(a.date).getTime() - new Date(b.date).getTime();
+            });
+
+            return {
+                month,
+                sortedEvents,
+            };
+        })
+        .filter(({ sortedEvents }) => sortedEvents.length > 0);
+
+    // Flatten the array of sorted events
+    const allSortedEvents = currentYearEntries.flatMap(({ sortedEvents }) => sortedEvents);
+
+    // Filter and grab the first two events that are closest to the current date
+    const upcomingEvents = allSortedEvents
+        .filter(event => new Date(event.date).getTime() >= Date.now())
+        .slice(0, 2);
     const month = upcomingEvents.at(0)?.month;
+
 
     useEffect(() => {
         fetchAgendaData();
@@ -125,7 +140,7 @@ const Page: React.FC<{
                                 <div className={styles.events}>
                                     {upcomingEvents.map(({ date, name }, i) => (
                                         <div key={i} className={styles.info}>
-                                            <p className={styles.day}>{date.getDate()}</p>
+                                            <p className={styles.day}>{new Date(date).getUTCDate()}</p>
                                             <p className={styles.name}>{name}</p>
                                         </div>
                                     ))}
@@ -143,37 +158,5 @@ const Page: React.FC<{
     );
 }
 
-/*const AgendaBlock: React.FC<{
-    className?: string;
-}> = ({ className }) => {
-    return (
-        <section className={className}>
-            <Container padding={12} title="Agenda">
-                <div className={styles.agenda}>
-                    {upcomingEvents.length ? (
-                        <>
-                            <h2 className={styles.month}>{month}</h2>
-                            <div className={styles.wrapper}>
-                                <div className={clsx(styles.bar, month && styles[month])}></div>
-                                <div className={styles.events}>
-                                    {upcomingEvents.map(({ date, name }, i) => (
-                                        <div key={i} className={styles.info}>
-                                            <p className={styles.day}>{date.getDate()}</p>
-                                            <p className={styles.name}>{name}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-                        </>
-                    ) : (
-                        <p className={styles.noEvents}>
-                            Er zijn geen agenda-items deze maand.
-                        </p>
-                    )}
-                </div>
-            </Container>
-        </section>
-    );
-};
-*/
+
 export default Page;

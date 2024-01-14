@@ -82,7 +82,7 @@ const Page = () => {
   };
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>Laden..</div>;
   }
 
   const handlePhotoChange = async (e: ChangeEvent<HTMLInputElement>) => {

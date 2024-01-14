@@ -134,7 +134,7 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
             <div key={new Date(event.date).getMilliseconds()} className={styles.event}>
                 <div className={styles.info}>
                     <time dateTime={new Date(event.date).toISOString()} className={styles.eventDay}>
-                        {new Date(event.date).getDate()}
+                        {new Date(event.date).getUTCDate()}
                     </time>
                     <div className={styles.eventName}>{event.name}</div>
                 </div>

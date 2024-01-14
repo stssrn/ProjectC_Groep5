@@ -31,15 +31,29 @@
     height: 24px;
     width: 100%;
     border-radius: 1rem;
-    background: red;
+    background: #ac3b61;
+
 }
 
 .quizProgress {
     height: 24px;
     width: 50%;
     border-radius: 1rem;
-    background: green;
+    background: white;
 }
+
+/*
+--b700: #123c69;
+  --g200: #f2f2f2;
+  --g100: #fff;
+  --bg500: #edc7b7;
+  --bg300: #eee2dc;
+  --p500: #ac3b61;
+  --p600: #a2102c;
+  --b500: #0036a0;
+  --g500: #707070;
+  --g600: #3e3e3e;
+*/
 
 .topOverlay {
     pointer-events: none;
