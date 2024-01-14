@@ -228,12 +228,7 @@ const Page = () => {
                             onChange={(e) => updateField('url', e.target.value)}
                         />
                         <button className={styles.button} onClick={handleSaveCasus}>Opslaan</button>
-                        <button
-                            className={styles.button}
-                            onClick={() => handleDeleteCasus(currentCasus?.id)}
-                        >
-                            Verwijderen
-                        </button>
+                        <button className={styles.button} onClick={() => handleDeleteCasus(currentCasus?.id)}>Verwijderen</button>
                         <button className={styles.button} onClick={() => setShowDialog(false)}>Sluiten</button>
                     </div>
                 </div>

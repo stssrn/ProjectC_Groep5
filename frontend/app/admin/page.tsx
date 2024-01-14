@@ -10,7 +10,8 @@ const Page = () => {
     { text: "Forum Moderatie", href: "", symbol: "shield" },
     { text: "Bug Meldingen", href: "/admin/bugmeldingenbeheer", symbol: "bug_report" },
     { text: "Educatie modules", href: "/admin/educatiemodules", symbol: "book_4" },
-    { text: "Casussen Beheren", href: "/admin/casussenbeheer", symbol: "cases"}
+    { text: "Casussen Beheren", href: "/admin/casussenbeheer", symbol: "cases"},
+    { text: "Quizzes Beheren", href: "/admin/quizzesbeheren", symbol: "quiz" }
   ]
   return (
     <Container title="Admin">
