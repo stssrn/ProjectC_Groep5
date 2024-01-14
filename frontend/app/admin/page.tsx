@@ -12,7 +12,7 @@ const Page = () => {
     { text: "Educatie modules", href: "/admin/educatiemodules", symbol: "book_4" },
     { text: "Casussen Beheren", href: "/admin/casussenbeheer", symbol: "cases" },
     { text: "Quizzes Beheren", href: "/admin/quizzesbeheren", symbol: "quiz" },
-    { text: "Nieuws artikelen", href: "", symbol: "newspaper" }
+    { text: "Nieuws artikelen", href: "/admin/nieuwsbeheer", symbol: "newspaper" }
   ]
   return (
     <Container title="Admin">

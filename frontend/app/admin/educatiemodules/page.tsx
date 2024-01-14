@@ -91,8 +91,8 @@ const Page = () => {
     const sortData = () => {
         const sortedData = [...educatieModules];
         sortedData.sort((a, b) => {
-            const valueA = (a as any)[sortCriteria];
-            const valueB = (b as any)[sortCriteria];
+            const valueA = (a as any)[sortCriteria.toLowerCase()];
+            const valueB = (b as any)[sortCriteria.toLowerCase()];
 
             if (sortOrder === 'asc') {
                 if (valueA < valueB) return -1;
@@ -106,20 +106,6 @@ const Page = () => {
         });
 
         setEducatieModules(sortedData);
-        setUsingSort(false);
-    };
-
-    const sortArray = () => {
-        const sortedModules = [...educatieModules];
-        sortedModules.sort((a, b) => {
-            if (sortOrder === 'asc') {
-                return (a?.id || 0) - (b?.id || 0);
-            } else {
-                return (b?.id || 0) - (a?.id || 0);
-            }
-        });
-
-        setEducatieModules(sortedModules);
         setUsingSort(false);
     };
 
@@ -207,8 +193,7 @@ const Page = () => {
 
     useEffect(() => {
         if (educatieModules.length > 0 && usingSort) {
-            if (sortCriteria === 'id') sortArray();
-            else sortData();
+            sortData();
         }
     }, [educatieModules, sortCriteria, sortOrder]);
 
@@ -302,7 +287,7 @@ const Page = () => {
             {showDialog && (
                 <div className={styles.dialogBackdrop}>
                     <div className={styles.dialog}>
-                        <div className={styles.dialog}>
+                        <div className={styles.content}>
                             <label htmlFor={dialogTitle}>Titel</label>
                             <input
                                 type="text"
@@ -322,11 +307,30 @@ const Page = () => {
                                 className={descIsEmpty === false ? styles.textBox : styles.errorBorder}
                                 onChange={(e) => setCurrentModule({ ...currentModule, description: e.target.value })}
                             />
+                        </div>
 
+                        <div className={styles.adminDialogButtons}>
+                            <input
+                                type="button"
+                                value="Sluiten"
+                                className={styles.adminSecondaryButton}
+                                onClick={() => {
+                                    setShowDialog(false);
+                                    setDescIsEmpty(false);
+                                    setTitleIsEmpty(false);
+                                }} />
+                            <input
+                                type="button"
+                                value="Verwijderen"
+                                className={styles.adminButton}
+                                onClick={() => {
+                                    deleteEducatieModuleHandler(currentModule?.id);
+                                }}
+                            />
                             <input
                                 type="button"
                                 value="Opslaan"
-                                className={styles.button}
+                                className={styles.adminButton}
                                 onClick={() => {
                                     if (currentModule?.title) setTitleIsEmpty(false);
                                     else setTitleIsEmpty(true);
@@ -336,23 +340,6 @@ const Page = () => {
                                     } else setDescIsEmpty(true);
                                 }}
                             />
-                            <input
-                                type="button"
-                                value="Verwijderen"
-                                className={styles.button}
-                                onClick={() => {
-                                    deleteEducatieModuleHandler(currentModule?.id);
-                                }}
-                            />
-                            <input
-                                type="button"
-                                value="Sluiten"
-                                className={styles.secondaryButton}
-                                onClick={() => {
-                                    setShowDialog(false);
-                                    setDescIsEmpty(false);
-                                    setTitleIsEmpty(false);
-                                }} />
                         </div>
                     </div>
                 </div>
@@ -361,7 +348,7 @@ const Page = () => {
                 <div className={styles.createModuleBackdrop}>
                     <div className={styles.createModule}>
                         <div className={styles.newDialog}>
-                            <label htmlFor={dialogDescription}>Titel</label>
+                            <label htmlFor={dialogTitle}>Titel</label>
                             <input
                                 type="text"
                                 name="Titel"

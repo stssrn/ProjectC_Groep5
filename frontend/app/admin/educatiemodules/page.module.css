@@ -206,3 +206,43 @@
     justify-content: center;
     align-items: center;
 }
+
+.adminButton,
+.adminSecondaryButton {
+    flex-grow: 1;
+    border: none;
+    padding: 12px;
+    /* Adjust the padding as needed */
+    cursor: pointer;
+    text-align: center;
+}
+
+.adminButton {
+    background-color: var(--p500);
+    border: none;
+    color: #fff;
+}
+
+.adminSecondaryButton {
+    background-color: var(--bg300);
+    color: inherit;
+}
+
+.adminDialogButtons {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+@media (max-width: 475px) {
+    .adminDialogButtons {
+        flex-direction: column-reverse;
+        align-items: center;
+    }
+
+    .adminButton,
+    .adminSecondaryButton {
+        width: 175%;
+    }
+}

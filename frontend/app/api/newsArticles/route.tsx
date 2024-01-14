@@ -13,24 +13,24 @@ export async function GET(request: Request): Promise<NextResponse> {
                 );
             }
             if (Number(id) === 0) {
-                const educatieModuleData = await prisma.educatie_modules.findMany();
+                const newsArticles = await prisma.newsArticles.findMany();
 
-                return NextResponse.json({ educatieModules: educatieModuleData }, { status: 200 });
+                return NextResponse.json({ newsArticles }, { status: 200 });
             }
 
-            const educatieModule = await prisma.educatie_modules.findFirst({
+            const newsArticle = await prisma.newsArticles.findFirst({
                 where: {
                     id: Number(id),
                 },
             });
-            if (!educatieModule) {
+            if (!newsArticle) {
                 return new NextResponse(
-                    JSON.stringify({ message: 'No entries found', entry: null })
+                    JSON.stringify({ message: 'No articles found', article: null })
 
                 );
             }
 
-            return NextResponse.json({ entry: educatieModule }, { status: 200 });
+            return NextResponse.json({ article: newsArticle }, { status: 200 });
         } else {
             return new NextResponse(
                 JSON.stringify({ message: 'Method error' }),
@@ -49,24 +49,24 @@ export async function POST(request: Request): Promise<NextResponse> {
     try {
         if (request.method === "POST") {
             const body = await request.json();
-            const { id, title, description } = body;
-            console.log(id);
+            const { title, content, url } = body;
             try {
-                const newEducatieModule = await prisma.educatie_modules.create({
-                    data: { id, title, description },
+                const newArticle = await prisma.newsArticles.create({
+                    data: { title, content, url },
                 });
 
                 return new NextResponse(
                     JSON.stringify({
-                        message: "Successfully created a new educatie_modules entry",
-                        educatieModulesId: newEducatieModule.id,
-                        title: newEducatieModule.title,
-                        description: newEducatieModule.description,
+                        message: "Successfully created a new newsArticle entry",
+                        newsArticleId: newArticle.id,
+                        title: newArticle.title,
+                        content: newArticle.content,
+                        url: newArticle.url
                     }),
-                    { status: 201 } // 201 Created status code for successful creation
+                    { status: 201 }
                 );
             } catch (error) {
-                console.error("Create educatie_modules error:", error);
+                console.error("Create newsArtice error:", error);
                 return new NextResponse(JSON.stringify({ message: "Server error" }), {
                     status: 500,
                 });
@@ -94,18 +94,18 @@ export async function PUT(request: Request): Promise<NextResponse> {
         }
         else {
             const body = await request.json();
-            const { id, title, description } = body;
+            const { id, title, content, url } = body;
             try {
-                const updatedEducatieModule = await prisma.educatie_modules.update({
+                const updatedNewsArticle = await prisma.newsArticles.update({
                     where: { id },
-                    data: { title, description },
+                    data: { title, content, url },
                 });
                 return new NextResponse(
-                    JSON.stringify({ message: "Succesfully changed the data", id: updatedEducatieModule.id }),
+                    JSON.stringify({ message: "Succesfully changed the data", id: updatedNewsArticle.id }),
                     { status: 200 }
                 );
             } catch (error) {
-                console.error("Update educatie_modules error:", error);
+                console.error("Update newsArticles error:", error);
                 return new NextResponse(JSON.stringify({ message: "Server error" }), {
                     status: 500,
                 });
@@ -114,7 +114,7 @@ export async function PUT(request: Request): Promise<NextResponse> {
 
     }
     catch (error) {
-        console.error("Update educatie_module error:", error);
+        console.error("Update newsArticles error:", error);
         return new NextResponse(JSON.stringify({ message: "Server error" }), {
             status: 500,
         });
@@ -134,32 +134,33 @@ export async function DELETE(request: Request): Promise<NextResponse> {
             }
 
             try {
-                const educatieModule = await prisma.educatie_modules.findFirst({
+                const newsArticle = await prisma.newsArticles.findFirst({
                     where: { id },
                 });
 
-                if (!educatieModule) {
+                if (!newsArticle) {
                     return new NextResponse(
-                        JSON.stringify({ message: 'Educatie module not found' }),
+                        JSON.stringify({ message: 'News Article not found' }),
                         { status: 404 }
                     );
                 }
 
-                await prisma.educatie_modules.delete({
-                    where: { id: educatieModule.id },
+                await prisma.newsArticles.delete({
+                    where: { id: newsArticle.id },
                 });
 
                 return new NextResponse(
                     JSON.stringify({
-                        message: "Successfully deleted the educatie module",
-                        deletedEducatieModuleId: educatieModule.id,
-                        title: educatieModule.title,
-                        description: educatieModule.description,
+                        message: "Successfully deleted the News Article",
+                        deletedNewsArticleId: newsArticle.id,
+                        title: newsArticle.title,
+                        content: newsArticle.content,
+                        url: newsArticle.url,
                     }),
                     { status: 200 }
                 );
             } catch (error) {
-                console.error("Delete educatie module error:", error);
+                console.error("Delete newsArticle error:", error);
                 return new NextResponse(JSON.stringify({ message: "Server error" }), {
                     status: 500,
                 });
@@ -171,7 +172,7 @@ export async function DELETE(request: Request): Promise<NextResponse> {
             );
         }
     } catch (error) {
-        console.error("Fetch error:", error);
+        console.error("Delete error:", error);
         return new NextResponse(JSON.stringify({ message: "Server error" }), {
             status: 500,
         });

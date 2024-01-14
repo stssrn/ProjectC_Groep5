@@ -1,5 +1,5 @@
 "use client";
-import styles from "./page.module.css";
+import styles from "../educatiemodules/page.module.css";
 import Container from "@/app/components/Container";
 import { useState, useEffect, useId } from "react";
 
