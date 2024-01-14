@@ -67,20 +67,14 @@ const fetchRandomModules = async () => {
     }
 };
 
-const learn: Learn = {
-    id: 0,
-    title: "Excepteur sint occaecat cupidatat non proident.",
-    description:
-        "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est eopksio laborum.",
-    date: new Date(),
-    url: new URL("https://anteszorg.nl/"),
-};
 
 
 const getDateString = Intl.DateTimeFormat("nl", {
     month: "short",
     day: "numeric",
 }).format;
+
+
 const EducationBlock: React.FC<{
     className?: string;
 }> = ({ className }) => {
