@@ -21,7 +21,6 @@ const Page = () => {
     const [descIsEmpty, setDescIsEmpty] = useState(false);
     const [showCreateModule, setShowCreateModule] = useState(false);
     const [newModule, setNewModule] = useState<EducatieModule>({ id: 0, title: '', description: '' });
-    const [showMessage, setShowMessage] = useState(false);
     const [usingSort, setUsingSort] = useState(false);
     const dialogTitle = useId();
     const dialogDescription = useId();
@@ -183,9 +182,7 @@ const Page = () => {
                 setEducatieModulesUnfiltered(modules);
             }
 
-            if (window.innerWidth < 650) {
-                setShowMessage(true);
-            }
+
             setIsLoading(false);
         };
         fetchData();
@@ -201,10 +198,6 @@ const Page = () => {
 
     if (isLoading) {
         return <div>Laden...</div>;
-    }
-
-    if (showMessage) {
-        return <h1>Deze pagina is alleen toegangelijk op een groter beeldscherm</h1>
     }
 
     return (
@@ -313,7 +306,7 @@ const Page = () => {
                             <input
                                 type="button"
                                 value="Sluiten"
-                                className={styles.adminSecondaryButton}
+                                className={styles.button}
                                 onClick={() => {
                                     setShowDialog(false);
                                     setDescIsEmpty(false);
@@ -322,7 +315,7 @@ const Page = () => {
                             <input
                                 type="button"
                                 value="Verwijderen"
-                                className={styles.adminButton}
+                                className={styles.button}
                                 onClick={() => {
                                     deleteEducatieModuleHandler(currentModule?.id);
                                 }}
@@ -330,7 +323,7 @@ const Page = () => {
                             <input
                                 type="button"
                                 value="Opslaan"
-                                className={styles.adminButton}
+                                className={styles.button}
                                 onClick={() => {
                                     if (currentModule?.title) setTitleIsEmpty(false);
                                     else setTitleIsEmpty(true);

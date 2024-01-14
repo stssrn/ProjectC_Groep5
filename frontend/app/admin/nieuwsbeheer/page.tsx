@@ -294,7 +294,7 @@ const Page = () => {
                             <input
                                 type="button"
                                 value="Sluiten"
-                                className={styles.adminSecondaryButton}
+                                className={styles.button}
                                 onClick={() => {
                                     setShowEdit(false);
                                     setContentIsEmpty(false);
@@ -305,7 +305,7 @@ const Page = () => {
                             <input
                                 type="button"
                                 value="Verwijderen"
-                                className={styles.adminButton}
+                                className={styles.button}
                                 onClick={() => {
                                     deleteArticle(currentArticle?.id);
                                     setShowEdit(false);
@@ -315,7 +315,7 @@ const Page = () => {
                             <input
                                 type="button"
                                 value="Opslaan"
-                                className={styles.adminButton}
+                                className={styles.button}
                                 onClick={() => {
                                     if (currentArticle?.title) setTitleIsEmpty(false);
                                     else setTitleIsEmpty(true);
