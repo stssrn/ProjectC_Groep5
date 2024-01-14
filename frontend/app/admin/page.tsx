@@ -9,8 +9,9 @@ const Page = () => {
     { text: "Agenda Aanpassen", href: "/admin/agendabeheer", symbol: "edit_calendar" },
     { text: "Forum Moderatie", href: "", symbol: "shield" },
     { text: "Bug Meldingen", href: "/admin/bugmeldingenbeheer", symbol: "bug_report" },
-    { text: "Educatie Modules", href: "/admin/educatiemodules", symbol: "book_4" },
+    { text: "Educatie modules", href: "/admin/educatiemodules", symbol: "book_4" },
     { text: "Casussen Beheren", href: "/admin/casussenbeheer", symbol: "cases" },
+    { text: "Quizzes Beheren", href: "/admin/quizzesbeheren", symbol: "quiz" },
     { text: "Nieuws artikelen", href: "", symbol: "newspaper" }
   ]
   return (

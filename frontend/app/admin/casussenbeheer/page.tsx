@@ -20,6 +20,7 @@ const Page = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [showDialog, setShowDialog] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+    const [sortType, setSortType] = useState("id");
 
     const dialogName = useId();
     const dialogDescription = useId();
@@ -28,16 +29,18 @@ const Page = () => {
 
     const fetchCasussen = async () => {
         setIsLoading(true);
-        const response = await fetch(`/api/casussenBeheer`);
-        if (!response.ok) {
-            console.error('Failed to fetch casussen');
+        try {
+            const response = await fetch(`/api/casussenBeheer`);
+            if (!response.ok) throw new Error('Failed to fetch casussen');
+            const data = await response.json();
+            const sortedData = sortCasussen(data);
+            setCasussen(sortedData);
+            setFilteredCasussen(sortedData);
+        } catch (error) {
+            console.error('Error:', error);
+        } finally {
             setIsLoading(false);
-            return;
         }
-        const data = await response.json();
-        setCasussen(data);
-        setFilteredCasussen(data);
-        setIsLoading(false);
     };
 
     const handleSearch = (event: any) => {
@@ -56,6 +59,15 @@ const Page = () => {
         }
 
         setFilteredCasussen(filtered);
+    };
+
+    const sortCasussen = (casussen: any[]) => {
+        return casussen.sort((a, b) => {
+            if (sortType === "name") {
+                return a.name.localeCompare(b.name);
+            }
+            return a.id - b.id;
+        });
     };
 
     const openNewCasusDialog = () => {
@@ -114,7 +126,7 @@ const Page = () => {
 
     useEffect(() => {
         fetchCasussen();
-    }, []);
+    }, [sortType]);
 
     if (isLoading) {
         return <div>Laden...</div>;
@@ -139,6 +151,16 @@ const Page = () => {
                     onChange={handleSearch}
                 />
             </div>
+            <div className={styles.sortOptions}>
+                <select
+                    className={styles.select}
+                    value={sortType}
+                    onChange={(e) => setSortType(e.target.value)}
+                >
+                    <option value="id">Sorteer op ID</option>
+                    <option value="name">Sorteer op Naam</option>
+                </select>
+            </div>
             <button className={styles.add} onClick={openNewCasusDialog}>
                 Nieuwe Casus Toevoegen
             </button>
@@ -162,11 +184,15 @@ const Page = () => {
                             <td>{casus.treatment}</td>
                             <td>{casus.url}</td>
                             <td>
-                                <button className={styles.edit} onClick={() => {
-                                    setCurrentCasus(casus);
-                                    setShowDialog(true);
-                                }}>Bewerk</button>
-                                <button className={styles.delete} onClick={() => handleDeleteCasus(casus.id)}>Verwijder</button>
+                                <button
+                                    className={styles.edit}
+                                    onClick={() => {
+                                        setCurrentCasus(casus);
+                                        setShowDialog(true);
+                                    }}
+                                >
+                                    <i className="symbol">edit</i>
+                                </button>
                             </td>
                         </tr>
                     ))}
@@ -202,6 +228,7 @@ const Page = () => {
                             onChange={(e) => updateField('url', e.target.value)}
                         />
                         <button className={styles.button} onClick={handleSaveCasus}>Opslaan</button>
+                        <button className={styles.button} onClick={() => handleDeleteCasus(currentCasus?.id)}>Verwijderen</button>
                         <button className={styles.button} onClick={() => setShowDialog(false)}>Sluiten</button>
                     </div>
                 </div>

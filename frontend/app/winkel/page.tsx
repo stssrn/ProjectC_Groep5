@@ -110,7 +110,7 @@ const Page = () => {
 
     useEffect(() => {
         setHasMounted(true);
-        if (windowWidth <= 420) {
+        if (windowWidth <= 600) { // <- dit veranderd van 420 naar 600
             setitemsPerPage(itemsLength);
         } else {
             setitemsPerPage(4);

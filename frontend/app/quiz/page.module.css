@@ -1,55 +1,72 @@
 .quizContainer {
-    display: flex;
-    flex-direction: column;
-    width: 50vw;
-    min-height: 70vh;
+  display: flex;
+  flex-direction: column;
+  width: 50vw;
+  min-height: 70vh;
 }
 
 .answerList {
-    list-style-type: none;
+  list-style-type: none;
+  padding: 0;
 }
 
 .answerList li {
-    margin: 20px;
+  margin: 20px;
 }
 
 .answerList label {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
+  word-break: break-word;
 }
 
 .answerList label input {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 .quizContent {
-    flex: 1;
+  flex: 1;
 }
 
 .progressBar {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column-reverse;
-    align-items: center;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
 }
 
 .progress {
-    width: 80%;
+  width: 80%;
 }
 
 .buttonContainer {
-    display: flex;
-    justify-content: space-evenly;
+  display: flex;
+  justify-content: space-evenly;
 }
 
 .buttonContainer button {
-    background: #AC3B61;
-    color: white;
-    padding: 10px;
-    z-index: 999;
-    margin-left: auto;
-    margin-right: auto;
-    cursor: pointer;
-    width: 90px;
-    text-align: center;
+  background: #ac3b61;
+  color: white;
+  padding: 10px;
+  z-index: 999;
+  margin-left: auto;
+  margin-right: auto;
+  cursor: pointer;
+  width: 90px;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .quizContainer {
+    padding: 5px;
+  }
+
+  .answerList label {
+    font-size: 14px;
+  }
+
+  .buttonContainer button {
+    margin-top: 10%;
+    margin-left: 10%;
+  }
 }

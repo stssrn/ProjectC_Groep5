@@ -16,6 +16,7 @@
 
 .faqItem {
   margin-bottom: 16px;
+  border-bottom: 1px solid #000000;
 }
 
 .questionButton {
@@ -43,10 +44,17 @@
 
 .answer {
   padding: 16px;
+  color: #000000;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
   animation: fadeIn 0.3s ease;
 }
 
 .fixedWidth {
-  width: 40vw;
+  width: 70vw;
+}
+
+@media (max-width: 600px) {
+  .fixedWidth {
+    width: 100%;
+  }
 }
