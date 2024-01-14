@@ -27,16 +27,12 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
     const [titleIsEmpty, setTitleIsEmpty] = useState(false);
     const [descIsEmpty, setDescIsEmpty] = useState(false);
     const [eventName, setEventName] = useState<string>(event.name || "");
-
-    const [value, onChange] = useState<Value>(event.date ? new Date(event.date) : null);
-    //const [eventDate, setEventDate] = useState<Date | null>(event.date ? new Date(event.date) : null);
+    const [eventDate, setEventDate] = useState<Value>(event.date ? new Date(event.date) : null);
     const [eventDescription, setEventDescription] = useState<string>(event.description || "");
     const [showUsers, setShowUsers] = useState(false);
 
-
-
     const deleteEventHandler = async (eventId: any) => {
-        //delete all agenda users with this id maybe with id 0??
+        await deleteAgendaUsersByEventId(eventId);
         await deleteEvent(eventId);
         setShowEdit(false);
         fetchEventData();
@@ -55,7 +51,23 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
         }
     }
     const deleteAgendaUsersByEventId = async (eventID: any) => {
-
+        try {
+            const response = await fetch(`/api/agendaUser`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    eventId: eventID,
+                    userId: 0,
+                }),
+            });
+            if (!response.ok) {
+                throw new Error("Failed to delete event data");
+            }
+        } catch (error) {
+            console.error("Error deleting event data:", error);
+        }
     }
 
     const fetchEventData = async () => {
@@ -65,7 +77,7 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
             });
             if (!response.ok) throw new Error("Failed to fetch agenda data");
             const data = await response.json();
-            onChange(new Date(data.date));
+            setEventDate(new Date(data.date));
             setEventDescription(data.description);
             setEventName(data.name);
         } catch (error) {
@@ -103,7 +115,7 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
             return;
         }
 
-        await saveEditedData(eventName, eventDescription, value);
+        await saveEditedData(eventName, eventDescription, eventDate);
         setShowEdit(false);
         fetchEventData();
         window.location.reload();
@@ -111,7 +123,9 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
 
     useEffect(() => {
         if (session?.user?.id) {
-            if (showEdit === false) fetchEventData();
+            if (showEdit === false) {
+                fetchEventData();
+            }
         }
     }, [event.id, session]);
 
@@ -129,7 +143,7 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
                     onClick={() => {
                         setShowEdit(true);
                         setEventName(event.name || "");
-                        onChange(new Date(event.date));
+                        setEventDate(new Date(event.date));
                         setEventDescription(event.description || "");
                     }}
                 >
@@ -165,8 +179,8 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
                             <label htmlFor={dialogDate}>Datum</label><br />
                             <DateTimePicker
                                 className={styles.dateBox}
-                                onChange={onChange}
-                                value={value}
+                                onChange={setEventDate}
+                                value={eventDate}
                                 locale="en-GB"
                                 calendarIcon={null}
                                 clearIcon={null}

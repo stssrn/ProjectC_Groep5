@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useId } from "react";
 import styles from "../../agenda/Event.module.css";
-import SignUserIn from "./SignUserIn";
 
 type UserData = {
     id: number;
@@ -18,12 +17,6 @@ type UserData = {
     firstLogin: boolean;
 };
 
-interface AgendaUser {
-    id: number,
-    EventId: number,
-    userId: number,
-}
-
 type EventData = {
     id: number;
     date: Date;
@@ -31,18 +24,19 @@ type EventData = {
     description: string;
 };
 
-const UsersComponent: React.FC<{ event: EventData; setShowUsers: React.Dispatch<React.SetStateAction<boolean>> }> = ({ event, setShowUsers }) => {
+const SignUserIn: React.FC<{ event: EventData; setSignUserIn: React.Dispatch<React.SetStateAction<boolean>> }> = ({ event, setSignUserIn }) => {
 
     const dialogInfo = useId();
     const dialogSignIn = useId();
     const dialogSignOut = useId();
     const [allUsers, setAllUsers] = useState<UserData[]>([]);
     const [agendaUsersByEvent, setAgendaUsersByEvent] = useState<UserData[]>([]);
+    const [allUsersUnfiltered, setAllUsersUnFiltered] = useState<UserData[]>([]);
     const [editUserSignIn, setEditUserSignIn] = useState(false);
     const [currentUser, setCurrentUser] = useState<UserData>();
     const [isLoading, setIsLoading] = useState(false);
     const [signIn, setSignIn] = useState(true);
-    const [signUserIn, setSignUserIn] = useState(false);
+    const [searchQuery, setSearchQuery] = useState<string>('');
 
 
     const fetchAllUsers = async () => {
@@ -55,30 +49,6 @@ const UsersComponent: React.FC<{ event: EventData; setShowUsers: React.Dispatch<
         } catch (error) {
             console.error("Error fetching user data:", error);
         }
-    }
-
-    const fetchAgendaUserByEventId = async (userID: any, eventId: any) => {
-        try {
-            const response = await fetch(`/api/agendaUser?userId=${userID}&eventId=${eventId}`, {
-                method: "GET",
-            });
-            if (!response.ok) throw new Error("Failed to fetch agenda user data");
-            const data = await response.json();
-            return data.entries;
-        } catch (error) {
-            console.error("Error fetching agenda user data:", error);
-        }
-    }
-
-
-    const filterUsersHandler = async () => {
-        const agendaUsers: AgendaUser[] = await fetchAgendaUserByEventId(0, event.id);
-        const allusers: UserData[] = await fetchAllUsers();
-
-        setAllUsers(allusers);
-        const filteredUsers = allusers.filter(user => agendaUsers.some(agendaUser => agendaUser.userId === user.id));
-        setAgendaUsersByEvent(filteredUsers);
-        return allusers;
     }
 
     const saveSignIn = async () => {
@@ -126,22 +96,36 @@ const UsersComponent: React.FC<{ event: EventData; setShowUsers: React.Dispatch<
     const signInAndSignOutHandler = async () => {
         if (signIn) await saveSignIn();
         else await saveSignOut();
-        await filterUsersHandler();
+    }
 
+    const filterData = () => {
+
+        const searchInput = document.getElementById('searchInput') as HTMLInputElement | null;
+        if (searchInput) {
+            const query = searchInput.value.toLowerCase();
+            const filteredData = allUsersUnfiltered.filter((user) =>
+                user.id?.toString().includes(query) ||
+                user.firstName?.toLowerCase().includes(query) ||
+                user.lastName?.toLowerCase().includes(query)
+            );
+            setAllUsers(filteredData);
+        }
     };
+
 
     useEffect(() => {
         const fetchData = async () => {
             setIsLoading(true);
-            const users = await filterUsersHandler();
+            const users = await fetchAllUsers();
             if (users) {
                 setAllUsers(users);
+                setAllUsersUnFiltered(users);
             }
             setIsLoading(false);
 
         };
         fetchData();
-    }, [event.id, signUserIn]);
+    }, [event.id]);
 
     if (isLoading) {
         return (
@@ -159,15 +143,23 @@ const UsersComponent: React.FC<{ event: EventData; setShowUsers: React.Dispatch<
         <main>
             <div className={styles.createPopUp}>
                 <div className={styles.dialog}>
+                    <div className={styles.filterOptions}>
+                        <input
+                            className={styles.search}
+                            type="search"
+                            name=""
+                            id="searchInput"
+                            placeholder="Bevat…"
+                            defaultValue={searchQuery}
+                        />
+                        <input
+                            className={styles.button}
+                            type="button"
+                            value="Zoek"
+                            onClick={filterData}
+                        />
+                    </div>
                     <div className={styles.content}>
-                        <div className={styles.addDiv}>
-                            <button
-                                className={styles.add}
-                                onClick={() => setSignUserIn(true)}
-                            >
-                                <i className="symbol">add</i>
-                            </button>
-                        </div><br></br>
                         <table className={styles.table}>
                             <tbody>
                                 <tr>
@@ -177,7 +169,7 @@ const UsersComponent: React.FC<{ event: EventData; setShowUsers: React.Dispatch<
                                     <th></th>
                                     <th></th>
                                 </tr>
-                                {agendaUsersByEvent.map((user) =>
+                                {allUsers.map((user) => (
                                     <tr key={user.id}>
                                         <td className={styles.tableId}>{user.id}</td>
                                         <td>{user.firstName}</td>
@@ -195,9 +187,10 @@ const UsersComponent: React.FC<{ event: EventData; setShowUsers: React.Dispatch<
                                             </button>
                                         </td>
                                     </tr>
-                                )}
+                                ))}
                             </tbody>
                         </table>
+
                     </div>
                     <div className={styles.adminDialogButtons}>
                         <input
@@ -205,15 +198,12 @@ const UsersComponent: React.FC<{ event: EventData; setShowUsers: React.Dispatch<
                             value="Sluiten"
                             className={styles.adminButton}
                             onClick={() => {
-                                setShowUsers(false);
+                                setSignUserIn(false);
                             }}
                         />
                     </div>
                 </div>
             </div>
-            {signUserIn && (
-                <SignUserIn event={event} setSignUserIn={setSignUserIn} />
-            )}
             {editUserSignIn && (
                 <div className={styles.createPopUp}>
                     <div className={styles.dialog}>
@@ -269,4 +259,4 @@ const UsersComponent: React.FC<{ event: EventData; setShowUsers: React.Dispatch<
     );
 };
 
-export default UsersComponent;
+export default SignUserIn;

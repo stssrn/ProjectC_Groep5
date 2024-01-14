@@ -44,6 +44,8 @@
   justify-content: space-between;
 }
 
+
+
 .content {
   overflow: auto;
   align-items: left;
@@ -163,30 +165,26 @@
 .table {
   border-spacing: 12px 0;
   border-collapse: collapse;
-  width: 100%;
 }
 
 .table td,
 .table th {
-  padding: 8px 12px;
-  border: 1px solid var(--bg600);
+  padding: 2px 8px;
 }
 
-.table th {
-  background-color: red;
-  /* Red background for all th elements */
+.table tr:first-child {
   color: #fff;
-  /* White text color for all th elements */
-}
-
-.table tr:first-child th {
-  background-color: red;
-  color: #fff;
+  text-align: left;
+  background-color: var(--p500);
 }
 
 .table tr:first-child th {
   font-weight: normal;
-  padding: 8px 12px;
+  padding: 4px 8px;
+}
+
+.table tr td:last-child {
+  padding-right: 0;
 }
 
 .tableId {
@@ -213,7 +211,11 @@
   }
 }
 
-
+.filterOptions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
 
 
 .errorBorder {
@@ -253,6 +255,13 @@
   width: calc(100% - 12px);
 }
 
+.search {
+  display: block;
+  min-height: 32px;
+  padding: 0 12px;
+  flex-grow: 1;
+  border: 1px solid var(--bg600);
+}
 
 .adminButton,
 .adminSecondaryButton {

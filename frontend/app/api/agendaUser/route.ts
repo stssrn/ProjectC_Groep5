@@ -99,6 +99,24 @@ export async function DELETE(request: Request): Promise<NextResponse> {
 
             try {
                 // Find the AgendaUser entry based on userId and eventId
+                if (Number(userId) === 0) {
+                    const agendaUserEntries = await prisma.agendaUser.findMany({
+                        where: { eventId }
+                    });
+
+                    for (const entry of agendaUserEntries) {
+                        await prisma.agendaUser.delete({
+                            where: { id: entry.id }
+                        });
+                    }
+
+                    return new NextResponse(
+                        JSON.stringify({
+                            message: "Successfully deleted the AgendaUser entries",
+                        }),
+                        { status: 200 }
+                    );
+                }
                 const agendaUserEntry = await prisma.agendaUser.findFirst({
                     where: { userId, eventId },
                 });
