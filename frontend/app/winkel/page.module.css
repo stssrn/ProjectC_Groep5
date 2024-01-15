@@ -17,11 +17,24 @@
     border: 1px black solid;
     box-shadow: 5px 5px 2px grey;
     background: rgba(238, 226, 220, 1);
-    display: grid;
+    /* display: grid;
     grid-template-columns: 1vw [first] 10vw [middle] 25vw;
     grid-template-rows: [first-line] 5vh [middle-start] 20vh [middle-end] 5vh [last-line];
-    align-items: center;
+    align-items: center; */
     margin: 0 10px;
+    display: flex;
+    align-items: center;
+    width: 35vw;
+    height: 30vh;
+    white-space: normal;
+    padding: 5px;
+}
+
+@media screen and (max-width: 750px) {
+    .rewardLeft {
+        display: none;
+        padding: 5px;
+    }
 }
 
 .rewardName {
@@ -119,5 +132,6 @@
 
     .rewardLeft {
         display: none;
+        padding: 5px;
     }
 }

@@ -173,7 +173,7 @@ const Page: React.FC = () => {
                 }
             } else if (response.status === 409) {
                 const existingQuizUser = await response.json();
-                console.log('Existing quizUser entry:', existingQuizUser);
+                console.log('quizUser already exists');
 
                 if (existingQuizUser.quizUserId) {
                     setQuizUserId(existingQuizUser.quizUserId);
