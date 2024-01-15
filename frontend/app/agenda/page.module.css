@@ -34,26 +34,48 @@
   background-color: #BAB2B5;
 }
 
-.bar.februari, .bar.december {
+.bar.februari,
+.bar.december {
   background-color: #BDA5A7;
 }
 
-.bar.maart, .bar.november {
+.bar.maart,
+.bar.november {
   background-color: #BF9FA0;
 }
 
-.bar.april, .bar.oktober {
+.bar.april,
+.bar.oktober {
   background-color: #C09898;
 }
 
-.bar.mei, .bar.september {
+.bar.mei,
+.bar.september {
   background-color: #C38C96;
 }
 
-.bar.juni, .bar.augustus {
+.bar.juni,
+.bar.augustus {
   background-color: #C68093;
 }
 
 .bar.juli {
   background-color: #CB688D;
+}
+
+.add {
+  background-color: var(--bg300);
+  border: none;
+  padding: 0px 8px;
+  color: inherit;
+  font-size: 20px;
+  display: flex;
+  height: 35px;
+  align-items: center;
+  justify-content: center;
+}
+
+.addDiv {
+  display: flex;
+  justify-content: right;
 }

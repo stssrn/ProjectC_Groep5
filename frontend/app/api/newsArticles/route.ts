@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../lib/prisma';
-import { DateTime } from 'luxon';
-
 
 export async function GET(request: Request): Promise<NextResponse> {
     try {
@@ -14,36 +12,25 @@ export async function GET(request: Request): Promise<NextResponse> {
                     { status: 400 }
                 );
             }
-
             if (Number(id) === 0) {
-                const bugReports = await prisma.bug.findMany();
-                const formattedBugs = bugReports.map(report => ({
-                    ...report,
-                    date: DateTime.fromJSDate(report.date, { zone: 'utc' }).toLocal().toJSDate(),
-                }));
+                const newsArticles = await prisma.newsArticles.findMany();
 
-                return NextResponse.json({ formattedBugs: formattedBugs }, { status: 200 });
+                return NextResponse.json({ newsArticles }, { status: 200 });
             }
 
-            const bugReport = await prisma.bug.findFirst({
+            const newsArticle = await prisma.newsArticles.findFirst({
                 where: {
                     id: Number(id),
                 },
             });
-
-            if (!bugReport) {
+            if (!newsArticle) {
                 return new NextResponse(
-                    JSON.stringify({ message: 'No bug reports found', report: null }),
-                    { status: 404 }
+                    JSON.stringify({ message: 'No articles found', article: null })
+
                 );
             }
-            const formattedBug = {
-                ...bugReport,
-                date: DateTime.fromJSDate(bugReport.date, { zone: 'utc' }).toLocal().toJSDate(),
-            };
-            // console.log("before the return single formatted event");
-            // console.log(formattedEvent.date);
-            return NextResponse.json({ formattedBug: formattedBug }, { status: 200 });
+
+            return NextResponse.json({ article: newsArticle }, { status: 200 });
         } else {
             return new NextResponse(
                 JSON.stringify({ message: 'Method error' }),
@@ -51,7 +38,7 @@ export async function GET(request: Request): Promise<NextResponse> {
             );
         }
     } catch (error: any) {
-        console.error("Fetch bug report error:", error);
+        console.error("Get error:", error);
         return new NextResponse(JSON.stringify({ message: "Server error" }), {
             status: 500,
         });
@@ -62,25 +49,24 @@ export async function POST(request: Request): Promise<NextResponse> {
     try {
         if (request.method === "POST") {
             const body = await request.json();
-            const { title, description, date } = body;
-
+            const { title, content, url } = body;
             try {
-                // Create a new AgendaUser entry
-                const newBugReport = await prisma.bug.create({
-                    data: { title, description, date },
+                const newArticle = await prisma.newsArticles.create({
+                    data: { title, content, url },
                 });
 
                 return new NextResponse(
                     JSON.stringify({
-                        message: "Successfully created a new bug report",
-                        title: newBugReport.title,
-                        description: newBugReport.description,
-                        date: newBugReport.date,
+                        message: "Successfully created a new newsArticle entry",
+                        newsArticleId: newArticle.id,
+                        title: newArticle.title,
+                        content: newArticle.content,
+                        url: newArticle.url
                     }),
-                    { status: 201 } // 201 Created status code for successful creation
+                    { status: 201 }
                 );
             } catch (error) {
-                console.error("Create bug report error:", error);
+                console.error("Create newsArtice error:", error);
                 return new NextResponse(JSON.stringify({ message: "Server error" }), {
                     status: 500,
                 });
@@ -99,7 +85,6 @@ export async function POST(request: Request): Promise<NextResponse> {
     }
 }
 
-
 export async function PUT(request: Request): Promise<NextResponse> {
     try {
         if (request.method !== "PUT") {
@@ -109,18 +94,18 @@ export async function PUT(request: Request): Promise<NextResponse> {
         }
         else {
             const body = await request.json();
-            const { id, title, description } = body;
+            const { id, title, content, url } = body;
             try {
-                const updatedBugReport = await prisma.bug.update({
+                const updatedNewsArticle = await prisma.newsArticles.update({
                     where: { id },
-                    data: { title, description },
+                    data: { title, content, url },
                 });
                 return new NextResponse(
-                    JSON.stringify({ message: "Succesfully changed the data", bugId: updatedBugReport.id }),
+                    JSON.stringify({ message: "Succesfully changed the data", id: updatedNewsArticle.id }),
                     { status: 200 }
                 );
             } catch (error) {
-                console.error("Update bug report error:", error);
+                console.error("Update newsArticles error:", error);
                 return new NextResponse(JSON.stringify({ message: "Server error" }), {
                     status: 500,
                 });
@@ -129,7 +114,7 @@ export async function PUT(request: Request): Promise<NextResponse> {
 
     }
     catch (error) {
-        console.error("Update error:", error);
+        console.error("Update newsArticles error:", error);
         return new NextResponse(JSON.stringify({ message: "Server error" }), {
             status: 500,
         });
@@ -149,32 +134,33 @@ export async function DELETE(request: Request): Promise<NextResponse> {
             }
 
             try {
-                const bugEntry = await prisma.bug.findFirst({
+                const newsArticle = await prisma.newsArticles.findFirst({
                     where: { id },
                 });
 
-                if (!bugEntry) {
+                if (!newsArticle) {
                     return new NextResponse(
-                        JSON.stringify({ message: 'Bug entry not found' }),
+                        JSON.stringify({ message: 'News Article not found' }),
                         { status: 404 }
                     );
                 }
 
-                await prisma.bug.delete({
-                    where: { id: bugEntry.id },
+                await prisma.newsArticles.delete({
+                    where: { id: newsArticle.id },
                 });
 
                 return new NextResponse(
                     JSON.stringify({
-                        message: "Successfully deleted the Bug entry",
-                        deletedBugId: bugEntry.id,
-                        title: bugEntry.title,
-                        description: bugEntry.description,
+                        message: "Successfully deleted the News Article",
+                        deletedNewsArticleId: newsArticle.id,
+                        title: newsArticle.title,
+                        content: newsArticle.content,
+                        url: newsArticle.url,
                     }),
                     { status: 200 }
                 );
             } catch (error) {
-                console.error("Delete bug error:", error);
+                console.error("Delete newsArticle error:", error);
                 return new NextResponse(JSON.stringify({ message: "Server error" }), {
                     status: 500,
                 });

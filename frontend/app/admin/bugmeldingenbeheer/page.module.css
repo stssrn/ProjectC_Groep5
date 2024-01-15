@@ -1,129 +1,185 @@
 .filterOptions {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 24px;
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
 }
 
 .search,
 .textBox {
-    display: block;
-    min-height: 32px;
-    padding: 0 12px;
-    flex-grow: 1;
-    border: 1px solid var(--bg600);
+  display: block;
+  min-height: 32px;
+  padding: 0 12px;
+  flex-grow: 1;
+  border: 1px solid var(--bg600);
 }
 
 .select,
 .button,
 .secondaryButton {
-    display: block;
-    border: none;
-    padding: 8px 12px;
+  display: block;
+  border: none;
+  padding: 8px 12px;
 }
 
 .button {
-    background-color: var(--p500);
-    border: none;
-    color: #fff;
+  background-color: var(--p500);
+  border: none;
+  color: #fff;
 }
 
 .select,
 .secondaryButton {
-    background-color: var(--bg300);
-    color: inherit;
+  background-color: var(--bg300);
+  color: inherit;
 }
 
 .select {
-    font-size: inherit;
+  font-size: inherit;
 }
 
 .table {
-    border-spacing: 12px 0;
-    border-collapse: collapse;
+  width: 100%;
+  border-spacing: 0 12px;
+  border-collapse: collapse;
 }
 
-.table td,
+.table th,
+.table td {
+  padding: 10px;
+  border: 1px solid #000000;
+  text-align: left;
+}
+
 .table th {
-    padding: 2px 8px;
+  background-color: var(--p500);
+  color: white;
 }
 
-.table tr:first-child {
-    color: #fff;
-    text-align: left;
-    background-color: var(--p500);
-}
-
-.table tr:first-child th {
-    font-weight: normal;
-    padding: 4px 8px;
-}
-
-.table tr td:last-child {
-    padding-right: 0;
+.table td {
+  background-color: var(--bg200);
+  border-bottom: 1px solid #000000;
 }
 
 .tableId {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
 }
 
+
 .edit {
-    background-color: var(--bg300);
-    border: none;
-    padding: 0px 8px;
-    color: inherit;
-    font-size: 20px;
-    display: flex;
-    height: 24px;
-    align-items: center;
-    justify-content: center;
+  background-color: var(--bg300);
+  border: none;
+  padding: 0px 8px;
+  color: inherit;
+  font-size: 20px;
+  display: flex;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
 }
 
 .dialogBackdrop {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #4104;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .dialog {
-    display: flex;
-    flex-direction: column;
-    width: fit-content;
-    background-color: var(--bg500);
-    padding: 24px;
-    margin: 64px auto;
-    border: 2px solid var(--g500);
-    border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  background-color: var(--bg500);
+  padding: 24px;
+  margin: 64px auto;
+  border: 2px solid var(--g500);
+  border-radius: 24px;
+  overflow-y: auto;
+}
+
+.dialog label {
+  margin-top: 10px;
+  font-weight: bold;
 }
 
 .dialog .button,
 .dialog .secondaryButton {
-    margin-top: 12px;
+  margin-top: 12px;
 }
 
 .sort {
-    margin-left: auto;
-    width: fit-content;
-    margin-bottom: 12px;
+  margin-left: auto;
+  width: fit-content;
+  margin-bottom: 12px;
 }
 
 .sortSelect {
-    background: none;
-    border: none;
-    color: inherit;
-    font-size: inherit;
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: inherit;
 }
 
 .errorBorder {
+  display: block;
+  min-height: 32px;
+  padding: 0 12px;
+  flex-grow: 1;
+  border: 1px solid red;
+}
+
+@media (max-width: 600px) {
+  .dialogBackdrop {
+    width: 90%;
+  }
+
+  .dialog {
+    width: 90%;
+    margin: 10px;
+  }
+
+  .filterOptions,
+  .sortOptions {
+    flex-direction: column;
+  }
+
+  .table,
+  .table th,
+  .table td {
     display: block;
-    min-height: 32px;
-    padding: 0 12px;
-    flex-grow: 1;
-    border: 1px solid red;
+    width: 100%;
+    padding: 8px;
+  }
+
+  .table th {
+    display: none;
+  }
+
+  .table td {
+    text-align: left;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .table td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .button,
+  .search,
+  .select {
+    padding: 10px;
+    font-size: 16px;
+  }
 }

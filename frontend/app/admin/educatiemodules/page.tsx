@@ -21,9 +21,7 @@ const Page = () => {
     const [descIsEmpty, setDescIsEmpty] = useState(false);
     const [showCreateModule, setShowCreateModule] = useState(false);
     const [newModule, setNewModule] = useState<EducatieModule>({ id: 0, title: '', description: '' });
-    const [showMessage, setShowMessage] = useState(false);
-
-
+    const [usingSort, setUsingSort] = useState(false);
     const dialogTitle = useId();
     const dialogDescription = useId();
     const [showDialog, setShowDialog] = useState(false);
@@ -55,15 +53,14 @@ const Page = () => {
         setShowDialog(false);
         setDescIsEmpty(false);
         setTitleIsEmpty(false);
-        refreshEducatieModules();
+        await refreshEducatieModules();
     };
 
     const deleteEducatieModule = async (moduleID: any) => {
         try {
-            const response = await fetch(`/api/bug?id=${moduleID}`, {
+            const response = await fetch(`/api/educatie?id=${moduleID}`, {
                 method: "DELETE",
             });
-
             if (!response.ok) {
                 throw new Error("Failed to delete educatie_modules data");
             }
@@ -93,8 +90,8 @@ const Page = () => {
     const sortData = () => {
         const sortedData = [...educatieModules];
         sortedData.sort((a, b) => {
-            const valueA = (a as any)[sortCriteria];
-            const valueB = (b as any)[sortCriteria];
+            const valueA = (a as any)[sortCriteria.toLowerCase()];
+            const valueB = (b as any)[sortCriteria.toLowerCase()];
 
             if (sortOrder === 'asc') {
                 if (valueA < valueB) return -1;
@@ -108,30 +105,21 @@ const Page = () => {
         });
 
         setEducatieModules(sortedData);
-    };
-
-
-    const sortArray = () => {
-        const sortedModules = [...educatieModules];
-        sortedModules.sort((a, b) => {
-            if (sortOrder === 'asc') {
-                return (a?.id || 0) - (b?.id || 0);
-            } else {
-                return (b?.id || 0) - (a?.id || 0);
-            }
-        });
-
-        setEducatieModules(sortedModules);
+        setUsingSort(false);
     };
 
     const filterData = () => {
-        const filteredData = educatieModulesUnfiltered.filter((module) =>
-            module?.id?.toString().includes(searchQuery.toLowerCase()) ||
-            module?.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            module?.description?.toLowerCase().includes(searchQuery.toLowerCase())
-        );
+        const searchInput = document.getElementById('searchInput') as HTMLInputElement | null;
+        if (searchInput) {
+            const query = searchInput.value;
+            const filteredData = educatieModulesUnfiltered.filter((module) =>
+                module.id?.toString().includes(query.toLowerCase()) ||
+                module.title?.toLowerCase().includes(query.toLowerCase()) ||
+                module.description?.toLowerCase().includes(query.toLowerCase())
+            );
 
-        setEducatieModules(filteredData);
+            setEducatieModules(filteredData);
+        }
     };
 
     const addModule = async (moduleID: number, title: string, desc: string) => {
@@ -149,10 +137,10 @@ const Page = () => {
             });
             setShowCreateModule(false);
             if (!response.ok) {
-                throw new Error("Failed to delete educatie_modules data");
+                throw new Error("Failed to add educatie_modules data");
             }
         } catch (error) {
-            console.error("Error deleting educatie_modules data:", error);
+            console.error("Error adding educatie_modules data:", error);
         }
     }
 
@@ -165,12 +153,17 @@ const Page = () => {
     }
 
     const saveAndClose = async () => {
-        if (!currentModule) return;
+        if (!currentModule || !currentModule.title?.trim() || !currentModule.description?.trim()) {
+            // If title or description is empty, do nothing
+            return;
+        }
 
         await saveEditedData(currentModule.title || '', currentModule.description || '');
         setShowDialog(false);
         refreshEducatieModules();
     };
+
+
 
     const refreshEducatieModules = async () => {
         const modules = await fetchEducatieModules();
@@ -181,8 +174,6 @@ const Page = () => {
         }
     };
 
-
-
     useEffect(() => {
         const fetchData = async () => {
             const modules = await fetchEducatieModules();
@@ -191,35 +182,22 @@ const Page = () => {
                 setEducatieModulesUnfiltered(modules);
             }
 
-            if (window.innerWidth < 650) {
-                setShowMessage(true);
-            }
+
             setIsLoading(false);
         };
         fetchData();
     }, []);
 
     useEffect(() => {
-        if (educatieModules.length > 0) {
-            if (sortCriteria === 'id') sortArray();
-            else sortData();
+        if (educatieModules.length > 0 && usingSort) {
+            sortData();
         }
     }, [educatieModules, sortCriteria, sortOrder]);
 
-    useEffect(() => {
-        if (!searchQuery) {
-            setEducatieModules(educatieModulesUnfiltered);
-        } else {
-            filterData();
-        }
-    }, [searchQuery, educatieModulesUnfiltered]);
+
 
     if (isLoading) {
         return <div>Laden...</div>;
-    }
-
-    if (showMessage) {
-        return <h1>Deze pagina is alleen toegangelijk op een groter beeldscherm</h1>
     }
 
     return (
@@ -229,10 +207,9 @@ const Page = () => {
                     className={styles.search}
                     type="search"
                     name=""
-                    id=""
+                    id="searchInput"
                     placeholder="Bevat…"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    defaultValue={searchQuery}
                 />
                 <input
                     className={styles.button}
@@ -252,7 +229,10 @@ const Page = () => {
                 <select
                     className={styles.sortSelect}
                     value={sortCriteria}
-                    onChange={(e) => setSortCriteria(e.target.value)}
+                    onChange={(e) => {
+                        setUsingSort(true);
+                        setSortCriteria(e.target.value);
+                    }}
                 >
                     <option value="ID">ID</option>
                     <option value="title">Titel</option>
@@ -260,7 +240,10 @@ const Page = () => {
                 <select
                     className={styles.sortSelect}
                     value={sortOrder}
-                    onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
+                    onChange={(e) => {
+                        setUsingSort(true);
+                        setSortOrder(e.target.value as 'asc' | 'desc');
+                    }}
                 >
                     <option value="asc">Oplopend</option>
                     <option value="desc">Aflopend</option>
@@ -294,110 +277,114 @@ const Page = () => {
                     )}
                 </tbody>
             </table>
-            <div
-                className={styles.dialogBackdrop}
-                style={{ display: showDialog ? "block" : "none" }}
-            >
-                <div className={styles.dialog}>
-                    <label htmlFor={dialogTitle}>Titel</label>
-                    <input
-                        type="text"
-                        name="Titel"
-                        value={currentModule?.title || ""}
-                        id={dialogTitle}
-                        className={titleIsEmpty === false ? styles.textBox : styles.errorBorder}
-                        onChange={(e) => setCurrentModule({ ...currentModule, title: e.target.value })}
-                    />
-                    <label htmlFor={dialogDescription}>Beschrijving</label>
-                    <input
-                        type="text"
-                        name="Beschrijving"
-                        id={dialogDescription}
-                        value={currentModule?.description || ""}
-                        className={descIsEmpty === false ? styles.textBox : styles.errorBorder}
-                        onChange={(e) => setCurrentModule({ ...currentModule, description: e.target.value })}
-                    />
-                    <input
-                        type="button"
-                        value="Opslaan"
-                        className={styles.button}
-                        onClick={() => {
-                            if (currentModule?.title) setTitleIsEmpty(false);
-                            else setTitleIsEmpty(true);
-                            if (currentModule?.description) {
-                                setDescIsEmpty(false);
-                                saveAndClose();
-                            }
-                            else setDescIsEmpty(true);
+            {showDialog && (
+                <div className={styles.dialogBackdrop}>
+                    <div className={styles.dialog}>
+                        <div className={styles.content}>
+                            <label htmlFor={dialogTitle}>Titel</label>
+                            <input
+                                type="text"
+                                name="Titel"
+                                value={currentModule?.title || ""}
+                                id={dialogTitle}
+                                className={titleIsEmpty === false ? styles.textBox : styles.errorBorder}
+                                onChange={(e) => setCurrentModule({ ...currentModule, title: e.target.value })}
+                            />
+                            <label htmlFor={dialogDescription}>Beschrijving</label>
+                            <textarea
+                                name="Beschrijving"
+                                id={dialogDescription}
+                                value={currentModule?.description || ""}
+                                rows={15}
+                                cols={75} // Set the number of columns you want to display initially
+                                className={descIsEmpty === false ? styles.textBox : styles.errorBorder}
+                                onChange={(e) => setCurrentModule({ ...currentModule, description: e.target.value })}
+                            />
+                        </div>
 
-                        }}
-                    />
-                    <input
-                        type="button"
-                        value="Verwijderen"
-                        className={styles.button}
-                        onClick={() => {
-                            deleteEducatieModuleHandler(currentModule?.id)
-                        }}
-                    />
-                    <input
-                        type="button"
-                        value="Sluiten"
-                        className={styles.secondaryButton}
-                        onClick={() => {
-                            setShowDialog(false);
-                            setDescIsEmpty(false);
-                            setTitleIsEmpty(false);
-                        }} />
-                </div>
-            </div>
-            {showCreateModule && (
-                <div className={styles.createPost2}>
-                    <div className={styles.dialog2}>
-                        <label htmlFor={dialogDescription}>Titel</label>
-                        <input
-                            type="text"
-                            name="Titel"
-                            value={newModule?.title || ""}
-                            id={dialogTitle}
-                            className={`${styles.textBox} ${titleIsEmpty ? styles.errorBorder : ''}`}
-                            onChange={(e) => {
-                                setNewModule({ ...newModule, title: e.target.value });
-                                setTitleIsEmpty(e.target.value.trim() === '');
-                            }}
-                        />
-                        <label htmlFor={dialogDescription}>Beschrijving</label>
-                        <input
-                            type="text"
-                            name="Beschrijving"
-                            id={dialogDescription}
-                            value={newModule?.description || ""}
-                            className={`${styles.textBox} ${descIsEmpty ? styles.errorBorder : ''}`}
-                            onChange={(e) => {
-                                setNewModule({ ...newModule, description: e.target.value });
-                                setDescIsEmpty(e.target.value.trim() === '');
-                            }}
-                        />
-                        <div className={styles.dialogButtons2}>
-                            <div
-                                onClick={() => setShowCreateModule(false)}
-                                className={styles.secondaryButton2}
-                            >
-                                Sluiten
-                            </div>
-                            <div
-                                className={styles.button2}
+                        <div className={styles.adminDialogButtons}>
+                            <input
+                                type="button"
+                                value="Sluiten"
+                                className={styles.button}
                                 onClick={() => {
-                                    if (newModule?.title) setTitleIsEmpty(false);
+                                    setShowDialog(false);
+                                    setDescIsEmpty(false);
+                                    setTitleIsEmpty(false);
+                                }} />
+                            <input
+                                type="button"
+                                value="Verwijderen"
+                                className={styles.button}
+                                onClick={() => {
+                                    deleteEducatieModuleHandler(currentModule?.id);
+                                }}
+                            />
+                            <input
+                                type="button"
+                                value="Opslaan"
+                                className={styles.button}
+                                onClick={() => {
+                                    if (currentModule?.title) setTitleIsEmpty(false);
                                     else setTitleIsEmpty(true);
-                                    if (newModule?.description) {
+                                    if (currentModule?.description) {
                                         setDescIsEmpty(false);
-                                        newModule.id = educatieModules.length + 1;
-                                        addModuleHandler(Number(newModule?.id), newModule?.title, newModule?.description);
+                                        saveAndClose();
                                     } else setDescIsEmpty(true);
                                 }}
-                            >
-                                Maak module
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
+            {showCreateModule && (
+                <div className={styles.createModuleBackdrop}>
+                    <div className={styles.createModule}>
+                        <div className={styles.newDialog}>
+                            <label htmlFor={dialogTitle}>Titel</label>
+                            <input
+                                type="text"
+                                name="Titel"
+                                value={newModule?.title || ""}
+                                id={dialogTitle}
+                                className={`${styles.textBox} ${titleIsEmpty ? styles.errorBorder : ''}`}
+                                onChange={(e) => {
+                                    setNewModule({ ...newModule, title: e.target.value });
+                                    setTitleIsEmpty(e.target.value.trim() === '');
+                                }}
+                            />
+                            <label htmlFor={dialogDescription}>Beschrijving</label>
+                            <textarea
+                                name="Beschrijving"
+                                id={dialogDescription}
+                                value={newModule?.description || ""}
+                                rows={25}
+                                cols={75}
+                                className={descIsEmpty === false ? styles.textBox : styles.errorBorder}
+                                onChange={(e) => setNewModule({ ...newModule, description: e.target.value })}
+                            />
+
+                            <div className={styles.newDialogButtons}>
+                                <div
+                                    onClick={() => setShowCreateModule(false)}
+                                    className={styles.newSecondaryButton}
+                                >
+                                    Sluiten
+                                </div>
+                                <div
+                                    className={styles.newButton}
+                                    onClick={() => {
+                                        if (newModule?.title) setTitleIsEmpty(false);
+                                        else setTitleIsEmpty(true);
+                                        if (newModule?.description) {
+                                            setDescIsEmpty(false);
+                                            newModule.id = educatieModules.length + 1;
+                                            addModuleHandler(Number(newModule?.id), newModule?.title, newModule?.description);
+                                        } else setDescIsEmpty(true);
+                                    }}
+                                >
+                                    Maak module
+                                </div>
                             </div>
                         </div>
                     </div>

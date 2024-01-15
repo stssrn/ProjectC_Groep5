@@ -344,11 +344,11 @@ const Page: React.FC = () => {
             ) : (
                 <div>
                     {totalQuizzes === null || userQuizzesCompleted === null ? (
-                        <h3>Loading...</h3>
+                        <h3>Laden...</h3>
                     ) : totalQuizzes === userQuizzesCompleted ? (
                         <h3>Je hebt al de quizzen gedaan.</h3>
                     ) : (
-                        <h3>Loading...</h3>
+                        <h3>Laden...</h3>
                     )}
                 </div>
             )}

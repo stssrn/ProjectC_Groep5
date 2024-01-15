@@ -26,16 +26,23 @@
   padding: 10px;
   border: 1px solid #000000;
   text-align: left;
-  font-size: 16px;
 }
 
 .table th {
-  background-color: var(--bg600);
+  background-color: var(--p500);
+  color: white;
 }
 
 .table td {
-  background-color: var(--bg500);
+  background-color: var(--bg200);
+  border-bottom: 1px solid #000000;
 }
+
+.tableId {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
 
 .edit,
 .delete {

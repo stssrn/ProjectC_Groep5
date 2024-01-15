@@ -1,5 +1,5 @@
 "use client";
-import styles from "./page.module.css";
+import styles from "../educatiemodules/page.module.css";
 import Container from "@/app/components/Container";
 import { useState, useEffect, useId } from "react";
 
@@ -35,7 +35,7 @@ const Page = () => {
     const [currentUserId, setCurrentUserId] = useState(0);
     const [titleIsEmpty, setTitleIsEmpty] = useState(false);
     const [descIsEmpty, setDescIsEmpty] = useState(false);
-    const [showMessage, setShowMessage] = useState(false);
+    const [usingSort, setUsingSort] = useState(false);
 
 
 
@@ -172,9 +172,6 @@ const Page = () => {
 
         setBugReportsWithUserId(combinedData);
         setBugReportsWithUserIdUnfiltered(combinedData);
-        if (window.innerWidth < 650) {
-            setShowMessage(true);
-        }
         setIsLoading(false);
     };
     const sortData = () => {
@@ -193,28 +190,37 @@ const Page = () => {
 
             return 0;
         });
-
         setBugReportsWithUserId(sortedData);
+        setUsingSort(false);
     };
 
-    const filterDataByTitle = () => {
-        const filteredData = bugReportsWithUserId.filter((report) =>
-            report.id.toString().includes(searchQuery.toLowerCase()) ||
-            report.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            report.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            report.userId.toString().includes(searchQuery.toLowerCase()) ||
-            new Date(report.date).toISOString().includes(searchQuery.toLowerCase())
-        );
+    const filterData = () => {
+        const searchInput = document.getElementById('searchInput') as HTMLInputElement | null;
+        if (searchInput) {
+            const query = searchInput.value;
+            const filteredData = bugReportsWithUserIdUnfiltered.filter((report) =>
+                report.id.toString().includes(query.toLowerCase()) ||
+                report.title.toLowerCase().includes(query.toLowerCase()) ||
+                report.description.toLowerCase().includes(query.toLowerCase()) ||
+                report.userId.toString().includes(query.toLowerCase()) ||
+                new Date(report.date).toISOString().includes(query.toLowerCase())
+            );
 
-        setBugReportsWithUserId(filteredData);
+            setBugReportsWithUserId(filteredData);
+        }
     };
+
+
 
     const saveAndClose = async () => {
-        if (!currentReport) return;
+        if (!currentReport || !currentReport.title?.trim() || !currentReport.description?.trim()) {
+            // If title or description is empty, do nothing
+            return;
+        }
 
-        await saveEditedData(currentReport.title, currentReport.description);
+        await saveEditedData(currentReport.title || '', currentReport.description || '');
         setShowDialog(false);
-        refreshBugReports();
+        await refreshBugReports();
     };
 
     const refreshBugReports = async () => {
@@ -223,41 +229,29 @@ const Page = () => {
         combineBugReportsAndBugUserData(reports, bugUser);
     };
 
+
+
     useEffect(() => {
         const fetchData = async () => {
             const reports = await fetchBugReports();
             const bugUser = await fetchBugUserData();
-            //console.log("buguser:" + bugUser)
-
             combineBugReportsAndBugUserData(reports, bugUser);
         };
-
         fetchData();
     }, []);
 
     useEffect(() => {
-        if (bugReportsWithUserId.length > 0) {
+        if (bugReportsWithUserId.length > 0 && usingSort) {
             sortData();
         }
     }, [bugReportsWithUserId, sortCriteria, sortOrder]);
 
-    useEffect(() => {
-        // Check if the search query is empty, and reset data if true
-        if (!searchQuery) {
-            setBugReportsWithUserId(bugReportsWithUserIdUnfiltered);
-            return;
-        }
 
-        filterDataByTitle();
-    }, [searchQuery, bugReportsWithUserIdUnfiltered]);
 
     if (isLoading) {
         return <div>Laden...</div>;
     }
 
-    if (showMessage) {
-        return <h1>Deze pagina is alleen toegangelijk op een groter beeldscherm</h1>
-    }
     return (
         <Container title="Bug meldingen beheer">
             <div className={styles.filterOptions}>
@@ -265,16 +259,15 @@ const Page = () => {
                     className={styles.search}
                     type="search"
                     name=""
-                    id=""
+                    id="searchInput"
                     placeholder="Bevat…"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    defaultValue={searchQuery}
                 />
                 <input
                     className={styles.button}
                     type="button"
                     value="Zoek"
-                    onClick={filterDataByTitle}
+                    onClick={filterData}
                 />
             </div>
             <div className={styles.sort}>
@@ -282,7 +275,10 @@ const Page = () => {
                 <select
                     className={styles.sortSelect}
                     value={sortCriteria}
-                    onChange={(e) => setSortCriteria(e.target.value)}
+                    onChange={(e) => {
+                        setUsingSort(true);
+                        setSortCriteria(e.target.value);
+                    }}
                 >
                     <option value="id">ID</option>
                     <option value="title">Titel</option>
@@ -292,7 +288,10 @@ const Page = () => {
                 <select
                     className={styles.sortSelect}
                     value={sortOrder}
-                    onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
+                    onChange={(e) => {
+                        setUsingSort(true);
+                        setSortOrder(e.target.value as 'asc' | 'desc');
+                    }}
                 >
                     <option value="asc">Oplopend</option>
                     <option value="desc">Aflopend</option>
@@ -331,64 +330,62 @@ const Page = () => {
                     )}
                 </tbody>
             </table>
-            <div
-                className={styles.dialogBackdrop}
-                style={{ display: showDialog ? "block" : "none" }}
-            >
-                <div className={styles.dialog}>
-                    <label htmlFor={dialogTitle}>Titel</label>
-                    <input
-                        type="text"
-                        name="Titel"
-                        value={currentReport?.title || ""}
-                        id={dialogTitle}
-                        className={titleIsEmpty === false ? styles.textBox : styles.errorBorder}
-                        onChange={(e) => setCurrentReport({ ...currentReport, title: e.target.value })}
-                    />
-                    <label htmlFor={dialogDescription}>Beschrijving</label>
-                    <input
-                        type="text"
-                        name="Beschrijving"
-                        id={dialogDescription}
-                        value={currentReport?.description || ""}
-                        className={descIsEmpty === false ? styles.textBox : styles.errorBorder}
-                        onChange={(e) => setCurrentReport({ ...currentReport, description: e.target.value })}
-                    />
-                    <input
-                        type="button"
-                        value="Opslaan"
-                        className={styles.button}
-                        onClick={() => {
-                            if (currentReport?.title) setTitleIsEmpty(false);
-                            else setTitleIsEmpty(true);
-                            if (currentReport?.description) {
+            {showDialog && (
+                <div className={styles.dialogBackdrop}>
+                    <div className={styles.dialog}>
+                        <label htmlFor={dialogTitle}>Titel</label>
+                        <input
+                            type="text"
+                            name="Titel"
+                            value={currentReport?.title || ""}
+                            id={dialogTitle}
+                            className={titleIsEmpty === false ? styles.textBox : styles.errorBorder}
+                            onChange={(e) => setCurrentReport({ ...currentReport, title: e.target.value })}
+                        />
+                        <label htmlFor={dialogDescription}>Beschrijving</label>
+                        <textarea
+                            name="Beschrijving"
+                            id={dialogDescription}
+                            value={currentReport?.description || ""}
+                            rows={5}
+                            cols={50}
+                            className={`${styles.textBox} ${descIsEmpty ? styles.errorBorder : ''}`}
+                            onChange={(e) => setCurrentReport({ ...currentReport, description: e.target.value })}
+                        />
+                        <input
+                            type="button"
+                            value="Opslaan"
+                            className={styles.button}
+                            onClick={() => {
+                                if (currentReport?.title) setTitleIsEmpty(false);
+                                else setTitleIsEmpty(true);
+                                if (currentReport?.description) {
+                                    setDescIsEmpty(false);
+                                    saveAndClose();
+                                } else setDescIsEmpty(true);
+                            }}
+                        />
+
+                        <input
+                            type="button"
+                            value="Verwijderen"
+                            className={styles.button}
+                            onClick={() => {
+                                deleteBugReportHandler(currentReport?.id, currentUserId)
+                            }}
+                        />
+                        <input
+                            type="button"
+                            value="Sluiten"
+                            className={styles.secondaryButton}
+                            onClick={() => {
+                                setShowDialog(false);
                                 setDescIsEmpty(false);
-                                saveAndClose();
-                            }
-                            else setDescIsEmpty(true);
-
-                        }}
-                    />
-
-                    <input
-                        type="button"
-                        value="Verwijderen"
-                        className={styles.button}
-                        onClick={() => {
-                            deleteBugReportHandler(currentReport?.id, currentUserId)
-                        }}
-                    />
-                    <input
-                        type="button"
-                        value="Sluiten"
-                        className={styles.secondaryButton}
-                        onClick={() => {
-                            setShowDialog(false);
-                            setDescIsEmpty(false);
-                            setTitleIsEmpty(false);
-                        }} />
+                                setTitleIsEmpty(false);
+                            }} />
+                    </div>
                 </div>
-            </div>
+            )}
         </Container >
     );
 };

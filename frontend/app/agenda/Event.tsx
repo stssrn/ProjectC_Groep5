@@ -121,21 +121,19 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
   }, [event.id, session]);
 
 
-
   return (
     <main>
-      <div key={new Date(event.date).getMilliseconds()} className={styles.event}>
+      <div key={new Date(event.date).getUTCMilliseconds()} className={styles.event}>
         <div className={styles.info}>
           <time dateTime={new Date(event.date).toISOString()} className={styles.eventDay}>
-            {new Date(event.date).getDate()}
+            {new Date(event.date).getUTCDate()}
           </time>
           <div className={styles.eventName}>{event.name}</div>
-
         </div>
-        {signedIn && (
+
+        {signedIn ? (
           <button className={styles.signUp} onClick={() => setShowSignUp(true)}>Uitschrijven</button>
-        )}
-        {signedIn === false && (
+        ) : (
           <button className={styles.signUp} onClick={() => setShowSignUp(true)}>Inschrijven</button>
         )}
       </div>
@@ -151,26 +149,18 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
               <p className={styles.description}>{event.description}</p>
             </div>
             <div className={styles.dialogButtons}>
-              <div
-                onClick={() => setShowSignUp(false)}
-                className={styles.secondaryButton}
-              >
-                Sluiten
-              </div>
-              {signedIn && (
+              <div onClick={() => setShowSignUp(false)} className={styles.secondaryButton}>Sluiten</div>
+              {signedIn ? (
                 <div onClick={handleSignUp} className={styles.button}>Uitschrijven</div>
-              )}
-              {signedIn === false && (
-                <div
-                  onClick={handleSignUp}
-                  className={styles.button}>Inschrijven</div>
+              ) : (
+                <div onClick={handleSignUp} className={styles.button}>Inschrijven</div>
               )}
             </div>
           </div>
         </div>
       )}
     </main>
-  )
+  );
 };
 
 export default EventComponent;

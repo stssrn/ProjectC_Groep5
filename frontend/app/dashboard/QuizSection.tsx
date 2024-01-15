@@ -11,6 +11,7 @@ const QuizBlock: React.FC<{
     const [quizzesDone, setQuizzesDone] = useState(0);
     const [quizzes, setQuizzes] = useState(0);
     const { data: session } = useSession();
+    const [lineBreaks, setLineBreaks] = useState(false);
 
 
     useEffect(() => {
@@ -29,19 +30,21 @@ const QuizBlock: React.FC<{
                 if (session?.user.id) {
                     const response = await fetch(`/api/quizUser?userId=${session.user.id}`);
                     const data = await response.json();
-                    setQuizzesDone(data.quizUserData.length); // Adjust this based on your API response structure
+                    setQuizzesDone(data.quizUserData.length);
                 }
             } catch (error) {
                 console.error('Error fetching quiz data:', error);
             }
         };
+        if (window.innerWidth < 1200) setLineBreaks(false);
+        else setLineBreaks(true);
 
         fetchQuizzes();
         fetchData();
     }, [session]);
 
     if (!quizzesDone) {
-        return <p>Loading...</p>;
+        return <p>Laden..</p>;
     }
 
     const progress = (quizzesDone / quizzes) * 100;
@@ -53,6 +56,9 @@ const QuizBlock: React.FC<{
                     <article className={styles.quiz}>
                         <div className={styles.quizProgressTracker}>
                             <h3>Afgeronde quizzen: {quizzesDone}/{quizzes}</h3>
+                            {lineBreaks && (
+                                <br></br>
+                            )}
                             <div className={styles.quizProgressBar}>
                                 <div
                                     className={styles.quizProgress}

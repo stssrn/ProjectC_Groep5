@@ -24,29 +24,28 @@
   top: 0;
   width: 100%;
   height: 100%;
-  background-color: #4104;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
 }
 
 .dialog {
   background-color: var(--bg500);
-  width: 20%;
-  height: 50%;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%) translateY(-10%);
-  padding: 24px;
-  align-items: center;
-  justify-content: flex-end;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  padding: 20px;
+  margin: 20px auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
-.content {
-  overflow: auto;
-  align-items: left;
+.dialog label {
+  margin-top: 10px;
+  font-weight: bold;
 }
 
 .dialogButtons {
@@ -54,6 +53,35 @@
   gap: 16px;
   justify-content: center;
   margin-top: 20px;
+}
+
+.dialog input,
+.dialog select {
+  width: 100%;
+  padding: 8px;
+  margin-top: 5px;
+  border: 1px solid var(--bg600);
+  border-radius: 4px;
+}
+
+.dialog button {
+  margin-top: 15px;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background-color: var(--p500);
+  color: white;
+  cursor: pointer;
+}
+
+.dialog button:hover {
+  background-color: var(--p600);
+}
+
+.content {
+  overflow: auto;
+  align-items: left;
 }
 
 .button,
@@ -86,18 +114,6 @@
   margin-top: 15px;
 }
 
-@media (max-width: 700px) {
-  .dialog {
-    width: 80%;
-  }
-}
-
-@media (max-width: 450px) {
-  .dialog {
-    width: 60%;
-  }
-}
-
 .signUp {
   background-color: transparent;
   border-color: transparent;
@@ -114,4 +130,237 @@
 
 .timeText {
   font-size: 30px;
+}
+
+.edit {
+  background-color: var(--bg300);
+  border: none;
+  padding: 0px 8px;
+  color: inherit;
+  font-size: 20px;
+  display: flex;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+}
+
+.group {
+  background-color: var(--bg300);
+  border: none;
+  padding: 0px 8px;
+  color: inherit;
+  font-size: 20px;
+  display: flex;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+}
+
+.exit {
+  background-color: var(--bg300);
+  border: none;
+  padding: 10px 16px;
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: inherit;
+  font-size: 24px;
+  display: flex;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+}
+
+.table {
+  border-spacing: 12px 0;
+  border-collapse: collapse;
+}
+
+.table td,
+.table th {
+  padding: 2px 8px;
+}
+
+.table tr:first-child {
+  color: #fff;
+  text-align: left;
+  background-color: var(--p500);
+}
+
+.table tr:first-child th {
+  font-weight: normal;
+  padding: 4px 8px;
+}
+
+.table tr td:last-child {
+  padding-right: 0;
+}
+
+.tableId {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.editGroup {
+  background-color: var(--bg300);
+  border: none;
+  padding: 0px 8px;
+  color: inherit;
+  font-size: 20px;
+  display: flex;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+}
+
+.filterOptions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.errorBorder {
+  display: block;
+  min-height: 32px;
+  padding: 0 12px;
+  flex-grow: 1;
+  border: 1px solid red;
+  width: 100%;
+}
+
+.textBox {
+  display: block;
+  min-height: 32px;
+  padding: 0 12px;
+  flex-grow: 1;
+  border: 1px solid var(--bg600);
+  width: 100%;
+  margin-bottom: 10px;
+  margin-top: 5px;
+}
+
+.dateBox {
+  display: flex;
+  align-items: center;
+  left: 0%;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--bg600);
+  width: 65%;
+  margin-bottom: 10px;
+  margin-top: 5px;
+}
+
+.dateBox input {
+  border: none;
+  width: calc(100% - 12px);
+}
+
+.search {
+  display: block;
+  min-height: 32px;
+  padding: 0 12px;
+  flex-grow: 1;
+  border: 1px solid var(--bg600);
+}
+
+.adminButton,
+.adminSecondaryButton {
+  flex-grow: 1;
+  border: none;
+  padding: 12px;
+  /* Adjust the padding as needed */
+  cursor: pointer;
+  text-align: center;
+}
+
+.adminButton {
+  background-color: var(--p500);
+  border: none;
+  color: #fff;
+}
+
+.adminSecondaryButton {
+  background-color: var(--bg300);
+  color: inherit;
+}
+
+.adminDialogButtons {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.add {
+  background-color: var(--bg300);
+  border: none;
+  padding: 0px 8px;
+  color: inherit;
+  font-size: 20px;
+  display: flex;
+  height: 35px;
+  align-items: center;
+  justify-content: center;
+}
+
+.addDiv {
+  display: flex;
+  justify-content: right;
+}
+
+@media (max-width: 600px) {
+  .createPopUp {
+    width: 90%;
+  }
+
+  .content {
+    overflow-y: auto;
+    zoom: 75%;
+  }
+
+  .dialog {
+    width: 90%;
+    margin: 10px;
+  }
+
+  .event {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .signUp {
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .info {
+    align-items: center;
+    text-align: center;
+  }
+
+  .group {
+    margin-top: 5px;
+  }
+
+  .adminDialogButtons {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+
+  .adminButton,
+  .adminSecondaryButton {
+    width: 175%;
+  }
+}
+
+@media (max-width: 1250px) {
+  .dialog {
+    width: 80%;
+  }
 }
