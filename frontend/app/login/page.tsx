@@ -54,25 +54,28 @@ const Page = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (session?.user?.id) {
-      fetchUserData(session.user.id.toString());
-    }
-  }, [session]);
+    const handleRedirection = async () => {
+      if (session?.user?.id) {
+        const userData = await fetchUserData(session.user.id.toString());
+        if (userData.isAdmin) {
+          router.push('/admin');
+        } else if (userData.firstLogin) {
+          setShowPopup(true);
+        } else {
+          router.push('/dashboard');
+        }
+      }
+    };
+
+    handleRedirection();
+  }, [session, router]);
 
 
   const fetchUserData = async (userId: string) => {
     try {
       const response = await fetch(`/api/user/fetchFromUserId?id=${userId}`);
       if (!response.ok) throw new Error("Failed to fetch user data");
-
-      const data = await response.json();
-      setUserData({ ...userData, ...data });
-      if (data.firstLogin) {
-        setShowPopup(true);
-      }
-      else {
-        handleNo();
-      }
+      return await response.json();
     } catch (error) {
       console.error("Error fetching user data:", error);
     }

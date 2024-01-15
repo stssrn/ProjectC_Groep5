@@ -86,7 +86,14 @@
     text-align: center;
 }
 
-@media screen and (max-width: 420px) {
+@media screen and (max-width: 600px) {
+
+    /* <- dit veranderd van 420 naar 600 */
+    .rewardsContainer {
+        overflow-x: hidden;
+        white-space: normal;
+    }
+
     .rewards {
         height: 70vh;
         width: 54vw;

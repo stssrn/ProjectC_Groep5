@@ -7,7 +7,6 @@ import { useSession } from 'next-auth/react';
 
 import MaleDefaultPhoto from "./male.svg";
 import FemaleDefaultPhoto from "./female.svg";
-import { Router } from "react-router-dom";
 import Link from "next/link";
 
 type UserData = {
@@ -218,155 +217,179 @@ const Page = () => {
 
   return (
     <Container title="Profiel">
-      <div className={styles.parentContainer}>
-        <div className={styles.profileContainer}>
-          <div className={styles.circularProfilePhotoContainer}>
-            <Image
-              src={getImagePath()}
-              alt="Profile"
-              width={150}
-              height={150}
-              className={styles.circularProfilePhoto}
-            />
-            <input
-              ref={inputFileRef}
-              type="file"
-              accept="image/*"
-              style={{ display: "none" }}
-              onChange={handlePhotoChange}
-            />
+      {/* Profiel Foto Sectie */}
+      <div className={styles.widthAanpassing}>
+        <div className={styles.detailRow}>
+          <span className={styles.detailLabel}>Foto:</span>
+
+          <Image
+            src={getImagePath()}
+            alt="Profile"
+            width={100}
+            height={100}
+            className={styles.circularProfilePhoto}
+          />
+          <input
+            ref={inputFileRef}
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={handlePhotoChange}
+          />
+          <button
+            className={styles.editButton}
+            onClick={() => inputFileRef.current?.click()}
+          >
+            <i className="symbol">photo</i>
+          </button>
+        </div>
+
+        {/* Naam Sectie */}
+        <div className={styles.detailRow}>
+          <span className={styles.detailLabel}>Naam:</span>
+          <span className={styles.detailContent}>
+            {userData.firstName} {userData.lastName}
+          </span>
+        </div>
+
+        {/* Email Sectie */}
+        {editMode.email ? (
+          <div className={styles.dialogBackdrop}>
+            <div className={styles.dialog}>
+              <label htmlFor="email">Email</label>
+              <input
+                type="text"
+                id="email"
+                className={styles.inputField}
+                value={tempData.email}
+                onChange={(e) => setTempData({ ...tempData, email: e.target.value })}
+              />
+              <button
+                className={styles.saveButton}
+                onClick={() => handleSave("email")}
+              >
+                Opslaan
+              </button>
+              <button
+                className={styles.cancelButton}
+                onClick={() => handleCancel("email")}
+              >
+                Annuleren
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className={styles.detailRow}>
+            <span className={styles.detailLabel}>Email:</span>
+            <span className={styles.detailContent}>{userData.email}</span>
             <button
               className={styles.editButton}
-              onClick={() => inputFileRef.current?.click()}
+              onClick={() => handleEdit("email")}
             >
-              Bewerk Foto
+              <i className="symbol">edit</i>
             </button>
           </div>
-          <div className={styles.userInfo}>
-            <div>
-              <label>Naam:</label>
-              <p>
-                {userData.firstName} {userData.lastName}
-              </p>
-            </div>
-            {/* <div>
-              <label>Leeftijd:</label>
-              <p>{userData.age}</p>
-            </div> */}
-            <div>
-              <label>Email:</label>
-              {editMode.email ? (
-                <>
-                  <input
-                    type="text"
-                    value={tempData.email}
-                    onChange={(e) =>
-                      setTempData({ ...tempData, email: e.target.value })
-                    }
-                  />
-                  <button
-                    className={styles.saveButton}
-                    onClick={() => handleSave("email")}
-                  >
-                    Opslaan
-                  </button>
-                  <button
-                    className={styles.cancelButton}
-                    onClick={() => handleCancel("email")}
-                  >
-                    Annuleren
-                  </button>
-                </>
-              ) : (
-                <>
-                  <p>{userData.email}</p>
-                  <button
-                    className={styles.editButton}
-                    onClick={() => handleEdit("email")}
-                  >
-                    Bewerken
-                  </button>
-                </>
-              )}
-            </div>
+        )}
 
-            <div>
-              <label>Bio:</label>
-              {editMode.bio ? (
-                <>
-                  <textarea
-                    value={tempData.bio}
-                    onChange={(e) =>
-                      setTempData({ ...tempData, bio: e.target.value })
-                    }
-                  />
-                  <button
-                    className={styles.saveButton}
-                    onClick={() => handleSave("bio")}
-                  >
-                    Opslaan
-                  </button>
-                  <button
-                    className={styles.cancelButton}
-                    onClick={() => handleCancel("bio")}
-                  >
-                    Annuleren
-                  </button>
-                </>
-              ) : (
-                <>
-                  <p>{userData.bio}</p>
-                  <button
-                    className={styles.editButton}
-                    onClick={() => handleEdit("bio")}
-                  >
-                    Bewerken
-                  </button>
-                </>
-              )}
-            </div>
-            <div>
-              <label>Punten:</label>
-              <p>{userData.points}</p>
-            </div>
-            <div className={styles.passwordChangeSection}>
+
+        {/* Bio Sectie */}
+        {editMode.bio ? (
+          <div className={styles.dialogBackdrop}>
+            <div className={styles.dialog}>
+              <label htmlFor="bio">Bio</label>
+              <input
+                type="text"
+                id="bio"
+                className={styles.inputField}
+                value={tempData.bio}
+                onChange={(e) => setTempData({ ...tempData, bio: e.target.value })}
+              />
               <button
-                onClick={toggleChangePasswordForm}
-                className={styles.editButton}
+                className={styles.saveButton}
+                onClick={() => handleSave("bio")}
               >
-                {showChangePassword ? "Annuleren" : "Wachtwoord Wijzigen"}
+                Opslaan
               </button>
-
-              {showChangePassword && (
-                <div>
-                  <label htmlFor="newPassword">Nieuw Wachtwoord:</label>
-                  <input
-                    type="password"
-                    id="newPassword"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    className={styles.inputField}
-                  />
-                  <button
-                    onClick={handleChangePassword}
-                    className={styles.saveButton}
-                  >
-                    Opslaan
-                  </button>
-                </div>
-              )}
+              <button
+                className={styles.cancelButton}
+                onClick={() => handleCancel("bio")}
+              >
+                Annuleren
+              </button>
             </div>
           </div>
+        ) : (
+          <div className={styles.detailRow}>
+            <span className={styles.detailLabel}>Bio:</span>
+            <span className={styles.detailContent}>{userData.bio}</span>
+            <button
+              className={styles.editButton}
+              onClick={() => handleEdit("bio")}
+            >
+              <i className="symbol">edit</i>
+            </button>
+          </div>
+        )}
+
+        {/* Punten Sectie */}
+        <div className={styles.detailRow}>
+          <span className={styles.detailLabel}>Punten:</span>
+          <span className={styles.detailContent}>{userData.points}</span>
         </div>
+
+        {/* Wachtwoord Veranderen Sectie */}
+        {showChangePassword && (
+          <div className={styles.dialogBackdrop}>
+            <div className={styles.dialog}>
+              <label htmlFor="newPassword">Nieuwe Wachtwoord</label>
+              <input
+                type="password"
+                id="newPassword"
+                placeholder="Voer nieuw wachtwoord in"
+                className={styles.inputField}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+              <button
+                className={styles.saveButton}
+                onClick={handleChangePassword}
+              >
+                Opslaan
+              </button>
+              <button
+                className={styles.cancelButton}
+                onClick={() => setShowChangePassword(false)}
+              >
+                Annuleren
+              </button>
+            </div>
+          </div>
+        )}
+
+        <div className={styles.detailRow}>
+          <span className={styles.detailLabel}>Wachtwoord:</span>
+          <i className="symbol">password</i>
+          <button
+            onClick={toggleChangePasswordForm}
+            className={styles.editButton}
+          >
+            {showChangePassword ? "Annuleer " : "Wachtwoord Wijzigen "}
+            <i className="symbol">edit</i>
+          </button>
+        </div>
+
+
         {error && <p style={{ color: "red" }}>{error}</p>}
+
         <div className={styles.tourDiv}>
           <Link href="/tour">
-            <span className={styles.tourButton}>Ga naar de tour</span>
+            <span className={styles.tourButton}>Ga Naar Tour</span>
           </Link>
         </div>
       </div>
     </Container>
   );
+
 };
 
 export default Page;

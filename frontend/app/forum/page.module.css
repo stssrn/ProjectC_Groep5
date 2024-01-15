@@ -91,3 +91,16 @@
   resize: vertical;
   padding: 8px;
 }
+
+@media (max-width: 600px) {
+  .columns {
+    flex-direction: column;
+  }
+
+  .dialog {
+    zoom: 80%;
+    position: fixed;
+    top: 50%;
+    transform: translate(-55%, -50%);
+  }
+}

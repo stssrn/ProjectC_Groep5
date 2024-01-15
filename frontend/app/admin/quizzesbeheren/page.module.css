@@ -1,49 +1,18 @@
-.filterOptions {
+.filterOptions,
+.sortOptions {
   display: flex;
   gap: 12px;
   margin-bottom: 24px;
+  flex-wrap: wrap;
 }
 
 .search,
-.textBox {
-  flex-grow: 1;
-  min-width: 150px;
-  padding: 8px;
-  background-color: var(--bg300);
-  border-radius: 4px;
-}
-
-.select,
-.button,
-.secondaryButton,
-.button2,
-.secondaryButton2 {
-  flex-grow: 1;
-  min-width: 150px;
-  padding: 8px;
-  background-color: var(--bg300);
-  border-radius: 4px;
-}
-
-.button,
-.button2 {
-  background-color: var(--p500);
-  color: #fff;
-}
-
-.button:hover,
-.button2:hover {
-  background-color: var(--p600);
-}
-
-.secondaryButton,
-.secondaryButton2 {
-  background-color: var(--bg300);
-  color: inherit;
-}
-
 .select {
-  font-size: inherit;
+  flex-grow: 1;
+  min-width: 150px;
+  padding: 8px;
+  background-color: var(--bg300);
+  border-radius: 4px;
 }
 
 .table {
@@ -57,21 +26,15 @@
   padding: 10px;
   border: 1px solid #000000;
   text-align: left;
+  font-size: 16px;
 }
 
 .table th {
-  background-color: var(--p500);
-  color: white;
+  background-color: var(--bg600);
 }
 
 .table td {
-  background-color: var(--bg200);
-  border-bottom: 1px solid #000000;
-}
-
-.tableId {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
+  background-color: var(--bg500);
 }
 
 .edit,
@@ -87,16 +50,9 @@
   justify-content: center;
 }
 
-.edit:hover {
-  background-color: #eaeaea;
-}
-
-.delete {
-  background-color: var(--r500);
-}
-
+.edit:hover,
 .delete:hover {
-  background-color: var(--r600);
+  background-color: #eaeaea;
 }
 
 .dialogBackdrop {
@@ -129,13 +85,12 @@
   font-weight: bold;
 }
 
-.dialog textarea,
 .dialog input,
 .dialog select {
   width: 100%;
   padding: 8px;
   margin-top: 5px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--bg600);
   border-radius: 4px;
 }
 
@@ -155,25 +110,28 @@
 }
 
 .add {
-  background-color: var(--p500);
-  color: #fff;
-  padding: 8px 16px;
-  margin-bottom: 16px;
-  border-radius: 4px;
-  font-size: 16px;
-  align-self: flex-end;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
 }
 
-.add:hover {
+.add,
+.button {
+  background-color: var(--p500);
+  color: #ffffff;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+.add:hover,
+.button:hover {
   background-color: var(--p600);
 }
 
 @media (max-width: 600px) {
-  .container {
-    padding: 10px;
-  }
-
-  .flex {
+  .filterOptions,
+  .sortOptions {
     flex-direction: column;
   }
 
@@ -181,6 +139,8 @@
   .table th,
   .table td {
     display: block;
+    width: 100%;
+    padding: 8px;
   }
 
   .table th {
@@ -188,37 +148,27 @@
   }
 
   .table td {
-    padding: 8px;
-    border-bottom: 1px solid #000000;
-    text-align: right;
+    text-align: left;
+    padding-left: 10px;
+    padding-right: 10px;
   }
 
-  .table td:before {
+  .table td::before {
     content: attr(data-label);
-    float: left;
+    position: absolute;
+    left: 10px;
+    top: 10px;
     font-weight: bold;
-    text-transform: uppercase;
+    font-size: 14px;
   }
 
-  .filterOptions {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .search {
-    margin-right: 0;
-    width: 100%;
+  .table th,
+  .table td {
+    font-size: 14px;
   }
 }
 
-.sortOptions {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 16px;
-}
-
-.sortOptions .select {
-  padding: 8px 12px;
-  border: 1px solid var(--bg600);
-  border-radius: 4px;
+.dialog {
+  width: 90%;
+  margin: 10px;
 }
