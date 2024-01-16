@@ -13,7 +13,7 @@ async function upvote(userId: number, postId: number) {
   return res.ok;
 }
 
-async function unupvote(userId: number, postId: number) {
+async function removeUpvote(userId: number, postId: number) {
   const res = await fetch(
     `/api/forum/posts/${postId}/remove-upvote?userid=${userId}`,
     { method: "DELETE" }
@@ -60,7 +60,7 @@ const Post: React.FC<Props> = (props) => {
     if (clickedUpvote) {
       if (isUpvoted) {
         setIsUpvoted(false);
-        unupvote(props.userId, props.postId).then((res) => {
+        removeUpvote(props.userId, props.postId).then((res) => {
           if (!res) setIsUpvoted(true);
         });
       } else {

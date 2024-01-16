@@ -12,7 +12,7 @@ async function upvote(userId: number, reactionId: number) {
   return res.ok;
 }
 
-async function unupvote(userId: number, reactionId: number) {
+async function removeUpvote(userId: number, reactionId: number) {
   const res = await fetch(
     `/api/forum/reaction/${reactionId}/remove-upvote?userid=${userId}`,
     { method: "DELETE" }
@@ -57,7 +57,7 @@ const Reply: React.FC<Props> = (props) => {
     if (clickedUpvote) {
       if (isUpvoted) {
         setIsUpvoted(false);
-        unupvote(props.userId, props.reactionId).then((res) => {
+        removeUpvote(props.userId, props.reactionId).then((res) => {
           if (!res) setIsUpvoted(true);
         });
       } else {
