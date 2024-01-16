@@ -18,6 +18,10 @@ frontend/out/
 # production
 /build
 
+# local env files
+.env*.local
+.env
+
 # misc
 .DS_Store
 *.pem
