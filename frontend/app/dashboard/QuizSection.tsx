@@ -31,6 +31,9 @@ const QuizBlock: React.FC<{
                     const response = await fetch(`/api/quizUser?userId=${session.user.id}`);
                     const data = await response.json();
                     setQuizzesDone(data.quizUserData.length);
+                    if (response.status === 404) {
+                        setQuizzesDone(0);
+                    }
                 }
             } catch (error) {
                 console.error('Error fetching quiz data:', error);
@@ -41,9 +44,9 @@ const QuizBlock: React.FC<{
 
         fetchQuizzes();
         fetchData();
-    }, [session]);
+    }, []);
 
-    if (!quizzesDone) {
+    if (!quizzesDone && quizzesDone !== 0) {
         return <p>Laden..</p>;
     }
 
