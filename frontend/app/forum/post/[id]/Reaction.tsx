@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import styles from "./Reaction.module.css";
 import clsx from "clsx";
-import Image from "next/image";
 
 async function upvote(userId: number, reactionId: number) {
   const res = await fetch(
@@ -15,7 +14,7 @@ async function upvote(userId: number, reactionId: number) {
 
 async function unupvote(userId: number, reactionId: number) {
   const res = await fetch(
-    `/api/forum/reaction/${reactionId}/unupvote?userid=${userId}`,
+    `/api/forum/reaction/${reactionId}/remove-upvote?userid=${userId}`,
     { method: "DELETE" }
   );
   return res.ok;

@@ -15,7 +15,7 @@ async function upvote(userId: number, postId: number) {
 
 async function unupvote(userId: number, postId: number) {
   const res = await fetch(
-    `/api/forum/posts/${postId}/unupvote?userid=${userId}`,
+    `/api/forum/posts/${postId}/remove-upvote?userid=${userId}`,
     { method: "DELETE" }
   );
   return res.ok;
