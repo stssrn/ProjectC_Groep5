@@ -4,15 +4,42 @@ import { useEffect, useState } from "react";
 import styles from "./Post.module.css";
 import clsx from "clsx";
 import Link from "next/link";
-import { Post } from "@/lib/posts";
 
-const Post: React.FC<{
-  post: Post;
-}> = ({ post }) => {
+async function upvote(userId: number, postId: number) {
+  const res = await fetch(
+    `/api/forum/posts/${postId}/upvote?userid=${userId}`,
+    { method: "POST" }
+  );
+  return res.ok;
+}
+
+async function unupvote(userId: number, postId: number) {
+  const res = await fetch(
+    `/api/forum/posts/${postId}/unupvote?userid=${userId}`,
+    { method: "DELETE" }
+  );
+  return res.ok;
+}
+
+type Props = {
+  userId: number;
+  postId: number;
+  firstName: string;
+  lastName: string;
+  username: string;
+  content: string;
+  date: Date;
+  profilePhotoURL: string;
+  upvoteCount: number;
+  reactionCount: number;
+  isUpvoted: boolean;
+};
+
+const Post: React.FC<Props> = (props) => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
-  const { poster } = post;
-  const postUrl = `/forum/post/${post.id}`;
+  const [isUpvoted, setIsUpvoted] = useState(props.isUpvoted);
+  const [clickedUpvote, setClickedUpvote] = useState(false);
+  const postUrl = `/forum/post/${props.postId}`;
 
   const formatDate = Intl.DateTimeFormat("nl", {
     day: "numeric",
@@ -29,19 +56,39 @@ const Post: React.FC<{
     return () => window.removeEventListener("click", handler);
   }, [showDropdown]);
 
-  const formattedDate = formatDate(post.date);
+  useEffect(() => {
+    if (clickedUpvote) {
+      if (isUpvoted) {
+        setIsUpvoted(false);
+        unupvote(props.userId, props.postId).then((res) => {
+          if (!res) setIsUpvoted(true);
+        });
+      } else {
+        setIsUpvoted(true);
+        upvote(props.userId, props.postId).then((res) => {
+          if (!res) setIsUpvoted(false);
+        });
+      }
+      setClickedUpvote(false);
+    }
+  }, [clickedUpvote, isUpvoted]);
+
+  const formattedDate = formatDate(props.date);
   return (
     <div className={styles.post}>
       <div className={styles.top}>
         <div className={styles.left}>
           <div className={styles.profilePicture}>
-            <i className="symbol">person</i>
+            <img
+              className={styles.profilePictureImage}
+              src={props.profilePhotoURL}
+            ></img>
           </div>
         </div>
         <div className={styles.userInfo}>
-          <div className={styles.name}>
-            {poster.firstName} {poster.lastName}
-          </div>
+          <Link href={`/forum/@${props.username}`} className={styles.name}>
+            {props.firstName} {props.lastName}
+          </Link>
           <div className={styles.subtext}>
             <Link
               className={styles.subtextUrl}
@@ -77,7 +124,7 @@ const Post: React.FC<{
           )}
         </div>
       </div>
-      <p className={styles.content}>{post.content}</p>
+      <p className={styles.content}>{props.content}</p>
       <div className={styles.bottom}>
         <div className={styles.bottomItem}>
           <i
@@ -85,14 +132,17 @@ const Post: React.FC<{
               "symbol",
               styles.bottomItemButton,
               styles.likeButton,
-              isLiked && styles.liked,
+              isUpvoted && styles.liked
             )}
-            onClick={() => setIsLiked((prev) => !prev)}
-            title="Like"
+            onClick={() => setClickedUpvote(true)}
+            title="Upvote"
           >
             favorite
           </i>
-          <div>{post.likes + Number(isLiked)}</div>
+          <div>
+            {/* Don't count own upvote twice */}
+            {props.upvoteCount - Number(props.isUpvoted) + Number(isUpvoted)}
+          </div>
         </div>
         <div>
           <Link className={styles.bottomItem} href={postUrl}>
@@ -100,13 +150,13 @@ const Post: React.FC<{
               className={clsx(
                 "symbol",
                 styles.bottomItemButton,
-                styles.commentButton,
+                styles.commentButton
               )}
               title="Reacties"
             >
               comment
             </i>
-            <div>{post.replies.length}</div>
+            {props.reactionCount}
           </Link>
         </div>
       </div>

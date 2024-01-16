@@ -1,0 +1,25 @@
+.profilePicture {
+  border-radius: 50%;
+  border: 1px solid var(--b700);
+  overflow: hidden;
+  width: 100px;
+  aspect-ratio: 1;
+  background: linear-gradient(#fff, var(--bg500));
+  flex-shrink: 0;
+}
+
+.profilePictureImage {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.sectionTop {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin: 24px 0px;
+}
+
+.sectionBottom {
+  margin-bottom: 24px;
+}

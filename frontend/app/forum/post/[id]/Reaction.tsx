@@ -1,22 +1,48 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import styles from "./Reply.module.css";
+import styles from "./Reaction.module.css";
 import clsx from "clsx";
-import Link from "next/link";
-import { Reply } from "@/lib/posts";
+import Image from "next/image";
 
-const Reply: React.FC<{
-  reply: Reply;
-}> = ({ reply }) => {
+async function upvote(userId: number, reactionId: number) {
+  const res = await fetch(
+    `/api/forum/reaction/${reactionId}/upvote?userid=${userId}`,
+    { method: "POST" }
+  );
+  return res.ok;
+}
+
+async function unupvote(userId: number, reactionId: number) {
+  const res = await fetch(
+    `/api/forum/reaction/${reactionId}/unupvote?userid=${userId}`,
+    { method: "DELETE" }
+  );
+  return res.ok;
+}
+
+type Props = {
+  userId: number;
+  profilePhotoURL: string;
+  reactionId: number;
+  firstName: string;
+  lastName: string;
+  userName: string;
+  content: string;
+  date: Date;
+  upvoteCount: number;
+  isUpvoted: boolean;
+};
+
+const Reply: React.FC<Props> = (props) => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const [isLiked, setIsLiked] = useState(false);
-  const { poster } = reply;
+  const [isUpvoted, setIsUpvoted] = useState(props.isUpvoted);
+  const [clickedUpvote, setClickedUpvote] = useState(false);
 
-  const formatDate = Intl.DateTimeFormat("nl", {
+  const formattedDate = Intl.DateTimeFormat("nl", {
     day: "numeric",
     month: "long",
-  }).format;
+  }).format(props.date);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -28,18 +54,34 @@ const Reply: React.FC<{
     return () => window.removeEventListener("click", handler);
   }, [showDropdown]);
 
-  const formattedDate = formatDate(reply.date);
+  useEffect(() => {
+    if (clickedUpvote) {
+      if (isUpvoted) {
+        setIsUpvoted(false);
+        unupvote(props.userId, props.reactionId).then((res) => {
+          if (!res) setIsUpvoted(true);
+        });
+      } else {
+        setIsUpvoted(true);
+        upvote(props.userId, props.reactionId).then((res) => {
+          if (!res) setIsUpvoted(false);
+        });
+      }
+      setClickedUpvote(false);
+    }
+  }, [clickedUpvote, isUpvoted]);
+
   return (
     <div className={styles.post}>
       <div className={styles.top}>
         <div className={styles.left}>
           <div className={styles.profilePicture}>
-            <i className="symbol">person</i>
+            <img src={props.profilePhotoURL} />
           </div>
         </div>
         <div className={styles.userInfo}>
           <div className={styles.name}>
-            {poster.firstName} {poster.lastName}
+            {props.firstName} {props.lastName}
           </div>
           <div className={styles.subtext}>{formattedDate}</div>
         </div>
@@ -68,7 +110,7 @@ const Reply: React.FC<{
           )}
         </div>
       </div>
-      <p className={styles.content}>{reply.content}</p>
+      <p className={styles.content}>{props.content}</p>
       <div className={styles.bottom}>
         <div className={styles.bottomItem}>
           <i
@@ -76,14 +118,16 @@ const Reply: React.FC<{
               "symbol",
               styles.bottomItemButton,
               styles.likeButton,
-              isLiked && styles.liked,
+              isUpvoted && styles.liked
             )}
-            onClick={() => setIsLiked((prev) => !prev)}
+            onClick={() => setClickedUpvote(true)}
             title="Like"
           >
             favorite
           </i>
-          <div>{reply.likes + Number(isLiked)}</div>
+          <div>
+            {props.upvoteCount - Number(props.isUpvoted) + Number(isUpvoted)}
+          </div>
         </div>
       </div>
     </div>

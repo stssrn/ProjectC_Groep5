@@ -9,8 +9,7 @@
 }
 
 .profilePicture {
-  background-color: var(--b700);
-  color: #fff;
+  background: linear-gradient(#fff, var(--bg500));
   height: 40px;
   display: flex;
   align-items: center;
@@ -19,6 +18,8 @@
   font-size: 22px;
   border-radius: 50%;
   margin-right: 16px;
+  overflow: hidden;
+  border: 1px solid var(--b700);
 }
 
 .name {
