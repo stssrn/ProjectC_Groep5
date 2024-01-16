@@ -11,6 +11,7 @@ export async function PUT(request: Request): Promise<NextResponse> {
         else {
             const body = await request.json();
             const { id, firstLogin } = body;
+            console.log(id, firstLogin)
             try {
                 const updatedUser = await prisma.users.update({
                     where: { id },

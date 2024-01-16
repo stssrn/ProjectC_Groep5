@@ -14,7 +14,7 @@
 }
 
 .article {
-  height: 520px;
+  height: 320px;
   display: flex;
   flex-direction: column;
   overflow: hidden;

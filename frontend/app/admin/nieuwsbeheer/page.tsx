@@ -293,27 +293,6 @@ const Page = () => {
                         <div className={styles.adminDialogButtons}>
                             <input
                                 type="button"
-                                value="Sluiten"
-                                className={styles.button}
-                                onClick={() => {
-                                    setShowEdit(false);
-                                    setContentIsEmpty(false);
-                                    setTitleIsEmpty(false);
-                                    setUrlIsEmpty(false)
-                                }} />
-
-                            <input
-                                type="button"
-                                value="Verwijderen"
-                                className={styles.button}
-                                onClick={() => {
-                                    deleteArticle(currentArticle?.id);
-                                    setShowEdit(false);
-                                    setRefresh(true);
-                                }}
-                            />
-                            <input
-                                type="button"
                                 value="Opslaan"
                                 className={styles.button}
                                 onClick={() => {
@@ -333,6 +312,28 @@ const Page = () => {
                                     } else setUrlIsEmpty(true)
                                 }}
                             />
+                            <input
+                                type="button"
+                                value="Verwijderen"
+                                className={styles.button}
+                                onClick={() => {
+                                    deleteArticle(currentArticle?.id);
+                                    setShowEdit(false);
+                                    setRefresh(true);
+                                }}
+                            />
+
+                            <input
+                                type="button"
+                                value="Sluiten"
+                                className={styles.secondaryButton}
+                                onClick={() => {
+                                    setShowEdit(false);
+                                    setContentIsEmpty(false);
+                                    setTitleIsEmpty(false);
+                                    setUrlIsEmpty(false)
+                                }} />
+
                         </div>
                     </div>
                 </div>

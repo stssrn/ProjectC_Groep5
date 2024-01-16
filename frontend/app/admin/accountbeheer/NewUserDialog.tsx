@@ -44,13 +44,13 @@ const NewUserDialog: React.FC<{
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    console.log("USEEFFECT");
+    //console.log("USEEFFECT");
     setClickedSubmit(false);
     if (!clickedSubmit || !formRef?.current?.reportValidity()) return;
     userInfo.points = Number(userInfo.points);
     createUser(userInfo as UserWithoutIDandDate)
       .then(() => {
-        console.log("SUBMITTING");
+        //console.log("SUBMITTING");
         setShowDialog(false);
       })
       .catch(console.error);
@@ -66,82 +66,81 @@ const NewUserDialog: React.FC<{
     defaultValue?: InputHTMLAttributes<HTMLInputElement>["value"];
     id: string;
   }[] = [
-    {
-      label: "Voornaam",
-      field: "firstName",
-      type: "text",
-      isRequired: true,
-      id: useId(),
-    },
-    {
-      label: "Achternaam",
-      field: "lastName",
-      type: "text",
-      isRequired: true,
-      id: useId(),
-    },
-    {
-      label: "E-mail",
-      field: "email",
-      type: "email",
-      isRequired: true,
-      id: useId(),
-    },
-    {
-      label: "Gebruikersnaam",
-      field: "username",
-      type: "text",
-      isRequired: true,
-      id: useId(),
-    },
-    {
-      label: "Wachtwoord",
-      field: "password",
-      type: "password",
-      isRequired: true,
-      id: useId(),
-    },
-    {
-      label: "Punten",
-      field: "points",
-      type: "number",
-      isRequired: false,
-      defaultValue: 0,
-      id: useId(),
-    },
-    { label: "Bio", field: "bio", type: "text", isRequired: true, id: useId() },
-    {
-      label: "Admin",
-      field: "isAdmin",
-      type: "checkbox",
-      isRequired: false,
-      defaultValue: "false",
-      id: useId(),
-    },
-    {
-      label: "Forum Moderator",
-      field: "isForumMod",
-      type: "checkbox",
-      isRequired: false,
-      defaultValue: "false",
-      id: useId(),
-    },
-    {
-      label: "Profielfoto URL",
-      field: "profilePhotoUrl",
-      type: "url",
-      isRequired: false,
-      id: useId(),
-    },
-  ];
+      {
+        label: "Voornaam",
+        field: "firstName",
+        type: "text",
+        isRequired: true,
+        id: useId(),
+      },
+      {
+        label: "Achternaam",
+        field: "lastName",
+        type: "text",
+        isRequired: true,
+        id: useId(),
+      },
+      {
+        label: "E-mail",
+        field: "email",
+        type: "email",
+        isRequired: true,
+        id: useId(),
+      },
+      {
+        label: "Gebruikersnaam",
+        field: "username",
+        type: "text",
+        isRequired: true,
+        id: useId(),
+      },
+      {
+        label: "Wachtwoord",
+        field: "password",
+        type: "password",
+        isRequired: true,
+        id: useId(),
+      },
+      {
+        label: "Punten",
+        field: "points",
+        type: "number",
+        isRequired: false,
+        defaultValue: 0,
+        id: useId(),
+      },
+      { label: "Bio", field: "bio", type: "text", isRequired: true, id: useId() },
+      {
+        label: "Admin",
+        field: "isAdmin",
+        type: "checkbox",
+        isRequired: false,
+        defaultValue: "false",
+        id: useId(),
+      },
+      {
+        label: "Forum Moderator",
+        field: "isForumMod",
+        type: "checkbox",
+        isRequired: false,
+        defaultValue: "false",
+        id: useId(),
+      },
+      {
+        label: "Profielfoto URL",
+        field: "profilePhotoUrl",
+        type: "url",
+        isRequired: false,
+        id: useId(),
+      },
+    ];
 
   return (
     <form ref={formRef} className={styles.dialog}>
       {fields.map((field) => (
         <div key={field.field}>
-          <label htmlFor={field.id}>{`${field.label} ${
-            !field.isRequired ? "(optioneel)" : ""
-          }`}</label>
+          <label htmlFor={field.id}>{`${field.label} ${!field.isRequired ? "(optioneel)" : ""
+            }`}</label>
           <input
             type={field.type}
             name="Voornaam"

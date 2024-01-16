@@ -305,23 +305,6 @@ const Page = () => {
                         <div className={styles.adminDialogButtons}>
                             <input
                                 type="button"
-                                value="Sluiten"
-                                className={styles.button}
-                                onClick={() => {
-                                    setShowDialog(false);
-                                    setDescIsEmpty(false);
-                                    setTitleIsEmpty(false);
-                                }} />
-                            <input
-                                type="button"
-                                value="Verwijderen"
-                                className={styles.button}
-                                onClick={() => {
-                                    deleteEducatieModuleHandler(currentModule?.id);
-                                }}
-                            />
-                            <input
-                                type="button"
                                 value="Opslaan"
                                 className={styles.button}
                                 onClick={() => {
@@ -333,6 +316,24 @@ const Page = () => {
                                     } else setDescIsEmpty(true);
                                 }}
                             />
+                            <input
+                                type="button"
+                                value="Verwijderen"
+                                className={styles.button}
+                                onClick={() => {
+                                    deleteEducatieModuleHandler(currentModule?.id);
+                                }}
+                            />
+
+                            <input
+                                type="button"
+                                value="Sluiten"
+                                className={styles.secondaryButton}
+                                onClick={() => {
+                                    setShowDialog(false);
+                                    setDescIsEmpty(false);
+                                    setTitleIsEmpty(false);
+                                }} />
                         </div>
                     </div>
                 </div>

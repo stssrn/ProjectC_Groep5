@@ -60,9 +60,9 @@ const fetchRandomArticles = async () => {
 
       return random_articles;
     }
-  else {
-    console.error("Unexpected data structure in API response:", fetchedData);
-  }
+    else {
+      console.error("Unexpected data structure in API response:", fetchedData);
+    }
   } catch (error) {
     console.error("Error fetching newsArticles data:", error);
   }
@@ -86,6 +86,7 @@ const NewsBlock: React.FC<{
       const Articles = await fetchRandomArticles();
       if (Articles) {
         setArticles(Articles);
+        console.log(Articles)
       }
     };
 
@@ -94,28 +95,30 @@ const NewsBlock: React.FC<{
   return (
     <section className={className}>
       <Container padding={12} title="Recente Nieuws">
-        <div className={styles.articles}>
-          {articles.map((article, i) => (
-            <article key={i} className={styles.article}>
-              <div className={styles.top}>
-                <div className={styles.topOverlay}></div>
-                <div className={styles.articleImage}></div>
-                <h2 className={styles.articleTitle}>{article.title}</h2>
-                <p className={styles.articleSummary}>{article.content}</p>
-              </div>
-              <div className={styles.bottom}>
-                <div className={styles.bottomSection}>
-                  <i className={clsx("symbol", styles.symbol)}>link</i>
-                  {article?.url?.host}
+        {articles && (
+          <div className={styles.articles}>
+            {articles.map((article, i) => (
+              <article key={i} className={styles.article}>
+                <div className={styles.top}>
+                  <div className={styles.topOverlay}></div>
+                  <div className={styles.articleImage}></div>
+                  <h2 className={styles.articleTitle}>{article.title}</h2>
+                  <p className={styles.articleSummary}>{article.content}</p>
                 </div>
-                <div className={styles.bottomSection}>
-                  <i className={clsx("symbol", styles.symbol)}>schedule</i>
-                  {getDateString(article.date)}
+                <div className={styles.bottom}>
+                  <div className={styles.bottomSection}>
+                    <i className={clsx("symbol", styles.symbol)}>link</i>
+                    {article?.url?.host}
+                  </div>
+                  <div className={styles.bottomSection}>
+                    <i className={clsx("symbol", styles.symbol)}>schedule</i>
+                    {getDateString(article.date)}
+                  </div>
                 </div>
-              </div>
-            </article>
-          ))}
-        </div>
+              </article>
+            ))}
+          </div>
+        )}
       </Container>
     </section>
   );

@@ -13,10 +13,10 @@
 }
 
 .article {
-  height: 32.5vh;
+  height: 320px;
   display: flex;
   flex-direction: column;
-  /* overflow: hidden; */
+  /*overflow: hidden;*/
 }
 
 .top {

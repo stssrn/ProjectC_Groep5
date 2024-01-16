@@ -56,10 +56,12 @@ const Page = () => {
   useEffect(() => {
     const handleRedirection = async () => {
       if (session?.user?.id) {
-        const userData = await fetchUserData(session.user.id.toString());
-        if (userData.isAdmin) {
+        const userdata = await fetchUserData(session.user.id.toString());
+        setUserData(userdata);
+
+        if (userdata.isAdmin) {
           router.push('/admin');
-        } else if (userData.firstLogin) {
+        } else if (userdata.firstLogin) {
           setShowPopup(true);
         } else {
           router.push('/dashboard');
@@ -128,7 +130,8 @@ const Page = () => {
       if (response && response.error) {
         setError(response.error);
       } else if (session) {
-        fetchUserData(session.user.id.toString())
+        const userdata = await fetchUserData(session.user.id.toString())
+        setUserData(userdata);
       }
     } catch (error) {
       console.error("Login error:", error);

@@ -190,8 +190,7 @@ const Page = () => {
 
             return 0;
         });
-        setBugReportsWithUserId(sortedData);
-        setUsingSort(false);
+        return sortedData;
     };
 
     const filterData = () => {
@@ -241,9 +240,14 @@ const Page = () => {
     }, []);
 
     useEffect(() => {
-        if (bugReportsWithUserId.length > 0 && usingSort) {
-            sortData();
-        }
+        const sortdata = async () => {
+            if (bugReportsWithUserId.length > 0 && usingSort) {
+                const sortedData = sortData();
+                setBugReportsWithUserId(sortedData);
+                setUsingSort(false);
+            }
+        };
+        sortdata();
     }, [bugReportsWithUserId, sortCriteria, sortOrder]);
 
 

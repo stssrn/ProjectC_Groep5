@@ -313,3 +313,12 @@
   border: 1px solid var(--bg600);
   border-radius: 4px;
 }
+
+
+.secondaryButton:hover {
+  background-color: var(--p500);
+}
+
+.button:hover {
+  background-color: var(--p600);
+}
