@@ -52,6 +52,7 @@ model casus {
 
 model Post {
   id           Int            @id @default(autoincrement())
+  date         DateTime       @default(now())
   title        String
   content      String
   userId       Int
@@ -65,7 +66,7 @@ model Post {
 
 model Reaction {
   id           Int            @id @default(autoincrement())
-  date         DateTime
+  date         DateTime       @default(now())
   content      String
   postId       Int
   userId       Int
