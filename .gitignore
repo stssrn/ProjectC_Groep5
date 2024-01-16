@@ -4,16 +4,16 @@
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
 # dependencies
-frontend/node_modules
-frontend/.pnp
+src/node_modules
+src/.pnp
 .pnp.js
 
 # testing
-frontend/coverage
+src/coverage
 
 # next.js
-frontend/.next/
-frontend/out/
+src/.next/
+src/out/
 
 # production
 /build
@@ -433,4 +433,4 @@ FodyWeavers.xsd
 *.sln.iml
 
 #package-lock.json ignored
-frontend/package-lock.json
+src/package-lock.json

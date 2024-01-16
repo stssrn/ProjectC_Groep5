@@ -2,19 +2,19 @@
 
 ## Development
 
-First, make sure that the environment variables for the Postgres database are inside `frontend/.env`.
+First, make sure that the environment variables for the Postgres database are inside `src/.env`.
 
 To generate Typescript types from the Prisma schema run:
 
 ```sh
-cd frontend
+cd src
 pnpx prisma generate
 ```
 
 To run the dev server run:
 
 ```sh
-cd frontend
+cd src
 pnpm dev
 ```
 
@@ -32,6 +32,6 @@ npx prisma db seed
 To build the app run:
 
 ```sh
-cd frontend
+cd src
 pnpm build
 ```
