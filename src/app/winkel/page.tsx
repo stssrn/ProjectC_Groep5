@@ -5,6 +5,8 @@ import styles from "./page.module.css";
 import Image from "next/image";
 import image from "./reward_image.svg";
 import { useSession } from "next-auth/react";
+import { Popup } from "./popup";
+
 
 interface Item {
     id: number;
@@ -28,20 +30,12 @@ const Page = () => {
     const [items, setitemsData] = useState<Item[] | null>(null);
     const [itemsLength, setitemsLength] = useState(0);
     const [user, setUserData] = useState<UserData | null>();
+    const [purchaseMessage, setPurchaseMessage] = useState<string | null>(null);
+    const [showPopup, setShowPopup] = useState(false);
+
+
     const carouselRef = useRef(null);
     const totalPages = Math.ceil(itemsLength / itemsPerPage);
-
-
-    const fetchData = async () => {
-        try {
-            const response = await fetch(`/api/storeItems?userId=${session?.user?.id}`);
-            const data: Item[] = await response.json();
-            setitemsData(data);
-            setitemsLength(data.length);
-        } catch (error) {
-            console.error("Fetch rewards error:", error);
-        }
-    };
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -89,6 +83,18 @@ const Page = () => {
             }
         } catch (error) {
             console.error('Create quizUser error:', error);
+        }
+    };
+
+
+    const fetchData = async () => {
+        try {
+            const response = await fetch(`/api/storeItems?userId=${session?.user?.id}`);
+            const data: Item[] = await response.json();
+            setitemsData(data);
+            setitemsLength(data.length);
+        } catch (error) {
+            console.error("Fetch rewards error:", error);
         }
     };
 
@@ -142,7 +148,7 @@ const Page = () => {
     const handlePurchase = async (item: Item) => {
         try {
             if (user) {
-                if (user?.points >= item.price) {
+                if (user.points >= item.price) {
                     await createStoreItemUser(item.id);
                     await userPayPoints(item);
                     console.log(`Purchased: ${item.title}`);
@@ -153,13 +159,25 @@ const Page = () => {
 
                         return prevItems.filter((i) => i.id !== item.id);
                     });
+
+                    // Set success feedback message
+                    setPurchaseMessage(`je hebt item: ${item.title} gekocht.`);
+                    setShowPopup(true);
                 } else {
-                    console.log("not enough points");
+                    // Set insufficient points feedback message
+                    setPurchaseMessage("Je hebt niet genoeg punten voor dit item.");
+                    setShowPopup(true);
                 }
             }
         } catch (error) {
             console.error('Handle purchase error:', error);
         }
+    };
+
+    const closePopup = () => {
+        // Close the popup and reset the feedback message
+        setShowPopup(false);
+        setPurchaseMessage(null);
     };
 
 
@@ -221,6 +239,9 @@ const Page = () => {
                     <button className={styles.showPrev} onClick={() => showItems("previous")}>&lt;</button>
                     <button className={styles.showNext} onClick={() => showItems("next")}>&gt;</button>
                 </>
+            )}
+            {showPopup && (
+                <Popup message={purchaseMessage || ''} onClose={closePopup} />
             )}
         </Container>
     );
