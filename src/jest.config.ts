@@ -6,7 +6,8 @@
 import type { Config } from "jest";
 import nextJest from "next/jest.js";
 
-// scuffed fetch polyfill but it works lol
+// scuffed fetch polyfill but it works lol. make sure to run jest with
+// --runInBand or it will not work, probably because of some race condition.
 const fetch = (input: any, init: any) =>
   global.fetch("http://localhost:3000" + input, init);
 
