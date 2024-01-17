@@ -58,7 +58,7 @@ model Post {
   content      String
   userId       Int
   Forum        Forum[]
-  user         users          @relation(fields: [userId], references: [id])
+  user         users          @relation(fields: [userId], references: [id], onDelete: Cascade)
   PostUpvote   PostUpvote[]
   Reaction     Reaction[]
   ReactionPost ReactionPost[]
@@ -72,8 +72,8 @@ model Reaction {
   content      String
   postId       Int
   userId       Int
-  post         Post           @relation(fields: [postId], references: [id])
-  user         users          @relation(fields: [userId], references: [id])
+  post         Post           @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user         users          @relation(fields: [userId], references: [id], onDelete: Cascade)
   ReactionPost ReactionPost[]
   Upvote       Upvote[]
 }
@@ -82,9 +82,9 @@ model Upvote {
   userId     Int
   reactionId Int
   postId     Int?
-  Post       Post?    @relation(fields: [postId], references: [id])
-  reaction   Reaction @relation(fields: [reactionId], references: [id])
-  user       users    @relation(fields: [userId], references: [id])
+  Post       Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  reaction   Reaction @relation(fields: [reactionId], references: [id], onDelete: Cascade)
+  user       users    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, reactionId])
 }
@@ -135,7 +135,7 @@ model ReactionPost {
   id         Int      @id @default(autoincrement())
   reactionId Int
   postId     Int
-  post       Post     @relation(fields: [postId], references: [id])
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   reaction   Reaction @relation(fields: [reactionId], references: [id])
 }
 
@@ -169,7 +169,7 @@ model BugUser {
 model PostUpvote {
   postId Int
   userId Int
-  post   Post  @relation(fields: [postId], references: [id])
+  post   Post  @relation(fields: [postId], references: [id], onDelete: Cascade)
   user   users @relation(fields: [userId], references: [id])
 
   @@id([postId, userId])

@@ -3,29 +3,8 @@ import styles from "./page.module.css";
 import ReportedPost from "./ReportedPost";
 import { userFromDb } from "@/models/user";
 
-type User = {
-  username: string;
-  profilePhotoURL: string;
-  firstName: string;
-  lastName: string;
-};
-
-type Post = {
-  id: number;
-  content: string;
-  user: User;
-};
-
-type Report = {
-  reportedBy: User;
-  reason: string;
-  date: Date;
-};
-
-type ReportedPost = {
-  post: Post;
-  reports: Report[];
-};
+type Post = React.ComponentProps<typeof ReportedPost>["post"];
+type Reports = React.ComponentProps<typeof ReportedPost>["reports"];
 
 const Page = async () => {
   const dbReports = await prisma.reportedPost.findMany({
@@ -45,9 +24,11 @@ const Page = async () => {
       { ...x.post, user: userFromDb(x.post.user) },
     ])
   );
-  const reportMap: { [k: Post["id"]]: Report[] } = Object.fromEntries(
+
+  const reportMap: { [k: Post["id"]]: Reports } = Object.fromEntries(
     dbReports.map((x) => [x.postId, []])
   );
+
   for (const report of dbReports) {
     reportMap[report.postId].push({
       reportedBy: userFromDb(report.user),
