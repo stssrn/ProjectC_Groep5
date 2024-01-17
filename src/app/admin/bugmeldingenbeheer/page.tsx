@@ -302,7 +302,7 @@ const Page = () => {
                             <td>{report.title}</td>
                             <td>{report.description}</td>
                             <td>{report.userId}</td>
-                            <td>{new Date(report.date).toISOString()}</td>
+                            <td>{new Date(report.date).toLocaleDateString()}</td>
                             <td>
                                 <button
                                     className={styles.edit}
