@@ -72,6 +72,10 @@
   border: 1px solid var(--b700);
 }
 
+.profilePictureImage {
+  object-fit: cover;
+}
+
 .name {
   font-weight: 600;
   color: inherit;

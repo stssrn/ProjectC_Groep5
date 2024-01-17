@@ -55,6 +55,7 @@ const Reply: React.FC<Props> = (props) => {
         <div className={styles.left}>
           <div className={styles.profilePicture}>
             <Image
+              className={styles.profilePictureImage}
               src={props.profilePhotoURL}
               alt="profielfoto"
               width={24}
