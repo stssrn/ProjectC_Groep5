@@ -5,8 +5,7 @@ import clsx from "clsx";
 import Link from "next/link";
 import Image from "next/image";
 
-import { upvotePost } from "@/lib/fetch/upvotePost";
-import { removeUpvotePost } from "@/lib/fetch/removeUpvotePost";
+import { upvoteReaction, removeUpvoteReaction } from "@/lib/fetch/reaction";
 
 import styles from "./Reaction.module.css";
 
@@ -37,15 +36,16 @@ const Reply: React.FC<Props> = (props) => {
 
     if (isUpvoted) {
       setIsUpvoted(false);
-      removeUpvotePost(props.userId, props.reactionId).then((res) => {
+      removeUpvoteReaction(props.userId, props.reactionId).then((res) => {
         if (!res) setIsUpvoted(true);
       });
     } else {
       setIsUpvoted(true);
-      upvotePost(props.userId, props.reactionId).then((res) => {
+      upvoteReaction(props.userId, props.reactionId).then((res) => {
         if (!res) setIsUpvoted(false);
       });
     }
+
     setClickedUpvote(false);
   }, [clickedUpvote, isUpvoted, props.userId, props.reactionId]);
 
@@ -54,7 +54,12 @@ const Reply: React.FC<Props> = (props) => {
       <div className={styles.top}>
         <div className={styles.left}>
           <div className={styles.profilePicture}>
-            <Image src={props.profilePhotoURL} alt="profielfoto"/>
+            <Image
+              src={props.profilePhotoURL}
+              alt="profielfoto"
+              width={24}
+              height={24}
+            />
           </div>
         </div>
         <div className={styles.userInfo}>

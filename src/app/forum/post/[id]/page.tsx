@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
 import { Post } from "@/models/post";
-import { postReaction } from "@/lib/fetch/postReaction";
-import { fetchPost } from "@/lib/fetch/fetchPost";
+import { getPost } from "@/lib/fetch/post";
+import { postReaction  } from "@/lib/fetch/reaction";
 
 import PostComponent from "../../Post";
 import ReactionComponent from "./Reaction";
@@ -26,7 +26,7 @@ const Page = ({ params }: { params: { id: number } }) => {
     if (!userId || post || isLoading || isError) return;
 
     setIsLoading(true);
-    fetchPost(userId, params.id)
+    getPost(userId, params.id)
       .then((p) => {
         setPost(p);
       })

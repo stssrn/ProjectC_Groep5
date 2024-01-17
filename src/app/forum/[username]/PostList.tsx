@@ -4,13 +4,13 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 
 import { PostSummary } from "@/models/postSummary";
-import { fetchUserPosts } from "@/lib/fetch/fetchUserPosts";
+import { fetchUserPosts } from "@/lib/fetch/user/getUserPosts";
 
 import Post from "../Post";
 
 import styles from "./PostList.module.css";
 
-const PostList: React.FC<{ username: string }> = (props) => {
+const PostList: React.FC<{ username: string }> = ({ username }) => {
   const [posts, setPosts] = useState<PostSummary[]>([]);
   const [userHasNoPosts, setUserHasNoPosts] = useState(false);
 
@@ -20,16 +20,16 @@ const PostList: React.FC<{ username: string }> = (props) => {
   useEffect(() => {
     if (!userId || userHasNoPosts || posts.length) return;
 
-    fetchUserPosts(userId, props.username)
+    fetchUserPosts(userId, username)
       .then((posts) => {
-        if (posts.length === 0) {
+        if (posts.length > 0) {
+          setPosts(posts);
+        } else {
           setUserHasNoPosts(true);
-          return;
         }
-        setPosts(posts);
       })
       .catch(() => console.error("Failed to fetch recent posts :("));
-  }, [posts, userId, props.username, userHasNoPosts]);
+  }, [posts, userId, username, userHasNoPosts]);
 
   return (
     <div className={styles.container}>

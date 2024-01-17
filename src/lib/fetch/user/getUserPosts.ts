@@ -5,9 +5,9 @@ export async function fetchUserPosts(
   username: string,
   limit: number = 100
 ): Promise<PostSummary[]> {
-  const resp = await fetch(
+  const res = await fetch(
     `/api/forum/gebruiker/${username}?userid=${userId}&limit=${limit}`
   );
-  const posts = await resp.json();
+  const posts = await res.json();
   return posts;
 }

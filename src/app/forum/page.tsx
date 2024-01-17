@@ -5,8 +5,7 @@ import { useSession } from "next-auth/react";
 import clsx from "clsx";
 
 import { PostSummary } from "@/models/postSummary";
-import { submitPost } from "@/lib/fetch/submitPost";
-import { getFeed } from "@/lib/fetch/getFeed";
+import { submitPost, getFeed } from "@/lib/fetch/post";
 
 import PostComponent from "./Post";
 import Column from "./Column";
@@ -14,8 +13,8 @@ import Column from "./Column";
 import styles from "./page.module.css";
 
 const createPostComponent =
-// eslint doesn't like currying
-// eslint-disable-next-line react/display-name
+  // eslint doesn't like currying
+  // eslint-disable-next-line react/display-name
   (session: ReturnType<typeof useSession>) => (post: PostSummary) =>
     (
       <PostComponent
@@ -57,6 +56,7 @@ const Page = () => {
     (a, b) => b.reactionCount - a.reactionCount || b.upvoteCount - a.upvoteCount
   );
 
+  // Get recent post feed
   useEffect(() => {
     if (!userId || recentPosts.length) return;
 
@@ -67,6 +67,7 @@ const Page = () => {
       });
   }, [recentPosts, userId]);
 
+  // Submit post
   useEffect(() => {
     if (!clickedSubmit || !postContent || !userId) {
       setClickedSubmit(false);
@@ -111,17 +112,17 @@ const Page = () => {
         <div className={styles.createPost}>
           <div className={styles.dialog}>
             <textarea
+              className={styles.input}
               rows={6}
               cols={36}
-              className={styles.input}
               content={postContent}
               disabled={clickedSubmit}
               onChange={(e) => setPostContent(e.target.value)}
             ></textarea>
             <div className={styles.dialogButtons}>
               <div
-                onClick={() => setShowCreatePost(false)}
                 className={styles.secondaryButton}
+                onClick={() => setShowCreatePost(false)}
               >
                 Sluiten
               </div>
