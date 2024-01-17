@@ -7,8 +7,8 @@ import clsx from "clsx";
 import { PostSummary } from "@/models/postSummary";
 import { submitPost, getFeed } from "@/lib/fetch/post";
 
-import PostComponent from "./Post";
-import Column from "./Column";
+import PostComponent from "../components/Post";
+import Column from "@/app/components/Column";
 
 import styles from "./page.module.css";
 

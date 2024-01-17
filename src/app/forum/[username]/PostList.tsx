@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import { PostSummary } from "@/models/postSummary";
 import { fetchUserPosts } from "@/lib/fetch/user/getUserPosts";
 
-import Post from "../Post";
+import Post from "../../components/Post";
 
 import styles from "./PostList.module.css";
 

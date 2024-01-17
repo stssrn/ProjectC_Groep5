@@ -7,8 +7,8 @@ import { Post } from "@/models/post";
 import { getPost } from "@/lib/fetch/post";
 import { postReaction  } from "@/lib/fetch/reaction";
 
-import PostComponent from "../../Post";
-import ReactionComponent from "./Reaction";
+import PostComponent from "@/app/components/Post";
+import ReactionComponent from "@/app/components/Reaction";
 
 import styles from "./page.module.css";
 
