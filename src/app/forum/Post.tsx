@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import styles from "./Post.module.css";
 import clsx from "clsx";
 import Link from "next/link";
+import { parseArgs } from "util";
 
 async function upvote(userId: number, postId: number) {
   const res = await fetch(
@@ -21,6 +22,24 @@ async function removeUpvote(userId: number, postId: number) {
   return res.ok;
 }
 
+async function deletePost(postId: number) {
+  const res = await fetch(`/api/forum/posts/${postId}/delete`, {
+    method: "DELETE",
+  });
+  return res.ok;
+}
+
+async function reportPost(userId: number, postId: number, reason: string) {
+  const res = await fetch(
+    `/api/forum/posts/${postId}/report?userid=${userId}`,
+    {
+      method: "PUT",
+      body: JSON.stringify(reason),
+    }
+  );
+  return res;
+}
+
 type Props = {
   userId: number;
   postId: number;
@@ -33,18 +52,62 @@ type Props = {
   upvoteCount: number;
   reactionCount: number;
   isUpvoted: boolean;
+  showDelete: boolean;
 };
 
 const Post: React.FC<Props> = (props) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [isUpvoted, setIsUpvoted] = useState(props.isUpvoted);
+  const [showReportOverlay, setShowReportOverlay] = useState(false);
   const [clickedUpvote, setClickedUpvote] = useState(false);
+  const [clickedReport, setClickedReport] = useState(false);
+  const [clickedDelete, setClickedDelete] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
+  const [clickedSubmitReport, setClickedSubmitReport] = useState(false);
+  const [reportText, setReportText] = useState("");
   const postUrl = `/forum/post/${props.postId}`;
 
   const formatDate = Intl.DateTimeFormat("nl", {
     day: "numeric",
     month: "long",
   }).format;
+
+  useEffect(() => {
+    if (clickedSubmitReport && reportText) {
+      reportPost(props.userId, props.postId, reportText)
+        .then((res) => {
+          if (res?.ok) {
+            setIsHidden(true);
+          }
+        })
+        .catch(console.error)
+        .finally(() => {
+          setClickedSubmitReport(false);
+        });
+    } else if (clickedSubmitReport && !reportText) {
+      setClickedSubmitReport(false);
+    }
+  }, [clickedSubmitReport, reportText]);
+
+  useEffect(() => {
+    if (clickedReport) {
+      setShowReportOverlay(true);
+      setShowDropdown(false);
+      setClickedReport(false);
+    }
+  }, [clickedReport]);
+
+  useEffect(() => {
+    if (clickedDelete) {
+      deletePost(props.postId).then((res) => {
+        if (res) {
+          setIsHidden(true);
+        }
+      });
+      setShowDropdown(false);
+      setClickedDelete(false);
+    }
+  }, [clickedDelete]);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -75,7 +138,37 @@ const Post: React.FC<Props> = (props) => {
 
   const formattedDate = formatDate(props.date);
   return (
-    <div className={styles.post}>
+    <div className={styles.post} hidden={isHidden}>
+      {showReportOverlay && (
+        <div className={styles.reportOverlay}>
+          <div className={styles.reportBox}>
+            <label htmlFor="report-text" className={styles.reportLabel}>
+              Waarom wilt u deze post rapporteren?
+            </label>
+            <textarea
+              disabled={clickedSubmitReport}
+              rows={3}
+              className={styles.reportTextarea}
+              onChange={(e) => setReportText(e.target.value)}
+            ></textarea>
+            <div className={styles.reportOverlayButtons}>
+              <input
+                type="button"
+                id="report-text"
+                value="Annuleer"
+                className={styles.reportButton}
+                onClick={() => setShowReportOverlay(false)}
+              />
+              <input
+                type="submit"
+                className={clsx(styles.reportButton, styles.red)}
+                value="Verstuur"
+                onClick={() => setClickedSubmitReport(true)}
+              />
+            </div>
+          </div>
+        </div>
+      )}
       <div className={styles.top}>
         <div className={styles.left}>
           <div className={styles.profilePicture}>
@@ -115,10 +208,16 @@ const Post: React.FC<Props> = (props) => {
               className={styles.optionsMenu}
             >
               <ul className={styles.optionsList}>
-                <li>
+                <li onClick={() => setClickedReport(true)}>
                   <i className={clsx("symbol", styles.listSymbol)}>flag</i>
                   <span className={styles.listText}>Rapporteer</span>
                 </li>
+                {props.showDelete && (
+                  <li onClick={() => setClickedDelete(true)}>
+                    <i className={clsx("symbol", styles.listSymbol)}>delete</i>
+                    <span className={styles.listText}>Verwijder</span>
+                  </li>
+                )}
               </ul>
             </div>
           )}
