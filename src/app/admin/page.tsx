@@ -7,7 +7,7 @@ const Page = () => {
   const actions = [
     { text: "Accounts Beheren", href: "/admin/accountbeheer", symbol: "person_search" },
     { text: "Agenda Aanpassen", href: "/admin/agendabeheer", symbol: "edit_calendar" },
-    { text: "Forum Moderatie", href: "", symbol: "shield" },
+    { text: "Forum Moderatie", href: "/admin/forumbeheer", symbol: "shield" },
     { text: "Bug Meldingen", href: "/admin/bugmeldingenbeheer", symbol: "bug_report" },
     { text: "Educatie modules", href: "/admin/educatiemodules", symbol: "book_4" },
     { text: "Casussen Beheren", href: "/admin/casussenbeheer", symbol: "cases" },

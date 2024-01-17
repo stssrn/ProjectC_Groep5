@@ -34,6 +34,7 @@ model users {
   reactions        Reaction[]
   StoreItemsUser   StoreItemsUser[]
   upvotes          Upvote[]
+  ReportedPost     ReportedPost[]
 }
 
 model educatie_modules {
@@ -62,6 +63,7 @@ model Post {
   Reaction     Reaction[]
   ReactionPost ReactionPost[]
   upvotes      Upvote[]
+  ReportedPost ReportedPost[]
 }
 
 model Reaction {
@@ -125,7 +127,7 @@ model Forum {
   id     Int   @id @default(autoincrement())
   userId Int
   postId Int
-  post   Post  @relation(fields: [postId], references: [id])
+  post   Post  @relation(fields: [postId], references: [id], onDelete: Cascade)
   user   users @relation(fields: [userId], references: [id])
 }
 
@@ -135,6 +137,17 @@ model ReactionPost {
   postId     Int
   post       Post     @relation(fields: [postId], references: [id])
   reaction   Reaction @relation(fields: [reactionId], references: [id])
+}
+
+model ReportedPost {
+  postId     Int
+  reportedBy Int
+  reason     String
+  date       DateTime @default(now())
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user       users    @relation(fields: [reportedBy], references: [id])
+
+  @@id([postId, reportedBy])
 }
 
 model AgendaUser {

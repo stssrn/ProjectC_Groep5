@@ -1,6 +1,56 @@
 .post {
   width: 100%;
   padding: 16px 16px 16px 32px;
+  position: relative;
+}
+
+.reportOverlay {
+  z-index: 1;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(#4104, #0000);
+}
+
+.reportTextarea {
+  resize: none;
+  max-width: 100%;
+}
+
+.reportLabel {
+  font-weight: 500;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.reportBox {
+  background-color: var(--bg500);
+  padding: 12px;
+  margin: 8px auto;
+  width: min-content;
+  max-width: 100%;
+  border: 1px solid var(--g500);
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 20%);
+}
+
+.reportOverlayButtons {
+  margin-top: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.reportButton {
+  padding: 4px 8px;
+  color: inherit;
+  background-color: var(--g200);
+  border: none;
+}
+
+.reportButton.red {
+  background-color: var(--p500);
+  color: #fff;
 }
 
 .top {
@@ -108,6 +158,9 @@
 
 .optionsList {
   list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px
 }
 
 .optionsList > li {
@@ -118,6 +171,10 @@
 
 .listSymbol {
   display: block;
+}
+
+.optionsList > li:hover > .listText {
+  text-decoration: underline;
 }
 
 .subtextUrl {
