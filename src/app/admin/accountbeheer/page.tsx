@@ -130,7 +130,6 @@ const Page = () => {
             <option value="lastName">Achternaam</option>
             <option value="registationDate">Registratiedatum</option>
           </select>
-          Sorteerrichting:{" "}
           <select
             className={styles.sortSelect}
             value={orderDirection}
