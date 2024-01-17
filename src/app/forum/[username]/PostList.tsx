@@ -52,6 +52,11 @@ const PostList: React.FC<{ username: string }> = (params) => {
             upvoteCount={p.upvoteCount}
             reactionCount={p.reactionCount}
             isUpvoted={p.isUpvoted}
+            showDelete={
+              session.data?.user.isAdmin ||
+              session.data?.user.isForumMod ||
+              false
+            }
           />
         ))
       ) : (

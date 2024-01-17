@@ -66,14 +66,17 @@ const Page = () => {
   }, [recentPosts]);
 
   useEffect(() => {
-    (async () => {
-      if (clickedSubmit && postContent && userId) {
-        const createdPost = await submitPost(userId, postContent);
-        setRecentPosts((prev) => [createdPost, ...prev]);
-        setShowCreatePost(false);
-      }
-      setClickedSubmit(false);
-    })();
+    if (clickedSubmit && postContent && userId) {
+      submitPost(userId, postContent).then(
+        (createdPost) => {
+          setRecentPosts((prev) => [createdPost, ...prev]);
+          setShowCreatePost(false);
+          setClickedSubmit(false);
+        }
+      );
+    } else {
+      setClickedSubmit(false)
+    }
   }, [clickedSubmit, postContent]);
 
   return (
@@ -107,10 +110,11 @@ const Page = () => {
                 reactionCount={post.reactionCount}
                 date={new Date(post.date)}
                 isUpvoted={post.isUpvoted}
+                showDelete={session.data?.user.isAdmin || false}
               />
             ))
           ) : (
-            <div>Posts aan het ophalen...</div>
+            <div className={styles.loading}>Posts aan het ophalen...</div>
           )}
         </Column>
         <Column title="Populair">
@@ -129,10 +133,11 @@ const Page = () => {
                 reactionCount={post.reactionCount}
                 date={new Date(post.date)}
                 isUpvoted={post.isUpvoted}
+                showDelete={session.data?.user.isAdmin || false}
               />
             ))
           ) : (
-            <div>Posts aan het ophalen...</div>
+            <div className={styles.loading}>Posts aan het ophalen...</div>
           )}
         </Column>
       </div>
@@ -144,6 +149,7 @@ const Page = () => {
               cols={36}
               className={styles.input}
               content={postContent}
+              disabled={clickedSubmit}
               onChange={(e) => setPostContent(e.target.value)}
             ></textarea>
             <div className={styles.dialogButtons}>
