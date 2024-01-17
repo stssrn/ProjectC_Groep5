@@ -37,15 +37,16 @@ pnpm build
 ```
 
 ## Testing
-Will be kept updated if there will be any changes.
 
-> to run the normal testing you can use
+To run the tests, run the dev server on port 3000 and then run:
+
 ```sh
-npm run test
+pnpm test
 ```
 
-> to run test in a hot-loaded mode you can use:
+To run tests in watch mode run:
+
 ```sh
-npm run test:watch
+pnpm test:watch
 ```
 

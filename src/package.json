@@ -44,6 +44,7 @@
     "@testing-library/react": "^14.1.2",
     "@types/bcrypt": "^5.0.2",
     "@types/formidable": "^3.4.5",
+    "@types/jest": "^29.5.11",
     "@types/luxon": "^3.3.7",
     "@types/node": "^20.8.4",
     "@types/react": "^18.2.37",
