@@ -35,3 +35,17 @@ To build the app run:
 cd src
 pnpm build
 ```
+
+## Testing
+Will be kept updated if there will be any changes.
+
+> to run the normal testing you can use
+```sh
+npm run test
+```
+
+> to run test in a hot-loaded mode you can use:
+```sh
+npm run test:watch
+```
+
