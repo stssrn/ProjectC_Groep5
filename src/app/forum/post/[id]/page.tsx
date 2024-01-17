@@ -1,31 +1,16 @@
 "use client";
 
-import styles from "./page.module.css";
-import PostComponent from "../../Post";
-import ReactionComponent from "./Reaction";
 import { useEffect, useState } from "react";
-import { Post } from "@/models/post";
 import { useSession } from "next-auth/react";
-import { Reaction } from "@/models/reaction";
 
-async function fetchPost(userId: number, id: number): Promise<Post> {
-  const res = await fetch(`/api/forum/posts/${id}?userid=${userId}`);
-  const post = await res.json();
-  return post;
-}
+import { Post } from "@/models/post";
+import { getPost } from "@/lib/fetch/post";
+import { postReaction  } from "@/lib/fetch/reaction";
 
-async function postReaction(
-  userId: number,
-  postId: number,
-  content: string
-): Promise<Reaction> {
-  const res = await fetch(`/api/forum/posts/${postId}/react?userid=${userId}`, {
-    method: "POST",
-    body: JSON.stringify(content),
-  });
+import PostComponent from "@/app/components/Post";
+import ReactionComponent from "@/app/components/Reaction";
 
-  return await res.json();
-}
+import styles from "./page.module.css";
 
 const Page = ({ params }: { params: { id: number } }) => {
   const [post, setPost] = useState<Post>();
@@ -41,26 +26,28 @@ const Page = ({ params }: { params: { id: number } }) => {
     if (!userId || post || isLoading || isError) return;
 
     setIsLoading(true);
-    fetchPost(userId, params.id)
+    getPost(userId, params.id)
       .then((p) => {
         setPost(p);
       })
       .catch(() => setIsError(true))
       .finally(() => setIsLoading(false));
-  }, [post, isLoading]);
+  }, [post, isLoading, userId, isError, params.id]);
 
   useEffect(() => {
-    if (userId && post && clickedSubmit && replyContent) {
-      postReaction(userId, post.id, replyContent).then((r) => {
+    if (!userId || !post || !clickedSubmit || !replyContent) return;
+
+    postReaction(userId, post.id, replyContent)
+      .then((r) => {
         setReplyContent("");
         setSubmissionCount((prev) => prev + 1);
         setPost((prev) => ({
           ...prev!,
           reactions: [r, ...prev!.reactions],
         }));
-      }).finally(() => setClickedSubmit(false));
-    }
-  }, [clickedSubmit]);
+      })
+      .finally(() => setClickedSubmit(false));
+  }, [clickedSubmit, post, replyContent, userId]);
 
   return (
     <main className={styles.container}>

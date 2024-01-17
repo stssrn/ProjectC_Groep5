@@ -1,12 +1,12 @@
 import prisma from "@/lib/prisma";
-import styles from "./page.module.css";
 import Image from "next/image";
+
 import { userFromDb } from "@/models/user";
+
 import PostList from "./PostList";
+import styles from "./page.module.css";
 
 const Page = async ({ params }: { params: { username: string } }) => {
-  // const session = useSession();
-  //const userId = session.data?.user.id;
   const username = decodeURIComponent(params.username).slice(1);
   const dbUser = await prisma.users.findFirst({
     where: {

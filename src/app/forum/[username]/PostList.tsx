@@ -1,43 +1,41 @@
 "use client";
 
-import styles from "./PostList.module.css";
-import { PostSummary } from "@/models/postSummary";
-import { useSession } from "next-auth/react";
 import { useState, useEffect } from "react";
-import Post from "../Post";
+import { useSession } from "next-auth/react";
 
-async function fetchPosts(
-  userId: number,
-  username: string,
-  limit: number = 100
-): Promise<PostSummary[]> {
-  const resp = await fetch(
-    `/api/forum/gebruiker/${username}?userid=${userId}&limit=${limit}`
-  );
-  const posts = await resp.json();
-  return posts;
-}
+import { PostSummary } from "@/models/postSummary";
+import { fetchUserPosts } from "@/lib/fetch/user/getUserPosts";
 
-const PostList: React.FC<{ username: string }> = (params) => {
+import Post from "../../components/Post";
+
+import styles from "./PostList.module.css";
+
+const PostList: React.FC<{ username: string }> = ({ username }) => {
   const [posts, setPosts] = useState<PostSummary[]>([]);
+  const [userHasNoPosts, setUserHasNoPosts] = useState(false);
+
   const session = useSession();
   const userId = session.data?.user.id;
 
   useEffect(() => {
-    (async () => {
-      if (userId && !posts.length) {
-        const posts = await fetchPosts(userId, params.username);
-        if (posts) {
+    if (!userId || userHasNoPosts || posts.length) return;
+
+    fetchUserPosts(userId, username)
+      .then((posts) => {
+        if (posts.length > 0) {
           setPosts(posts);
         } else {
-          console.error("Failed to fetch recent posts :(");
+          setUserHasNoPosts(true);
         }
-      }
-    })();
-  }, [posts]);
+      })
+      .catch(() => console.error("Failed to fetch recent posts :("));
+  }, [posts, userId, username, userHasNoPosts]);
+
   return (
     <div className={styles.container}>
-      {posts.length && userId ? (
+      {userHasNoPosts ? (
+        <div className={styles.info}>Deze gebruiker heeft geen posts.</div>
+      ) : posts.length && userId ? (
         posts.map((p) => (
           <Post
             key={p.id}
@@ -60,7 +58,7 @@ const PostList: React.FC<{ username: string }> = (params) => {
           />
         ))
       ) : (
-        <div>Posts aan het ophalen...</div>
+        <div className={styles.info}>Posts aan het ophalen...</div>
       )}
     </div>
   );

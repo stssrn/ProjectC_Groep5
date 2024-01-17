@@ -1,14 +1,19 @@
 "use client";
-import { Step } from 'react-joyride';
-import React, { useState, useEffect } from 'react';
+
+import { useState, useEffect } from "react";
+import { CallBackProps, Step, STATUS } from "react-joyride";
+import { redirect } from "next/navigation";
+
 import styles from "../dashboard/page.module.css";
+import LayoutModule from "../layout.module.css";
+import forumThumbnail from "../gebruiker/male.svg";
+
+import JoyRideNoSSR from "../components/JoyRideNoSSR";
 import NewsSection from "../dashboard/NewsSection";
 import AgendaSection from "../dashboard/AgendaSection";
-import ForumSection from "../dashboard/ForumSection";
+import ForumSectionWidget from "../dashboard/ForumSectionWidget";
 import QuizSection from "../dashboard/QuizSection";
 import EducationSection from "../dashboard/EducationSection";
-import LayoutModule from "../layout.module.css";
-import JoyRideNoSSR from '../components/JoyRideNoSSR';
 
 const Page: React.FC = () => {
     const [run, setRun] = useState(false);
@@ -54,6 +59,12 @@ const Page: React.FC = () => {
         },
     };
 
+    const joyrideCallback = (data: CallBackProps) => {
+        if (data.status === STATUS.FINISHED) {
+            redirect("/dashboard")
+        }
+    }
+
     useEffect(() => {
         const timeout = setTimeout(() => {
             setRun(true);
@@ -61,16 +72,30 @@ const Page: React.FC = () => {
 
         return () => clearTimeout(timeout);
     }, []);
-    //<ForumSection className={styles.forum} />
+
+    const post: React.ComponentProps<
+        typeof ForumSectionWidget
+    >["posts"][number] = {
+        id: -1,
+        thumbnailUrl: forumThumbnail.src,
+        title: "Discussie Titel",
+        content: "Hier zie je de inhoud van een post.",
+        userFullname: "Tour",
+        username: "",
+        commentCount: 0,
+    };
+
+    const examplePosts = Array(3).fill(post);
+
     return (
         <main className={styles.blocks}>
             <NewsSection className={styles.news} />
-
+            <ForumSectionWidget className={styles.forum} posts={examplePosts} />
             <QuizSection className={styles.quiz} />
             <EducationSection className={styles.education} />
             <AgendaSection className={styles.agenda} />
 
-            <JoyRideNoSSR {...joyrideOptions} />
+            <JoyRideNoSSR {...joyrideOptions} callback={joyrideCallback} />
         </main>
     );
 };

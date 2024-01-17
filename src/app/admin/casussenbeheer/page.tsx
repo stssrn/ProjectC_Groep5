@@ -121,6 +121,7 @@ const Page = () => {
             console.error('Failed to delete casus');
             return;
         }
+        setShowDialog(false);
         fetchCasussen();
     };
 
@@ -228,7 +229,9 @@ const Page = () => {
                             onChange={(e) => updateField('url', e.target.value)}
                         />
                         <button className={styles.button} onClick={handleSaveCasus}>Opslaan</button>
-                        <button className={styles.button} onClick={() => handleDeleteCasus(currentCasus?.id)}>Verwijderen</button>
+                        {currentCasus?.id && (
+                            <button className={styles.button} onClick={() => handleDeleteCasus(currentCasus.id)}>Verwijderen</button>
+                        )}
                         <button className={styles.button} onClick={() => setShowDialog(false)}>Sluiten</button>
                     </div>
                 </div>

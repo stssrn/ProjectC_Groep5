@@ -155,6 +155,7 @@ const Page = () => {
             console.error('Failed to delete quiz');
             return;
         }
+        setShowDialog(false);
         fetchQuizzes();
     };
 
@@ -301,7 +302,9 @@ const Page = () => {
                             onChange={(e) => updateField('points', Number(e.target.value))}
                         />
                         <button className={styles.button} onClick={handleSaveQuiz}>Opslaan</button>
-                        <button className={styles.button} onClick={() => handleDeleteQuiz(currentQuiz?.id)}>Verwijderen</button>
+                        {currentQuiz?.id && (
+                            <button className={styles.button} onClick={() => handleDeleteQuiz(currentQuiz.id)}>Verwijderen</button>
+                        )}
                         <button className={styles.button} onClick={() => setShowDialog(false)}>Sluiten</button>
                     </div>
                 </div>

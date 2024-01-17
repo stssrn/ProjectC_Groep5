@@ -1,44 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import styles from "./Post.module.css";
-import clsx from "clsx";
+import Image from "next/image";
 import Link from "next/link";
-import { parseArgs } from "util";
+import clsx from "clsx";
 
-async function upvote(userId: number, postId: number) {
-  const res = await fetch(
-    `/api/forum/posts/${postId}/upvote?userid=${userId}`,
-    { method: "POST" }
-  );
-  return res.ok;
-}
+import {
+  upvotePost,
+  deletePost,
+  reportPost,
+  removeUpvotePost,
+} from "@/lib/fetch/post";
 
-async function removeUpvote(userId: number, postId: number) {
-  const res = await fetch(
-    `/api/forum/posts/${postId}/remove-upvote?userid=${userId}`,
-    { method: "DELETE" }
-  );
-  return res.ok;
-}
-
-async function deletePost(postId: number) {
-  const res = await fetch(`/api/forum/posts/${postId}/delete`, {
-    method: "DELETE",
-  });
-  return res.ok;
-}
-
-async function reportPost(userId: number, postId: number, reason: string) {
-  const res = await fetch(
-    `/api/forum/posts/${postId}/report?userid=${userId}`,
-    {
-      method: "PUT",
-      body: JSON.stringify(reason),
-    }
-  );
-  return res;
-}
+import styles from "./Post.module.css";
 
 type Props = {
   userId: number;
@@ -55,40 +29,43 @@ type Props = {
   showDelete: boolean;
 };
 
+const formatDate = Intl.DateTimeFormat("nl", {
+  day: "numeric",
+  month: "long",
+}).format;
+
 const Post: React.FC<Props> = (props) => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const [isUpvoted, setIsUpvoted] = useState(props.isUpvoted);
   const [showReportOverlay, setShowReportOverlay] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
+  const [isUpvoted, setIsUpvoted] = useState(props.isUpvoted);
+  const [reportText, setReportText] = useState("");
   const [clickedUpvote, setClickedUpvote] = useState(false);
   const [clickedReport, setClickedReport] = useState(false);
   const [clickedDelete, setClickedDelete] = useState(false);
-  const [isHidden, setIsHidden] = useState(false);
   const [clickedSubmitReport, setClickedSubmitReport] = useState(false);
-  const [reportText, setReportText] = useState("");
+
   const postUrl = `/forum/post/${props.postId}`;
+  const formattedDate = formatDate(props.date);
 
-  const formatDate = Intl.DateTimeFormat("nl", {
-    day: "numeric",
-    month: "long",
-  }).format;
-
+  // Submit report
   useEffect(() => {
-    if (clickedSubmitReport && reportText) {
-      reportPost(props.userId, props.postId, reportText)
-        .then((res) => {
-          if (res?.ok) {
-            setIsHidden(true);
-          }
-        })
-        .catch(console.error)
-        .finally(() => {
-          setClickedSubmitReport(false);
-        });
-    } else if (clickedSubmitReport && !reportText) {
-      setClickedSubmitReport(false);
-    }
-  }, [clickedSubmitReport, reportText]);
+    if (!clickedSubmitReport) return;
 
+    if (!reportText) {
+      setClickedSubmitReport(false);
+      return;
+    }
+
+    reportPost(props.userId, props.postId, reportText)
+      .then((res) => {
+        if (res?.ok) setIsHidden(true);
+      })
+      .catch(console.error)
+      .finally(() => setClickedSubmitReport(false));
+  }, [clickedSubmitReport, props.postId, props.userId, reportText]);
+
+  // Show report screen
   useEffect(() => {
     if (clickedReport) {
       setShowReportOverlay(true);
@@ -97,20 +74,22 @@ const Post: React.FC<Props> = (props) => {
     }
   }, [clickedReport]);
 
+  // Delete post
   useEffect(() => {
-    if (clickedDelete) {
-      deletePost(props.postId).then((res) => {
-        if (res) {
-          setIsHidden(true);
-        }
-      });
-      setShowDropdown(false);
-      setClickedDelete(false);
-    }
-  }, [clickedDelete]);
+    if (!clickedDelete) return;
 
+    deletePost(props.postId).then((res) => {
+      if (res) {
+        setIsHidden(true);
+      }
+    });
+    setShowDropdown(false);
+    setClickedDelete(false);
+  }, [clickedDelete, props.postId]);
+
+  // Show dropdown menu
   useEffect(() => {
-    const handler = (e: MouseEvent) => {
+    const handler = (_: MouseEvent) => {
       if (showDropdown) {
         setShowDropdown(false);
       }
@@ -119,24 +98,25 @@ const Post: React.FC<Props> = (props) => {
     return () => window.removeEventListener("click", handler);
   }, [showDropdown]);
 
+  // Upvote post
   useEffect(() => {
     if (clickedUpvote) {
+      setClickedUpvote(false);
+
       if (isUpvoted) {
         setIsUpvoted(false);
-        removeUpvote(props.userId, props.postId).then((res) => {
+        removeUpvotePost(props.userId, props.postId).then((res) => {
           if (!res) setIsUpvoted(true);
         });
       } else {
         setIsUpvoted(true);
-        upvote(props.userId, props.postId).then((res) => {
+        upvotePost(props.userId, props.postId).then((res) => {
           if (!res) setIsUpvoted(false);
         });
       }
-      setClickedUpvote(false);
     }
-  }, [clickedUpvote, isUpvoted]);
+  }, [clickedUpvote, isUpvoted, props.postId, props.userId]);
 
-  const formattedDate = formatDate(props.date);
   return (
     <div className={styles.post} hidden={isHidden}>
       {showReportOverlay && (
@@ -172,10 +152,13 @@ const Post: React.FC<Props> = (props) => {
       <div className={styles.top}>
         <div className={styles.left}>
           <div className={styles.profilePicture}>
-            <img
+            <Image
               className={styles.profilePictureImage}
               src={props.profilePhotoURL}
-            ></img>
+              alt="profielfoto"
+              width={40}
+              height={40}
+            ></Image>
           </div>
         </div>
         <div className={styles.userInfo}>
