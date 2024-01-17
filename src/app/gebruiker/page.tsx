@@ -220,8 +220,6 @@ const Page = () => {
       {/* Profiel Foto Sectie */}
       <div className={styles.widthAanpassing}>
         <div className={styles.detailRow}>
-          <span className={styles.detailLabel}>Foto:</span>
-
           <Image
             src={getImagePath()}
             alt="Profile"
