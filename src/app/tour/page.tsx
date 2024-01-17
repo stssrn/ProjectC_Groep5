@@ -23,10 +23,10 @@ const Page: React.FC = () => {
             target: `.${styles.news}`,
             content: 'Welkom bij de nieuwssectie! Hier staan de meest recente nieuwtjes binnen Antes.',
         },
-        //{
-        //    target: `.${styles.forum}`,
-        //    content: 'Verken het forumgedeelte om in contact te komen met de community en verschillende onderwerpen te bespreken',
-        //},
+        {
+            target: `.${styles.forum}`,
+            content: 'Verken het forumgedeelte om in contact te komen met de community en verschillende onderwerpen te bespreken',
+        },
         {
             target: `.${styles.quiz}`,
             content: 'In de Quiz-sectie kun je je progressie zien van de quiz en je kennis testen.',

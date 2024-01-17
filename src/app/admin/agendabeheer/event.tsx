@@ -30,7 +30,7 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
     const [eventDate, setEventDate] = useState<Value>(event.date ? new Date(event.date) : null);
     const [eventDescription, setEventDescription] = useState<string>(event.description || "");
     const [showUsers, setShowUsers] = useState(false);
-    const maxCharacterLength = 20;
+    const maxCharacterLength = 10;
 
     const deleteEventHandler = async (eventId: any) => {
         await deleteAgendaUsersByEventId(eventId);
@@ -184,17 +184,20 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
                             />
 
                             <label htmlFor={dialogDate}>Datum</label><br />
-                            <DateTimePicker
-                                className={styles.dateBox}
-                                onChange={setEventDate}
-                                value={eventDate}
-                                locale="en-GB"
-                                calendarIcon={null}
-                                clearIcon={null}
-                                disableCalendar={true}
-                                disableClock={true}
-                                required={true}
-                            />
+                            <div className={styles.dateDiv}>
+                                <DateTimePicker
+                                    className={styles.dateBox}
+                                    onChange={setEventDate}
+                                    value={eventDate}
+                                    locale="en-GB"
+                                    calendarIcon={null}
+                                    clearIcon={null}
+                                    disableCalendar={true}
+                                    disableClock={true}
+                                    required={true}
+                                />
+                            </div>
+
                             <button
                                 className={styles.group}
                                 onClick={() => {

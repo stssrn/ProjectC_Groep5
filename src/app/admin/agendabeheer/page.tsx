@@ -303,21 +303,24 @@ const Page = () => {
                             />
 
                             <label htmlFor={dialogDate}>Datum</label><br />
-                            <DateTimePicker
-                                className={eventStyles.dateBox}
-                                onChange={(e: Date | null) => {
-                                    // Ensure a default value when e is null
-                                    const selectedDate = e || new Date();
-                                    setNewEvent({ ...newEvent, date: selectedDate });
-                                }}
-                                value={newEvent.date || null}
-                                locale="en-GB"
-                                calendarIcon={null}
-                                clearIcon={null}
-                                disableCalendar={true}
-                                disableClock={true}
-                                required={true}
-                            />
+                            <div className={styles.dateDiv}>
+                                <DateTimePicker
+                                    className={eventStyles.dateBox}
+                                    onChange={(e: Date | null) => {
+                                        // Ensure a default value when e is null
+                                        const selectedDate = e || new Date();
+                                        setNewEvent({ ...newEvent, date: selectedDate });
+                                    }}
+                                    value={newEvent.date || null}
+                                    locale="en-GB"
+                                    calendarIcon={null}
+                                    clearIcon={null}
+                                    disableCalendar={true}
+                                    disableClock={true}
+                                    required={true}
+                                />
+                            </div>
+
                         </div>
                         <div className={eventStyles.adminDialogButtons}>
                             <input

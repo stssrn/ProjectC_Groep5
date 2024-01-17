@@ -10,6 +10,7 @@ import content from "./pictures_education/content.jpg";
 import drie_meisjes from "./pictures_education/la-drie-meisjes.jpg";
 import jongen_muur from "./pictures_education/jongen_muur.jpg";
 import kids_gamen from "./pictures_education/kids-gamen.jpg";
+import grootouders from "./pictures_education/esther-ann-glpYh1cWf0o-unsplash.jpeg";
 import Image, { StaticImageData } from "next/image";
 
 interface Learn {
@@ -24,7 +25,7 @@ interface Learn {
 function getRandomNumber(min: number, max: number) {
     return Math.floor(Math.random() * (max - min) + min);
 }
-const allImages = [vrouw_vrouw, man_vrouw, vrouw_donker_haar, content, drie_meisjes, jongen_muur, kids_gamen];
+const allImages = [vrouw_vrouw, man_vrouw, vrouw_donker_haar, content, drie_meisjes, jongen_muur, kids_gamen, grootouders];
 const getRandomImage = (randomNumb: number) => {
     return allImages[randomNumb];
 }
