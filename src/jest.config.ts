@@ -3,13 +3,17 @@
  * https://jestjs.io/docs/configuration
  */
 
-import type {Config} from 'jest';
-import nextJest from 'next/jest.js'
+import type { Config } from "jest";
+import nextJest from "next/jest.js";
+
+// scuffed fetch polyfill but it works lol
+const fetch = (input: any, init: any) =>
+  global.fetch("http://localhost:3000" + input, init);
 
 const createJestConfig = nextJest({
   // Provide the path to your Next.js app to load next.config.js and .env files in your test environment
-  dir: './',
-})
+  dir: "./",
+});
 
 const config: Config = {
   // All imported modules in your tests should be mocked automatically
@@ -73,7 +77,9 @@ const config: Config = {
   // globalTeardown: undefined,
 
   // A set of global variables that need to be available in all test environments
-  // globals: {},
+  globals: {
+    fetch,
+  },
 
   // The maximum amount of workers used to run your tests. Can be specified as % or a number. E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
   // maxWorkers: "50%",
@@ -99,7 +105,7 @@ const config: Config = {
   // moduleNameMapper: {},
   moduleNameMapper: {
     // ...
-    '^@/(.*)$': '<rootDir>/$1',
+    "^@/(.*)$": "<rootDir>/$1",
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -160,7 +166,7 @@ const config: Config = {
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},
-  testEnvironment: 'jsdom',
+  testEnvironment: "jsdom",
 
   // Adds a location field to test results
   // testLocationInResults: false,
@@ -207,5 +213,4 @@ const config: Config = {
   // watchman: true,
 };
 
-export default createJestConfig(config)
-// export default config;
+export default createJestConfig(config);

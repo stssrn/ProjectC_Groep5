@@ -2,7 +2,8 @@
   "compilerOptions": {
     "target": "es5",
     "types": [
-      "@types/luxon"
+      "@types/luxon",
+      "jest"
     ],
     "lib": [
       "dom",
