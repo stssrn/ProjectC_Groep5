@@ -1,6 +1,5 @@
 "use client";
 import { Step } from 'react-joyride';
-import stylestour from "./page.module.css";
 import React, { useState, useEffect } from 'react';
 import styles from "../dashboard/page.module.css";
 import NewsSection from "../dashboard/NewsSection";
@@ -19,10 +18,10 @@ const Page: React.FC = () => {
             target: `.${styles.news}`,
             content: 'Welkom bij de nieuwssectie! Hier staan de meest recente nieuwtjes binnen Antes.',
         },
-        {
-            target: `.${styles.forum}`,
-            content: 'Verken het forumgedeelte om in contact te komen met de community en verschillende onderwerpen te bespreken',
-        },
+        //{
+        //    target: `.${styles.forum}`,
+        //    content: 'Verken het forumgedeelte om in contact te komen met de community en verschillende onderwerpen te bespreken',
+        //},
         {
             target: `.${styles.quiz}`,
             content: 'In de Quiz-sectie kun je je progressie zien van de quiz en je kennis testen.',
@@ -62,11 +61,11 @@ const Page: React.FC = () => {
 
         return () => clearTimeout(timeout);
     }, []);
-
+    //<ForumSection className={styles.forum} />
     return (
         <main className={styles.blocks}>
             <NewsSection className={styles.news} />
-            <ForumSection className={styles.forum} />
+
             <QuizSection className={styles.quiz} />
             <EducationSection className={styles.education} />
             <AgendaSection className={styles.agenda} />

@@ -14,10 +14,16 @@
 }
 
 .article {
-  height: 320px;
+  height: 520px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+}
+
+@media (max-width: 600px) {
+  .article {
+    height: 320px;
+  }
 }
 
 .top {
