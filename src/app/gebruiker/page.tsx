@@ -73,7 +73,6 @@ const Page = () => {
     try {
       const response = await fetch(`/api/user/fetchFromUserId?id=${userId}`);
       if (!response.ok) throw new Error("Failed to fetch user data");
-
       const data = await response.json();
       setUserData({ ...userData, ...data });
     } catch (error) {
@@ -217,39 +216,43 @@ const Page = () => {
 
   return (
     <Container title="Profiel">
-      {/* Profiel Foto Sectie */}
       <div className={styles.widthAanpassing}>
+        {/* Profiel Foto Sectie */}
         <div className={styles.detailRow}>
-          <Image
-            src={getImagePath()}
-            alt="Profile"
-            width={100}
-            height={100}
-            className={styles.circularProfilePhoto}
-          />
-          <input
-            ref={inputFileRef}
-            type="file"
-            accept="image/*"
-            style={{ display: "none" }}
-            onChange={handlePhotoChange}
-          />
-          <button
-            className={styles.editButton}
-            onClick={() => inputFileRef.current?.click()}
-          >
-            <i className="symbol">photo</i>
-          </button>
+          <div className={styles.detailContentContainer}>
+            <Image
+              src={getImagePath()}
+              alt="Profile"
+              width={100}
+              height={100}
+              className={styles.circularProfilePhoto}
+            />
+          </div>
+          <div className={styles.buttonsContainer}>
+            <button
+              className={styles.editButton}
+              onClick={() => inputFileRef.current?.click()}
+            >
+              <i className="symbol">photo</i>
+            </button>
+            <input
+              ref={inputFileRef}
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              onChange={handlePhotoChange}
+            />
+          </div>
         </div>
-
         {/* Naam Sectie */}
         <div className={styles.detailRow}>
-          <span className={styles.detailLabel}>Naam:</span>
-          <span className={styles.detailContent}>
-            {userData.firstName} {userData.lastName}
-          </span>
+          <div className={styles.detailContentContainer}>
+            <span className={styles.detailLabel}>Naam:</span>
+            <span className={styles.detailContent}>
+              {userData.firstName} {userData.lastName}
+            </span>
+          </div>
         </div>
-
         {/* Email Sectie */}
         {editMode.email ? (
           <div className={styles.dialogBackdrop}>
@@ -278,18 +281,20 @@ const Page = () => {
           </div>
         ) : (
           <div className={styles.detailRow}>
-            <span className={styles.detailLabel}>Email:</span>
-            <span className={styles.detailContent}>{userData.email}</span>
-            <button
-              className={styles.editButton}
-              onClick={() => handleEdit("email")}
-            >
-              <i className="symbol">edit</i>
-            </button>
+            <div className={styles.detailContentContainer}>
+              <span className={styles.detailLabel}>Email:</span>
+              <span className={styles.detailContent}>{userData.email}</span>
+            </div>
+            <div className={styles.buttonsContainer}>
+              <button
+                className={styles.editButton}
+                onClick={() => handleEdit("email")}
+              >
+                <i className="symbol">edit</i>
+              </button>
+            </div>
           </div>
         )}
-
-
         {/* Bio Sectie */}
         {editMode.bio ? (
           <div className={styles.dialogBackdrop}>
@@ -318,23 +323,27 @@ const Page = () => {
           </div>
         ) : (
           <div className={styles.detailRow}>
-            <span className={styles.detailLabel}>Bio:</span>
-            <span className={styles.detailContent}>{userData.bio}</span>
-            <button
-              className={styles.editButton}
-              onClick={() => handleEdit("bio")}
-            >
-              <i className="symbol">edit</i>
-            </button>
+            <div className={styles.detailContentContainer}>
+              <span className={styles.detailLabel}>Bio:</span>
+              <span className={styles.detailContent}>{userData.bio}</span>
+            </div>
+            <div className={styles.buttonsContainer}>
+              <button
+                className={styles.editButton}
+                onClick={() => handleEdit("bio")}
+              >
+                <i className="symbol">edit</i>
+              </button>
+            </div>
           </div>
         )}
-
         {/* Punten Sectie */}
         <div className={styles.detailRow}>
-          <span className={styles.detailLabel}>Punten:</span>
-          <span className={styles.detailContent}>{userData.points}</span>
+          <div className={styles.detailContentContainer}>
+            <span className={styles.detailLabel}>Punten:</span>
+            <span className={styles.detailContent}>{userData.points}</span>
+          </div>
         </div>
-
         {/* Wachtwoord Veranderen Sectie */}
         {showChangePassword && (
           <div className={styles.dialogBackdrop}>
@@ -363,22 +372,25 @@ const Page = () => {
             </div>
           </div>
         )}
-
         <div className={styles.detailRow}>
-          <span className={styles.detailLabel}>Wachtwoord:</span>
-          <i className="symbol">password</i>
-          <button
-            onClick={toggleChangePasswordForm}
-            className={styles.editButton}
-          >
-            {showChangePassword ? "Annuleer " : "Wachtwoord Wijzigen "}
-            <i className="symbol">edit</i>
-          </button>
+          <div className={styles.detailContentContainer}>
+            <span className={styles.detailLabel}>Wachtwoord:</span>
+            <i className="symbol">password</i>
+          </div>
+          <div className={styles.buttonsContainer}>
+            <button
+              onClick={toggleChangePasswordForm}
+              className={styles.editButton}
+            >
+              {showChangePassword ? "Annuleer " : "Wachtwoord Wijzigen "}
+              <i className="symbol">edit</i>
+            </button>
+          </div>
         </div>
-
 
         {error && <p style={{ color: "red" }}>{error}</p>}
 
+        {/* Tour Sectie */}
         <div className={styles.tourDiv}>
           <Link href="/tour">
             <span className={styles.tourButton}>Ga Naar Tour</span>
@@ -387,7 +399,6 @@ const Page = () => {
       </div>
     </Container>
   );
-
 };
 
 export default Page;
