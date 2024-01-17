@@ -1,28 +1,10 @@
 "use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import clsx from "clsx";
 import styles from "./ReportedPost.module.css";
-import { useEffect, useState } from "react";
-
-type User = {
-  username: string;
-  profilePhotoURL: string;
-  firstName: string;
-  lastName: string;
-};
-
-type Post = {
-  id: number;
-  content: string;
-  user: User;
-};
-
-type Report = {
-  reportedBy: User;
-  reason: string;
-  date: Date;
-};
 
 async function removeReportsFromPost(postId: number) {
   const res = await fetch(`/api/forum/posts/${postId}/remove-reports`, {
@@ -50,6 +32,25 @@ const formatTime = Intl.DateTimeFormat("nl", {
 
 const formateDateAndTime = (x: number | Date | undefined) =>
   `${formatDate(x)} om ${formatTime(x)}`;
+
+type User = {
+  username: string;
+  profilePhotoURL: string;
+  firstName: string;
+  lastName: string;
+};
+
+type Post = {
+  id: number;
+  content: string;
+  user: User;
+};
+
+type Report = {
+  reportedBy: User;
+  reason: string;
+  date: Date;
+};
 
 const ReportedPost: React.FC<{
   post: Post;

@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import styles from "./Reaction.module.css";
 import clsx from "clsx";
+import Link from "next/link";
+
+import styles from "./Reaction.module.css";
 
 async function upvote(userId: number, reactionId: number) {
   const res = await fetch(
@@ -34,7 +36,6 @@ type Props = {
 };
 
 const Reply: React.FC<Props> = (props) => {
-  const [showDropdown, setShowDropdown] = useState(false);
   const [isUpvoted, setIsUpvoted] = useState(props.isUpvoted);
   const [clickedUpvote, setClickedUpvote] = useState(false);
 
@@ -42,16 +43,6 @@ const Reply: React.FC<Props> = (props) => {
     day: "numeric",
     month: "long",
   }).format(props.date);
-
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (showDropdown) {
-        setShowDropdown(false);
-      }
-    };
-    window.addEventListener("click", handler);
-    return () => window.removeEventListener("click", handler);
-  }, [showDropdown]);
 
   useEffect(() => {
     if (clickedUpvote) {
@@ -79,34 +70,10 @@ const Reply: React.FC<Props> = (props) => {
           </div>
         </div>
         <div className={styles.userInfo}>
-          <div className={styles.name}>
+          <Link className={styles.name} href={`/forum/@${props.userName}`}>
             {props.firstName} {props.lastName}
-          </div>
+          </Link>
           <div className={styles.subtext}>{formattedDate}</div>
-        </div>
-        <div className={styles.options}>
-          <i
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowDropdown(true);
-            }}
-            className={clsx("symbol", styles.optionsSymbol)}
-          >
-            more_vert
-          </i>
-          {showDropdown && (
-            <div
-              onClick={(e) => e.stopPropagation()}
-              className={styles.optionsMenu}
-            >
-              <ul className={styles.optionsList}>
-                <li>
-                  <i className={clsx("symbol", styles.listSymbol)}>flag</i>
-                  <span className={styles.listText}>Rapporteer</span>
-                </li>
-              </ul>
-            </div>
-          )}
         </div>
       </div>
       <p className={styles.content}>{props.content}</p>

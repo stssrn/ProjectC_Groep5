@@ -1,12 +1,15 @@
 "use client";
 
-import styles from "./page.module.css";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+
+import { Post } from "@/models/post";
+import { Reaction } from "@/models/reaction";
+
 import PostComponent from "../../Post";
 import ReactionComponent from "./Reaction";
-import { useEffect, useState } from "react";
-import { Post } from "@/models/post";
-import { useSession } from "next-auth/react";
-import { Reaction } from "@/models/reaction";
+
+import styles from "./page.module.css";
 
 async function fetchPost(userId: number, id: number): Promise<Post> {
   const res = await fetch(`/api/forum/posts/${id}?userid=${userId}`);

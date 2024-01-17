@@ -18,26 +18,30 @@ async function fetchPosts(
   return posts;
 }
 
-const PostList: React.FC<{ username: string }> = (params) => {
+const PostList: React.FC<{ username: string }> = (props) => {
   const [posts, setPosts] = useState<PostSummary[]>([]);
+  const [userHasNoPosts, setUserHasNoPosts] = useState(false);
   const session = useSession();
   const userId = session.data?.user.id;
 
   useEffect(() => {
-    (async () => {
-      if (userId && !posts.length) {
-        const posts = await fetchPosts(userId, params.username);
-        if (posts) {
+    if (userId && !userHasNoPosts && !posts.length) {
+      fetchPosts(userId, props.username)
+        .then((posts) => {
+          if (posts.length === 0) {
+            setUserHasNoPosts(true);
+            return;
+          }
           setPosts(posts);
-        } else {
-          console.error("Failed to fetch recent posts :(");
-        }
-      }
-    })();
+        })
+        .catch(() => console.error("Failed to fetch recent posts :("));
+    }
   }, [posts]);
   return (
     <div className={styles.container}>
-      {posts.length && userId ? (
+      {userHasNoPosts ? (
+        <div className={styles.info}>Deze gebruiker heeft geen posts.</div>
+      ) : posts.length && userId ? (
         posts.map((p) => (
           <Post
             key={p.id}
@@ -60,7 +64,7 @@ const PostList: React.FC<{ username: string }> = (params) => {
           />
         ))
       ) : (
-        <div>Posts aan het ophalen...</div>
+        <div className={styles.info}>Posts aan het ophalen...</div>
       )}
     </div>
   );

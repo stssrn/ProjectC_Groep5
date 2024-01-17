@@ -24,6 +24,11 @@
 
 .name {
   font-weight: 600;
+  color: inherit;
+}
+
+.name:hover {
+  text-decoration: underline;
 }
 
 .subtext {
