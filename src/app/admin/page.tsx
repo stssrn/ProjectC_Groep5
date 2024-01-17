@@ -7,12 +7,12 @@ const Page = () => {
   const actions = [
     { text: "Accounts Beheren", href: "/admin/accountbeheer", symbol: "person_search" },
     { text: "Agenda Aanpassen", href: "/admin/agendabeheer", symbol: "edit_calendar" },
-    { text: "Bug Meldingen", href: "/admin/bugmeldingenbeheer", symbol: "bug_report" },
     { text: "Forum Moderatie", href: "/admin/forumbeheer", symbol: "shield" },
-    { text: "Casussen Beheren", href: "/admin/casussenbeheer", symbol: "cases" },
+    { text: "Bug Meldingen", href: "/admin/bugmeldingenbeheer", symbol: "bug_report" },
     { text: "Educatie modules", href: "/admin/educatiemodules", symbol: "book_4" },
-    { text: "Nieuws artikelen", href: "/admin/nieuwsbeheer", symbol: "newspaper" },
+    { text: "Casussen Beheren", href: "/admin/casussenbeheer", symbol: "cases" },
     { text: "Quizzes Beheren", href: "/admin/quizzesbeheren", symbol: "quiz" },
+    { text: "Nieuws artikelen", href: "/admin/nieuwsbeheer", symbol: "newspaper" }
   ]
   return (
     <Container title="Admin">
