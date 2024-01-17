@@ -2,6 +2,7 @@
 import styles from "../educatiemodules/page.module.css";
 import Container from "@/app/components/Container";
 import { useState, useEffect, useId } from "react";
+import sortData from "./sortData";
 
 interface BugReport {
     id?: number;
@@ -174,24 +175,8 @@ const Page = () => {
         setBugReportsWithUserIdUnfiltered(combinedData);
         setIsLoading(false);
     };
-    const sortData = () => {
-        const sortedData = [...bugReportsWithUserId];
-        sortedData.sort((a, b) => {
-            const valueA = (a as any)[sortCriteria];
-            const valueB = (b as any)[sortCriteria];
 
-            if (sortOrder === 'asc') {
-                if (valueA < valueB) return -1;
-                if (valueA > valueB) return 1;
-            } else {
-                if (valueA > valueB) return -1;
-                if (valueA < valueB) return 1;
-            }
 
-            return 0;
-        });
-        return sortedData;
-    };
 
     const filterData = () => {
         const searchInput = document.getElementById('searchInput') as HTMLInputElement | null;
@@ -242,7 +227,7 @@ const Page = () => {
     useEffect(() => {
         const sortdata = async () => {
             if (bugReportsWithUserId.length > 0 && usingSort) {
-                const sortedData = sortData();
+                const sortedData = sortData(sortOrder, sortCriteria, bugReportsWithUserId);
                 setBugReportsWithUserId(sortedData);
                 setUsingSort(false);
             }
@@ -317,7 +302,7 @@ const Page = () => {
                             <td>{report.title}</td>
                             <td>{report.description}</td>
                             <td>{report.userId}</td>
-                            <td>{new Date(report.date).toISOString()}</td>
+                            <td>{new Date(report.date).toLocaleDateString()}</td>
                             <td>
                                 <button
                                     className={styles.edit}

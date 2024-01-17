@@ -30,6 +30,7 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
     const [eventDate, setEventDate] = useState<Value>(event.date ? new Date(event.date) : null);
     const [eventDescription, setEventDescription] = useState<string>(event.description || "");
     const [showUsers, setShowUsers] = useState(false);
+    const maxCharacterLength = 20;
 
     const deleteEventHandler = async (eventId: any) => {
         await deleteAgendaUsersByEventId(eventId);
@@ -109,13 +110,19 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
     };
 
     const saveAndClose = async () => {
-        if (!eventName || !eventDescription) {
+        const trimmedTitle = eventName.trim();
+        if (!trimmedTitle || !eventDescription) {
             setTitleIsEmpty(!eventName);
             setDescIsEmpty(!eventDescription);
             return;
         }
 
-        await saveEditedData(eventName, eventDescription, eventDate);
+        if (trimmedTitle.length > maxCharacterLength) {
+            console.error('Title exceeds the character limit.');
+            return;
+        }
+
+        await saveEditedData(trimmedTitle, eventDescription, eventDate);
         setShowEdit(false);
         fetchEventData();
         window.location.reload();

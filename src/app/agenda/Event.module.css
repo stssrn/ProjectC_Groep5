@@ -6,6 +6,8 @@
 
 .info {
   display: flex;
+  flex-direction: row;
+  align-items: flex-start;
 }
 
 .eventDay {
@@ -15,7 +17,10 @@
 }
 
 .eventName {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  /* Updated to column for small screens */
+  align-items: flex-start;
 }
 
 .createPopUp {
@@ -121,11 +126,16 @@
   color: inherit;
   font-weight: bold;
   font-size: 15px;
+  cursor: pointer;
 }
 
 .signUp:hover {
   background-color: rgba(0, 0, 0, 0.05);
   text-decoration: underline;
+}
+
+.plusMinusButton {
+  display: none;
 }
 
 .timeText {
@@ -330,8 +340,9 @@
   }
 
   .event {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .signUp {
@@ -339,9 +350,25 @@
     margin-top: 10px;
   }
 
+  .plusMinusButton {
+    display: block;
+    position: absolute;
+    margin-right: 0;
+    box-sizing: border-box;
+    margin-left: 350px;
+    font-size: 23px;
+
+  }
+
+  .eventName {
+    flex-direction: column;
+    align-items: center;
+  }
+
+
+
   .info {
     align-items: center;
-    text-align: center;
   }
 
   .group {

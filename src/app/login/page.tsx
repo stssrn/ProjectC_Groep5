@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { signIn, signOut } from 'next-auth/react'
 import { useSession } from "next-auth/react";
+import { LoginButton } from "../auth";
 
 type UserData = {
   id: number;
@@ -197,8 +198,8 @@ const Page = () => {
         <div className={styles.popupContainer}>
           <div className={styles.popup}>
             <p>We zien dat dit de eerste keer is dat je inlogd. Wil je een tour van de applicatie?</p>
-            <button onClick={handleYes}>Breng me naar de tour</button>
-            <button onClick={handleNo}>Overslaan</button>
+            <button className={styles.tourButton} onClick={handleYes}>Naar de tour</button>
+            <button className={styles.closeButton} onClick={handleNo}>Overslaan</button>
           </div>
         </div>
       )}

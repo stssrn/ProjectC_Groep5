@@ -4,6 +4,8 @@ import prisma from '../../../lib/prisma';
 export async function GET(request: Request): Promise<NextResponse> {
     try {
         if (request.method === 'GET') {
+            console.log('GET')
+
             const searchParams = new URL(request.url).searchParams;
             const id = searchParams.get("id");
             if (!searchParams) {
@@ -51,6 +53,8 @@ export async function POST(request: Request): Promise<NextResponse> {
             const body = await request.json();
             const { title, content, url } = body;
             try {
+                console.log('POST')
+
                 const newArticle = await prisma.newsArticles.create({
                     data: { title, content, url },
                 });
@@ -93,6 +97,8 @@ export async function PUT(request: Request): Promise<NextResponse> {
             });
         }
         else {
+            console.log('PUT')
+
             const body = await request.json();
             const { id, title, content, url } = body;
             try {
@@ -124,6 +130,8 @@ export async function PUT(request: Request): Promise<NextResponse> {
 export async function DELETE(request: Request): Promise<NextResponse> {
     try {
         if (request.method === "DELETE") {
+            console.log('DELETE')
+
             const searchParams = new URL(request.url).searchParams;
             const id = Number(searchParams.get("id"));
             if (!searchParams) {
