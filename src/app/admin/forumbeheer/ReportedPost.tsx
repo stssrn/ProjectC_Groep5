@@ -67,7 +67,7 @@ const ReportedPost: React.FC<{
       });
       setClickedDeletePost(false);
     }
-  }, [clickedDeletePost]);
+  }, [clickedDeletePost, params.post]);
 
   useEffect(() => {
     if (clickedIgnored) {
@@ -76,7 +76,7 @@ const ReportedPost: React.FC<{
       });
       setClickedIgnore(false);
     }
-  }, [clickedIgnored]);
+  }, [clickedIgnored, params.post.id]);
 
   return (
     <div className={styles.container} hidden={isHidden}>

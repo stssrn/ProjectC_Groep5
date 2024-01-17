@@ -1,39 +1,39 @@
 "use client";
 
-import styles from "./page.module.css";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import clsx from "clsx";
+
+import { PostSummary } from "@/models/postSummary";
+import { submitPost } from "@/lib/fetch/submitPost";
+import { getFeed } from "@/lib/fetch/getFeed";
+
 import PostComponent from "./Post";
 import Column from "./Column";
-import clsx from "clsx";
-import { useState } from "react";
-import { PostSummary } from "@/models/postSummary";
-import { useEffect } from "react";
-import { useSession } from "next-auth/react";
 
-const recentPostCap = 100;
-type ordering = "recent" | "popular";
+import styles from "./page.module.css";
 
-async function fetchPosts(
-  userId: number,
-  orderby: ordering = "recent",
-  limit: number = recentPostCap
-): Promise<PostSummary[]> {
-  const resp = await fetch(
-    `/api/forum/posts/feed?userid=${userId}&orderby=${orderby}&limit=${limit}`
-  );
-  const posts = await resp.json();
-  return posts;
-}
-
-async function submitPost(
-  userId: number,
-  content: string
-): Promise<PostSummary> {
-  const resp = await fetch(`/api/forum/posts/create?userid=${userId}`, {
-    method: "POST",
-    body: JSON.stringify(content),
-  });
-  return resp.json();
-}
+const createPostComponent =
+// eslint doesn't like currying
+// eslint-disable-next-line react/display-name
+  (session: ReturnType<typeof useSession>) => (post: PostSummary) =>
+    (
+      <PostComponent
+        key={post.id}
+        userId={session.data!.user.id}
+        profilePhotoURL={post.user.profilePhotoURL}
+        postId={post.id}
+        firstName={post.user.firstName}
+        lastName={post.user.lastName}
+        username={post.user.username}
+        content={post.content}
+        upvoteCount={post.upvoteCount}
+        reactionCount={post.reactionCount}
+        date={new Date(post.date)}
+        isUpvoted={post.isUpvoted}
+        showDelete={session.data!.user.isAdmin || false}
+      />
+    );
 
 const Page = () => {
   const [showCreatePost, setShowCreatePost] = useState(false);
@@ -44,40 +44,41 @@ const Page = () => {
   const session = useSession();
   const userId = session.data?.user.id;
 
+  const popularPosts = Array.from(recentPosts);
+  const columns = [
+    { name: "Recent", posts: recentPosts },
+    { name: "Populair", posts: popularPosts },
+  ];
+
   // The api currently loads all the posts in the database at once, so we can
   // sort the post on the client side. This should happen on the server in the
   // future.
-  const popularPosts = Array.from(recentPosts);
   popularPosts.sort(
     (a, b) => b.reactionCount - a.reactionCount || b.upvoteCount - a.upvoteCount
   );
 
   useEffect(() => {
-    (async () => {
-      if (userId && !recentPosts.length) {
-        const posts = await fetchPosts(userId, "recent");
-        if (posts) {
-          setRecentPosts(posts);
-        } else {
-          console.error("Failed to fetch recent posts :(");
-        }
-      }
-    })();
-  }, [recentPosts]);
+    if (!userId || recentPosts.length) return;
+
+    getFeed(userId, "recent")
+      .then(setRecentPosts)
+      .catch(() => {
+        console.error("Failed to fetch recent posts :(");
+      });
+  }, [recentPosts, userId]);
 
   useEffect(() => {
-    if (clickedSubmit && postContent && userId) {
-      submitPost(userId, postContent).then(
-        (createdPost) => {
-          setRecentPosts((prev) => [createdPost, ...prev]);
-          setShowCreatePost(false);
-          setClickedSubmit(false);
-        }
-      );
-    } else {
-      setClickedSubmit(false)
+    if (!clickedSubmit || !postContent || !userId) {
+      setClickedSubmit(false);
+      return;
     }
-  }, [clickedSubmit, postContent]);
+
+    submitPost(userId, postContent).then((createdPost) => {
+      setRecentPosts((prev) => [createdPost, ...prev]);
+      setShowCreatePost(false);
+      setClickedSubmit(false);
+    });
+  }, [clickedSubmit, postContent, userId]);
 
   return (
     <main className={styles.container}>
@@ -93,54 +94,19 @@ const Page = () => {
           </i>
         </h1>
       </div>
+
       <div className={styles.columns}>
-        <Column title="Recent">
-          {recentPosts.length && userId ? (
-            recentPosts.map((post) => (
-              <PostComponent
-                key={post.id}
-                userId={userId}
-                profilePhotoURL={post.user.profilePhotoURL}
-                postId={post.id}
-                firstName={post.user.firstName}
-                lastName={post.user.lastName}
-                username={post.user.username}
-                content={post.content}
-                upvoteCount={post.upvoteCount}
-                reactionCount={post.reactionCount}
-                date={new Date(post.date)}
-                isUpvoted={post.isUpvoted}
-                showDelete={session.data?.user.isAdmin || false}
-              />
-            ))
-          ) : (
-            <div className={styles.loading}>Posts aan het ophalen...</div>
-          )}
-        </Column>
-        <Column title="Populair">
-          {popularPosts.length && userId ? (
-            popularPosts.map((post) => (
-              <PostComponent
-                key={post.id}
-                userId={userId}
-                postId={post.id}
-                firstName={post.user.firstName}
-                lastName={post.user.lastName}
-                username={post.user.username}
-                profilePhotoURL={post.user.profilePhotoURL}
-                content={post.content}
-                upvoteCount={post.upvoteCount}
-                reactionCount={post.reactionCount}
-                date={new Date(post.date)}
-                isUpvoted={post.isUpvoted}
-                showDelete={session.data?.user.isAdmin || false}
-              />
-            ))
-          ) : (
-            <div className={styles.loading}>Posts aan het ophalen...</div>
-          )}
-        </Column>
+        {columns.map((col) => (
+          <Column key={col.name} title={col.name}>
+            {col.posts.length ? (
+              col.posts.map(createPostComponent(session))
+            ) : (
+              <div className={styles.loading}>Posts aan het ophalen...</div>
+            )}
+          </Column>
+        ))}
       </div>
+
       {showCreatePost && (
         <div className={styles.createPost}>
           <div className={styles.dialog}>

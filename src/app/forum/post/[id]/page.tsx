@@ -4,31 +4,13 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 
 import { Post } from "@/models/post";
-import { Reaction } from "@/models/reaction";
+import { postReaction } from "@/lib/fetch/postReaction";
+import { fetchPost } from "@/lib/fetch/fetchPost";
 
 import PostComponent from "../../Post";
 import ReactionComponent from "./Reaction";
 
 import styles from "./page.module.css";
-
-async function fetchPost(userId: number, id: number): Promise<Post> {
-  const res = await fetch(`/api/forum/posts/${id}?userid=${userId}`);
-  const post = await res.json();
-  return post;
-}
-
-async function postReaction(
-  userId: number,
-  postId: number,
-  content: string
-): Promise<Reaction> {
-  const res = await fetch(`/api/forum/posts/${postId}/react?userid=${userId}`, {
-    method: "POST",
-    body: JSON.stringify(content),
-  });
-
-  return await res.json();
-}
 
 const Page = ({ params }: { params: { id: number } }) => {
   const [post, setPost] = useState<Post>();
@@ -50,20 +32,22 @@ const Page = ({ params }: { params: { id: number } }) => {
       })
       .catch(() => setIsError(true))
       .finally(() => setIsLoading(false));
-  }, [post, isLoading]);
+  }, [post, isLoading, userId, isError, params.id]);
 
   useEffect(() => {
-    if (userId && post && clickedSubmit && replyContent) {
-      postReaction(userId, post.id, replyContent).then((r) => {
+    if (!userId || !post || !clickedSubmit || !replyContent) return;
+
+    postReaction(userId, post.id, replyContent)
+      .then((r) => {
         setReplyContent("");
         setSubmissionCount((prev) => prev + 1);
         setPost((prev) => ({
           ...prev!,
           reactions: [r, ...prev!.reactions],
         }));
-      }).finally(() => setClickedSubmit(false));
-    }
-  }, [clickedSubmit]);
+      })
+      .finally(() => setClickedSubmit(false));
+  }, [clickedSubmit, post, replyContent, userId]);
 
   return (
     <main className={styles.container}>

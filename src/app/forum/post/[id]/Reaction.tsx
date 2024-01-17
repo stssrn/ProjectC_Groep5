@@ -3,24 +3,12 @@
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 import Link from "next/link";
+import Image from "next/image";
+
+import { upvotePost } from "@/lib/fetch/upvotePost";
+import { removeUpvotePost } from "@/lib/fetch/removeUpvotePost";
 
 import styles from "./Reaction.module.css";
-
-async function upvote(userId: number, reactionId: number) {
-  const res = await fetch(
-    `/api/forum/reaction/${reactionId}/upvote?userid=${userId}`,
-    { method: "POST" }
-  );
-  return res.ok;
-}
-
-async function removeUpvote(userId: number, reactionId: number) {
-  const res = await fetch(
-    `/api/forum/reaction/${reactionId}/remove-upvote?userid=${userId}`,
-    { method: "DELETE" }
-  );
-  return res.ok;
-}
 
 type Props = {
   userId: number;
@@ -45,28 +33,28 @@ const Reply: React.FC<Props> = (props) => {
   }).format(props.date);
 
   useEffect(() => {
-    if (clickedUpvote) {
-      if (isUpvoted) {
-        setIsUpvoted(false);
-        removeUpvote(props.userId, props.reactionId).then((res) => {
-          if (!res) setIsUpvoted(true);
-        });
-      } else {
-        setIsUpvoted(true);
-        upvote(props.userId, props.reactionId).then((res) => {
-          if (!res) setIsUpvoted(false);
-        });
-      }
-      setClickedUpvote(false);
+    if (!clickedUpvote) return;
+
+    if (isUpvoted) {
+      setIsUpvoted(false);
+      removeUpvotePost(props.userId, props.reactionId).then((res) => {
+        if (!res) setIsUpvoted(true);
+      });
+    } else {
+      setIsUpvoted(true);
+      upvotePost(props.userId, props.reactionId).then((res) => {
+        if (!res) setIsUpvoted(false);
+      });
     }
-  }, [clickedUpvote, isUpvoted]);
+    setClickedUpvote(false);
+  }, [clickedUpvote, isUpvoted, props.userId, props.reactionId]);
 
   return (
     <div className={styles.post}>
       <div className={styles.top}>
         <div className={styles.left}>
           <div className={styles.profilePicture}>
-            <img src={props.profilePhotoURL} />
+            <Image src={props.profilePhotoURL} alt="profielfoto"/>
           </div>
         </div>
         <div className={styles.userInfo}>
