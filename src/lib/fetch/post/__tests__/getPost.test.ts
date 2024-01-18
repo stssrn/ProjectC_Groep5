@@ -1,6 +1,6 @@
 import { getPost } from "../getPost";
 
-test("Fetching an non-existant post", async () => {
+test("Fetching a non-existant post", async () => {
     await expect(getPost(0, -1)).rejects.toBe("Post not found");
 });
 
