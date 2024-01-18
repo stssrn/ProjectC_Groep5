@@ -54,7 +54,8 @@ const QuizBlock: React.FC<{
 
     return (
         <section className={className}>
-            <Container padding={12} title={`Volgende quiz: ${quizzesDone + 1}`}>
+            <Container padding={12} title={quizzesDone === quizzes ? `Alle quizzen gedaan` : `Volgende quiz: ${quizzesDone + 1}`}>
+
                 <div className={styles.quizes}>
                     <article className={styles.quiz}>
                         <div className={styles.quizProgressTracker}>
