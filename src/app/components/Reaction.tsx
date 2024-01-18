@@ -58,8 +58,8 @@ const Reply: React.FC<Props> = (props) => {
               className={styles.profilePictureImage}
               src={props.profilePhotoURL}
               alt="profielfoto"
-              width={24}
-              height={24}
+              width={64}
+              height={64}
             />
           </div>
         </div>
