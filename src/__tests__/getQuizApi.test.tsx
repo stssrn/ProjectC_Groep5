@@ -4,9 +4,9 @@ test("Fetching an non-existant quiz", async () => {
     await expect(getQuiz(-1)).rejects.toBe("Quiz not found");
 });
 
-// test("Fetching a storeItem with wrong id type", async () => {
-//     await expect(getQuiz("hi")).rejects.toBe("Invalid quiz id");
-// });
+test("Fetching a storeItem with wrong id type", async () => {
+    await expect(getQuiz("hi")).rejects.toBe("Invalid quiz id");
+});
 
 test("Fetching a quiz with correct structure", async () => {
     const quiz = await getQuiz(1);
