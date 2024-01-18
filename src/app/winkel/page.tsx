@@ -6,15 +6,8 @@ import Image from "next/image";
 import image from "./reward_image.svg";
 import { useSession } from "next-auth/react";
 import { Popup } from "./popup";
+import { Item } from "../../models/item";
 
-
-interface Item {
-    id: number;
-    title: string;
-    genre: string;
-    price: number;
-    details: string;
-}
 
 interface UserData {
     id: number;

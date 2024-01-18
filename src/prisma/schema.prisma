@@ -32,9 +32,9 @@ model users {
   PostUpvote       PostUpvote[]
   QuizUser         QuizUser[]
   reactions        Reaction[]
+  ReportedPost     ReportedPost[]
   StoreItemsUser   StoreItemsUser[]
   upvotes          Upvote[]
-  ReportedPost     ReportedPost[]
 }
 
 model educatie_modules {
@@ -53,17 +53,17 @@ model casus {
 
 model Post {
   id           Int            @id @default(autoincrement())
-  date         DateTime       @default(now())
   title        String
   content      String
   userId       Int
+  date         DateTime       @default(now())
   Forum        Forum[]
-  user         users          @relation(fields: [userId], references: [id])
+  user         users          @relation(fields: [userId], references: [id], onDelete: Cascade)
   PostUpvote   PostUpvote[]
   Reaction     Reaction[]
   ReactionPost ReactionPost[]
-  upvotes      Upvote[]
   ReportedPost ReportedPost[]
+  upvotes      Upvote[]
 }
 
 model Reaction {
@@ -72,8 +72,8 @@ model Reaction {
   content      String
   postId       Int
   userId       Int
-  post         Post           @relation(fields: [postId], references: [id])
-  user         users          @relation(fields: [userId], references: [id])
+  post         Post           @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user         users          @relation(fields: [userId], references: [id], onDelete: Cascade)
   ReactionPost ReactionPost[]
   Upvote       Upvote[]
 }
@@ -82,9 +82,9 @@ model Upvote {
   userId     Int
   reactionId Int
   postId     Int?
-  Post       Post?    @relation(fields: [postId], references: [id])
-  reaction   Reaction @relation(fields: [reactionId], references: [id])
-  user       users    @relation(fields: [userId], references: [id])
+  Post       Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  reaction   Reaction @relation(fields: [reactionId], references: [id], onDelete: Cascade)
+  user       users    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([userId, reactionId])
 }
@@ -119,8 +119,8 @@ model QuizUser {
   quizId       Int
   isCompleted  Boolean
   pointsScored Int
-  quiz         Quiz    @relation(fields: [quizId], references: [id])
-  user         users   @relation(fields: [userId], references: [id])
+  quiz         Quiz    @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  user         users   @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Forum {
@@ -128,15 +128,15 @@ model Forum {
   userId Int
   postId Int
   post   Post  @relation(fields: [postId], references: [id], onDelete: Cascade)
-  user   users @relation(fields: [userId], references: [id])
+  user   users @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model ReactionPost {
   id         Int      @id @default(autoincrement())
   reactionId Int
   postId     Int
-  post       Post     @relation(fields: [postId], references: [id])
-  reaction   Reaction @relation(fields: [reactionId], references: [id])
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  reaction   Reaction @relation(fields: [reactionId], references: [id], onDelete: Cascade)
 }
 
 model ReportedPost {
@@ -145,7 +145,7 @@ model ReportedPost {
   reason     String
   date       DateTime @default(now())
   post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  user       users    @relation(fields: [reportedBy], references: [id])
+  user       users    @relation(fields: [reportedBy], references: [id], onDelete: Cascade)
 
   @@id([postId, reportedBy])
 }
@@ -154,23 +154,23 @@ model AgendaUser {
   id      Int   @id @default(autoincrement())
   eventId Int
   userId  Int
-  event   Event @relation(fields: [eventId], references: [id])
-  user    users @relation(fields: [userId], references: [id])
+  event   Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  user    users @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model BugUser {
   id     Int   @id @default(autoincrement())
   bugId  Int
   userId Int
-  bug    Bug   @relation(fields: [bugId], references: [id])
-  user   users @relation(fields: [userId], references: [id])
+  bug    Bug   @relation(fields: [bugId], references: [id], onDelete: Cascade)
+  user   users @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model PostUpvote {
   postId Int
   userId Int
-  post   Post  @relation(fields: [postId], references: [id])
-  user   users @relation(fields: [userId], references: [id])
+  post   Post  @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user   users @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([postId, userId])
 }
@@ -195,8 +195,8 @@ model StoreItemsUser {
   id          Int        @id @default(autoincrement())
   storeItemId Int
   userId      Int
-  storeItem   storeItems @relation(fields: [storeItemId], references: [id])
-  user        users      @relation(fields: [userId], references: [id])
+  storeItem   storeItems @relation(fields: [storeItemId], references: [id], onDelete: Cascade)
+  user        users      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum profilePhoto {

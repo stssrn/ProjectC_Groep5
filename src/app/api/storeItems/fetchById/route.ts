@@ -11,11 +11,15 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     try {
         // Find the first quiz that the user hasn't finished or hasn't started yet
-        const quiz = await prisma.storeItems.findUnique({
+        const storeItem = await prisma.storeItems.findUnique({
             where: { id: Number(id) }
         });
 
-        return NextResponse.json({ quiz }, { status: 200 });
+        if (!storeItem) {
+            return NextResponse.json({ message: "StoreItem not found" }, { status: 404 });
+        }
+
+        return NextResponse.json({ storeItem }, { status: 200 });
 
     } catch (error) {
         return NextResponse.json({ message: "Server error" }, { status: 500 });
