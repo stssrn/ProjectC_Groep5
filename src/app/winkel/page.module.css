@@ -78,15 +78,20 @@
     background: #AC3B61;
     color: white;
     padding: 10px;
-    z-index: 999;
-    margin-left: auto;
-    margin-right: auto;
+    border: none;
+    margin-top: 10px;
     cursor: pointer;
     width: 90px;
     text-align: center;
 }
 
-@media screen and (max-width: 600px) { /* <- dit veranderd van 420 naar 600 */
+.buyButton:hover {
+    background: #C5557B;
+}
+
+@media screen and (max-width: 600px) {
+
+    /* <- dit veranderd van 420 naar 600 */
     .rewardsContainer {
         overflow-x: hidden;
         white-space: normal;
