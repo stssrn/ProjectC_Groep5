@@ -135,7 +135,7 @@ const Page = () => {
                 <input
                     className={`${styles.inputBox} ${inputError ? styles.inputBoxError : ""}`}
                     type="text"
-                    placeholder="Beschrijf hier aan wat er mis ging..."
+                    placeholder="Wat ging er mis..."
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                 />

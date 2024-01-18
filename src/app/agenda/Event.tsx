@@ -18,6 +18,7 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
   const [showSignUp, setShowSignUp] = useState(false);
   const [signedIn, setSignIn] = useState(false);
   const [userId, setUserId] = useState(0);
+  const [isOnMobile, setIsOnMobile] = useState(false);
   const [eventData, setEventData] = useState<EventData>({
     id: 0,
     date: new Date(),
@@ -118,7 +119,24 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
     if (session?.user?.id) {
       fetchEventData(eventId, session?.user.id);
     }
+
+    const handleResize = () => {
+      setIsOnMobile(window.innerWidth <= 600);
+    };
+
+    // Add event listener for resize
+    window.addEventListener('resize', handleResize);
+
+    // Initial check
+    handleResize();
+
+    // Cleanup the event listener when component unmounts
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+
   }, [event.id, session]);
+
 
 
   return (
@@ -130,36 +148,43 @@ const EventComponent: React.FC<{ event: EventData }> = ({ event }) => {
           </time>
           <div className={styles.eventName}>{event.name}</div>
         </div>
-
         {signedIn ? (
-          <button className={styles.signUp} onClick={() => setShowSignUp(true)}>Uitschrijven</button>
+          <div onClick={() => { setShowSignUp(true) }} className={isOnMobile ? styles.plusMinusButton : styles.signUp}>
+            {isOnMobile ? "-" : "Uitschrijven"}
+          </div>
         ) : (
-          <button className={styles.signUp} onClick={() => setShowSignUp(true)}>Inschrijven</button>
+          <div onClick={() => { setShowSignUp(true) }} className={isOnMobile ? styles.plusMinusButton : styles.signUp}>
+            {isOnMobile ? "+" : "Inschrijven"}
+          </div>
         )}
+
       </div>
 
-      {showSignUp && (
-        <div className={styles.createPopUp}>
-          <div className={styles.dialog}>
-            <div className={styles.content}>
-              <h1 className={styles.h1}>{event.name}</h1>
-              <p className={styles.timeText}>
-                {new Date(event.date).getUTCHours() + ":" + new Date(event.date).getUTCMinutes()}
-              </p>
-              <p className={styles.description}>{event.description}</p>
-            </div>
-            <div className={styles.dialogButtons}>
-              <div onClick={() => setShowSignUp(false)} className={styles.secondaryButton}>Sluiten</div>
-              {signedIn ? (
-                <div onClick={handleSignUp} className={styles.button}>Uitschrijven</div>
-              ) : (
-                <div onClick={handleSignUp} className={styles.button}>Inschrijven</div>
-              )}
+      {
+        showSignUp && (
+          <div className={styles.createPopUp}>
+            <div className={styles.dialog}>
+              <div className={styles.content}>
+                <h1 className={styles.h1}>{event.name}</h1>
+                <p className={styles.timeText}>
+                  {new Date(event.date).getUTCHours() + ":" + new Date(event.date).getUTCMinutes()}
+                </p>
+                <p className={styles.description}>{event.description}</p>
+              </div>
+              <div className={styles.dialogButtons}>
+                <div onClick={() => setShowSignUp(false)} className={styles.secondaryButton}>Sluiten</div>
+
+                {signedIn ? (
+                  <div onClick={handleSignUp} className={styles.button}>Uitschrijven</div>
+                ) : (
+                  <div onClick={handleSignUp} className={styles.button}>Inschrijven</div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
-      )}
-    </main>
+        )
+      }
+    </main >
   );
 };
 

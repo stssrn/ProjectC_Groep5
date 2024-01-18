@@ -6,3 +6,4 @@ export async function getPost(userId: number, id: number): Promise<Post> {
   const post = await res.json();
   return post;
 }
+

@@ -6,6 +6,8 @@
 
 .info {
   display: flex;
+  flex-direction: row;
+  align-items: flex-start;
 }
 
 .eventDay {
@@ -15,7 +17,10 @@
 }
 
 .eventName {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  /* Updated to column for small screens */
+  align-items: flex-start;
 }
 
 .createPopUp {
@@ -79,10 +84,33 @@
   background-color: var(--p600);
 }
 
-.content {
+.content,
+.contentUsers {
   overflow: auto;
-  align-items: left;
+  align-items: center;
+  justify-content: center;
 }
+
+.contentSignIn {
+  align-items: left;
+  overflow: auto;
+}
+
+.dateDiv {
+  display: flex;
+  justify-content: center;
+}
+
+.contentUsers {
+  display: flex;
+}
+
+.radio {
+  position: absolute;
+  left: 0%;
+}
+
+
 
 .button,
 .secondaryButton {
@@ -121,11 +149,16 @@
   color: inherit;
   font-weight: bold;
   font-size: 15px;
+  cursor: pointer;
 }
 
 .signUp:hover {
   background-color: rgba(0, 0, 0, 0.05);
   text-decoration: underline;
+}
+
+.plusMinusButton {
+  display: none;
 }
 
 .timeText {
@@ -246,7 +279,8 @@
 
 .dateBox {
   display: flex;
-  align-items: center;
+
+  justify-content: center;
   left: 0%;
   min-height: 32px;
   padding: 0 12px;
@@ -319,7 +353,8 @@
     width: 90%;
   }
 
-  .content {
+  .content,
+  .contentUsers {
     overflow-y: auto;
     zoom: 75%;
   }
@@ -330,8 +365,9 @@
   }
 
   .event {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .signUp {
@@ -339,9 +375,62 @@
     margin-top: 10px;
   }
 
+  .plusMinusButton {
+    display: block;
+    position: absolute;
+    margin-right: 0;
+    box-sizing: border-box;
+    margin-left: 350px;
+    font-size: 23px;
+
+  }
+
+  @media (max-width: 550px) {
+    .plusMinusButton {
+      margin-left: 300px;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .plusMinusButton {
+      margin-left: 250px;
+    }
+  }
+
+  @media (max-width: 450px) {
+    .plusMinusButton {
+      margin-left: 200px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .plusMinusButton {
+      margin-left: 175px;
+    }
+
+    .eventName {
+      word-break: break-all;
+    }
+  }
+
+  @media (max-width: 375px) {
+    .plusMinusButton {
+      margin-left: 150px;
+    }
+  }
+
+  .eventName {
+    flex-direction: column;
+    align-items: center;
+    overflow: auto;
+  }
+
+
+
+
+
   .info {
     align-items: center;
-    text-align: center;
   }
 
   .group {
