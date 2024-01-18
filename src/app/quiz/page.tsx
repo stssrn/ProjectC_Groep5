@@ -4,18 +4,8 @@ import { useEffect, useState } from 'react';
 import Container from '../components/Container';
 import styles from './page.module.css';
 import { useSession } from 'next-auth/react';
-import prisma from '../../lib/prisma';
+import { Quiz } from '../../models/quiz';
 
-interface Quiz {
-    id: number;
-    title: string;
-    points: number;
-    questions: {
-        question: string;
-        options: string[];
-        correctAnswer: string;
-    }[];
-}
 
 interface UserAnswers {
     answers: {

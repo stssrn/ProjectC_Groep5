@@ -32,9 +32,9 @@ model users {
   PostUpvote       PostUpvote[]
   QuizUser         QuizUser[]
   reactions        Reaction[]
+  ReportedPost     ReportedPost[]
   StoreItemsUser   StoreItemsUser[]
   upvotes          Upvote[]
-  ReportedPost     ReportedPost[]
 }
 
 model educatie_modules {
@@ -53,17 +53,17 @@ model casus {
 
 model Post {
   id           Int            @id @default(autoincrement())
-  date         DateTime       @default(now())
   title        String
   content      String
   userId       Int
+  date         DateTime       @default(now())
   Forum        Forum[]
   user         users          @relation(fields: [userId], references: [id], onDelete: Cascade)
   PostUpvote   PostUpvote[]
   Reaction     Reaction[]
   ReactionPost ReactionPost[]
-  upvotes      Upvote[]
   ReportedPost ReportedPost[]
+  upvotes      Upvote[]
 }
 
 model Reaction {

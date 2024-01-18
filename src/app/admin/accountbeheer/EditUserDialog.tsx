@@ -24,6 +24,7 @@ const deleteUser = async (id: Number) => {
   try {
     const response = await fetch(`/api/user?id=${id}`, { method: "DELETE" });
     if (!response.ok) throw new Error(`Failed to delete user ${id}`);
+    window.location.reload();
   } catch (error) {
     console.error("Failed to delete user:", error);
   }
@@ -81,19 +82,19 @@ const EditUserDialog: React.FC<{
     type: HTMLInputTypeAttribute;
     id: string;
   }[] = [
-    { label: "Voornaam", field: "firstName", type: "text", id: useId() },
-    { label: "Achternaam", field: "lastName", type: "text", id: useId() },
-    { label: "E-mail", field: "email", type: "email", id: useId() },
-    { label: "Gebruikersnaam", field: "username", type: "text", id: useId() },
-    { label: "Punten", field: "points", type: "number", id: useId() },
-    { label: "Admin", field: "isAdmin", type: "checkbox", id: useId() },
-    {
-      label: "Forum Moderator",
-      field: "isForumMod",
-      type: "checkbox",
-      id: useId(),
-    },
-  ];
+      { label: "Voornaam", field: "firstName", type: "text", id: useId() },
+      { label: "Achternaam", field: "lastName", type: "text", id: useId() },
+      { label: "E-mail", field: "email", type: "email", id: useId() },
+      { label: "Gebruikersnaam", field: "username", type: "text", id: useId() },
+      { label: "Punten", field: "points", type: "number", id: useId() },
+      { label: "Admin", field: "isAdmin", type: "checkbox", id: useId() },
+      {
+        label: "Forum Moderator",
+        field: "isForumMod",
+        type: "checkbox",
+        id: useId(),
+      },
+    ];
 
   return (
     <div className={styles.dialog}>
