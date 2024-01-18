@@ -1,6 +1,6 @@
-import addArticle from "@/app/admin/nieuwsbeheer/addArticle";
-import fetchNewsArticles from "@/app/admin/nieuwsbeheer/fetchArticles";
-import deleteArticle from "@/app/admin/nieuwsbeheer/deleteArticle";
+import addArticle from "@/lib/articles/addArticle";
+import fetchNewsArticles from "@/lib/articles/fetchArticles";
+import deleteArticle from "@/lib/articles/deleteArticle";
 
 //Run pnpm run dev before testing!!!!
 

@@ -130,7 +130,6 @@ const Page = () => {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    id: Number(moduleID),
                     title,
                     description: desc,
                 }),

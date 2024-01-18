@@ -2,9 +2,9 @@
 import styles from "../educatiemodules/page.module.css";
 import Container from "@/app/components/Container";
 import { useState, useEffect, useId } from "react";
-import addArticle from "./addArticle";
-import fetchNewsArticles from "./fetchArticles";
-import deleteArticle from "./deleteArticle";
+import addArticle from "../../../lib/articles/addArticle";
+import fetchNewsArticles from "../../../lib/articles/fetchArticles";
+import deleteArticle from "../../../lib/articles/deleteArticle";
 
 
 interface newsArticle {

@@ -38,7 +38,7 @@ model users {
 }
 
 model educatie_modules {
-  id          Int     @unique @default(autoincrement())
+  id          Int     @id @unique @default(autoincrement())
   title       String?
   description String?
 }
