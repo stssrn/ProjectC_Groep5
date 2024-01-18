@@ -156,8 +156,8 @@ const Post: React.FC<Props> = (props) => {
               className={styles.profilePictureImage}
               src={props.profilePhotoURL}
               alt="profielfoto"
-              width={40}
-              height={40}
+              width={64}
+              height={64}
             ></Image>
           </div>
         </div>

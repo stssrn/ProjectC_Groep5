@@ -4,21 +4,8 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import clsx from "clsx";
+import { removeReportsFromPost, deletePost } from "@/lib/fetch/post";
 import styles from "./ReportedPost.module.css";
-
-async function removeReportsFromPost(postId: number) {
-  const res = await fetch(`/api/forum/posts/${postId}/remove-reports`, {
-    method: "DELETE",
-  });
-  return res;
-}
-
-async function deletePost(postId: number) {
-  const res = await fetch(`/api/forum/posts/${postId}/delete`, {
-    method: "DELETE",
-  });
-  return res;
-}
 
 const formatDate = Intl.DateTimeFormat("nl", {
   day: "numeric",
@@ -61,21 +48,21 @@ const ReportedPost: React.FC<{
   const [clickedIgnored, setClickedIgnore] = useState(false);
 
   useEffect(() => {
-    if (clickedDeletePost) {
-      deletePost(params.post.id).then(() => {
-        setIsHidden(true);
-      });
-      setClickedDeletePost(false);
-    }
+    if (!clickedDeletePost) return;
+    setClickedDeletePost(false);
+
+    deletePost(params.post.id).then(() => {
+      setIsHidden(true);
+    });
   }, [clickedDeletePost, params.post]);
 
   useEffect(() => {
-    if (clickedIgnored) {
-      removeReportsFromPost(params.post.id).then(() => {
-        setIsHidden(true);
-      });
-      setClickedIgnore(false);
-    }
+    if (!clickedIgnored) return;
+
+    removeReportsFromPost(params.post.id).then(() => {
+      setIsHidden(true);
+    });
+    setClickedIgnore(false);
   }, [clickedIgnored, params.post.id]);
 
   return (
