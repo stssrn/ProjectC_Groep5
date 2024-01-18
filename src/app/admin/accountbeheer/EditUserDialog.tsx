@@ -9,49 +9,15 @@ import {
   useState,
 } from "react";
 
-const fetchUser = async (id: Number): Promise<users[] | undefined> => {
-  try {
-    const response = await fetch(`/api/user?id=${id}`, { method: "PUT" });
-    if (!response.ok) throw new Error("Failed to fetch user data");
-
-    return await response.json();
-  } catch (error) {
-    console.error("Error fetching user data:", error);
-  }
-};
-
-const deleteUser = async (id: Number) => {
-  try {
-    const response = await fetch(`/api/user?id=${id}`, { method: "DELETE" });
-    if (!response.ok) throw new Error(`Failed to delete user ${id}`);
-    window.location.reload();
-  } catch (error) {
-    console.error("Failed to delete user:", error);
-  }
-};
+import { fetchUser, deleteUser } from "@/lib/fetch/user";
 
 const updateUser = async (changes: Partial<users>) => {
-  // currentUser is passed in so we can diff the currentUser and changes values
-  // for changes. If their keys are equal, we don't have to update the field in
-  // the database which keeps things a little more efficient.
   try {
-    // TypeScript doesn't like it when you use URLSearchParams with number values
-    const paramString = Object.entries(changes)
-      .filter(([_, v]) => typeof v !== "undefined")
-      .map(([k, v]) => `${k}=${v}`)
-      .join("&");
-
-    for (const k in Object.keys(changes)) {
-      if (typeof changes[k as keyof users] === undefined) {
-        delete changes[k as keyof users];
-      }
+    if (typeof changes.points === "string") {
+      changes.points = Number(changes.points);
     }
 
-    // the string is empty if there are no changes
-    if (!paramString) return;
-
-    // console.log(paramString);
-    const response = await fetch(`/api/user?id=${changes.id}`, {
+    const response = await fetch(`/api/user/updateUser`, {
       method: "PUT",
       body: JSON.stringify(changes),
     });
@@ -66,11 +32,13 @@ const EditUserDialog: React.FC<{
   setShowDialog: Dispatch<SetStateAction<boolean>>;
 }> = ({ user, setShowDialog }) => {
   const [changes, setChanges] = useState<Partial<users>>({ id: user.id });
+  const [currentUser, setCurrentUser] = useState<Partial<users>>();
 
   useEffect(() => {
     (async () => {
-      const users = await fetchUser(user.id);
-      if (users) {
+      const res = await fetchUser(user.id);
+      if (res) {
+        setCurrentUser(res)
       } else {
         console.error("Failed to fetch accounts :(");
       }
@@ -82,14 +50,14 @@ const EditUserDialog: React.FC<{
     type: HTMLInputTypeAttribute;
     id: string;
   }[] = [
-      { label: "Voornaam", field: "firstName", type: "text", id: useId() },
-      { label: "Achternaam", field: "lastName", type: "text", id: useId() },
-      { label: "E-mail", field: "email", type: "email", id: useId() },
-      { label: "Gebruikersnaam", field: "username", type: "text", id: useId() },
-      { label: "Punten", field: "points", type: "number", id: useId() },
-      { label: "Admin", field: "isAdmin", type: "checkbox", id: useId() },
+    { label: "Voornaam", field: "firstName", type: "text", id: useId() },
+    { label: "Achternaam", field: "lastName", type: "text", id: useId() },
+    { label: "E-mail", field: "email", type: "email", id: useId() },
+    { label: "Gebruikersnaam", field: "username", type: "text", id: useId() },
+    { label: "Punten", field: "points", type: "number", id: useId() },
+    { label: "Admin", field: "isAdmin", type: "checkbox", id: useId() },
+  ];
 
-    ];
 
   return (
     <div className={styles.dialog}>
@@ -98,16 +66,17 @@ const EditUserDialog: React.FC<{
           <label htmlFor={field.id}>{field.label}</label>
           <input
             type={field.type}
-            name="Voornaam"
-            value={(changes[field.field] || user[field.field])?.toString()}
+            name={field.field}
+            value={(changes[field.field] || user[field.field] || currentUser?.[field.field])?.toString()}
+            checked={!!(changes[field.field] ?? currentUser?.[field.field])}
             id={field.id}
             className={styles.textBox}
-            onChange={(e) =>
-              setChanges((prev) => ({
+            onChange={(e) => {
+              return setChanges((prev) => ({
                 ...prev,
-                [field.field]: e.target.value,
+                [field.field]: field.type === "checkbox" ? e.target.checked : e.target.value,
               }))
-            }
+            }}
           />
         </div>
       ))}
