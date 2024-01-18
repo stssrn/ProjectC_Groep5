@@ -19,6 +19,12 @@
   cursor: pointer;
 }
 
+.editButton:hover,
+.saveButton:hover,
+.cancelButton:hover {
+  background: #C5557B;
+}
+
 .editButton {
   margin-top: 1%;
   background-color: var(--p500);
@@ -65,11 +71,19 @@
   margin-right: 5%;
 }
 
+.tourDiv:hover {
+  background: #C5557B;
+}
+
 .tourButton {
   text-align: center;
   color: white;
   display: block;
   text-decoration: none;
+}
+
+.tourButton:hover {
+  background: #C5557B;
 }
 
 .editButton i.symbol,

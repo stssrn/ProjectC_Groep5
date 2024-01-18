@@ -53,3 +53,5 @@ i.symbol {
 textarea {
   font-family: inherit;
 }
+
+button:hover {}

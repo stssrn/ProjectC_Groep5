@@ -44,3 +44,10 @@
 .closeButton:hover {
     background: #C5557B;
 }
+
+@media screen and (max-width: 600px) {
+
+    .popup {
+        width: 70vw;
+    }
+}

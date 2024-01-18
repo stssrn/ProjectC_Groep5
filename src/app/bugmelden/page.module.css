@@ -41,6 +41,10 @@
     font-size: 20px;
 }
 
+.sendBut:hover {
+    background: #C5557B;
+}
+
 .sendDiv {
     display: flex;
     justify-content: flex-end;
