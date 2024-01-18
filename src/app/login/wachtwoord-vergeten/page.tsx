@@ -123,8 +123,20 @@ const Page = () => {
     }
   };
 
+    const goBackToLogin = () => {
+    router.push('/login');
+  };
+
   return (
     <main className={styles.forgotPassword}>
+    <div className={styles.backButton}>
+                <button
+            className={styles.backButton}
+            onClick={goBackToLogin}
+          >
+            <i className="symbol">arrow_back</i>
+          </button>
+          </div>
       <form onSubmit={handleSubmit}>
       {currentStep === 1 && (
         <div className={styles.stepOne}>
@@ -145,6 +157,7 @@ const Page = () => {
               >
                 {loading ? 'Verzenden...' : 'Verzend'}
               </button>
+              {error && <p style={{ color: "red" }}>{error}</p>}
             </div>
           </div>
           <div className={styles.right}>
@@ -172,6 +185,7 @@ const Page = () => {
               >
                 {loading ? 'Validating...' : 'Validate'}
               </button>
+              {error && <p style={{ color: "red" }}>{error}</p>}
             </div>
           </div>
           <div className={styles.right}>
@@ -206,6 +220,7 @@ const Page = () => {
               >
                 {loading ? 'Resetting...' : 'Reset Password'}
               </button>
+              {error && <p style={{ color: "red" }}>{error}</p>}
             </div>
           </div>
           <div className={styles.right}>
@@ -213,8 +228,6 @@ const Page = () => {
           </div>
         </div>
       )}
-
-      {error && <p style={{ color: "red" }}>{error}</p>}
       </form>
     </main>
   );
