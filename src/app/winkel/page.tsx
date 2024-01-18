@@ -144,7 +144,6 @@ const Page = () => {
                 if (user.points >= item.price) {
                     await createStoreItemUser(item.id);
                     await userPayPoints(item);
-                    console.log(`Purchased: ${item.title}`);
 
                     // Remove the purchased item from the list
                     setitemsData((prevItems: Item[] | null) => {
@@ -216,7 +215,7 @@ const Page = () => {
                                 <div className={styles.rewardRight}>
                                     <h2 className={styles.rewardName}>{item.title}</h2>
                                     <p className={styles.rewardInfo}><b>genre:</b> {item.genre}</p>
-                                    <p className={styles.rewardInfo}><b>price:</b> {item.price}</p>
+                                    <p className={styles.rewardInfo}><b>prijs:</b> {item.price}</p>
                                     <p className={styles.rewardInfo}><b>details:</b> {item.details}</p>
                                     <button className={styles.buyButton} onClick={() => handlePurchase(item)}>
                                         Kopen

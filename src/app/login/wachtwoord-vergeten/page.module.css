@@ -91,7 +91,12 @@
   font-size: 25px;
 }
 
+.continuePasswordChange:hover {
+  background: #C5557B;
+}
+
 @media (max-width: 600px) {
+
   .forgotPassword .stepOne,
   .forgotPassword .stepTwo,
   .forgotPassword .stepThree {
