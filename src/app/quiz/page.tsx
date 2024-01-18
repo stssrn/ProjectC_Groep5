@@ -49,7 +49,7 @@ const Page: React.FC = () => {
             try {
                 const response = await fetch(`/api/quizzes`);
                 const data = await response.json();
-                setTotalQuizzes(data.length); // Adjust this based on your API response structure
+                setTotalQuizzes(data.length);
             } catch (error) {
                 console.error('Error fetching quizzes:', error);
             }
@@ -59,7 +59,7 @@ const Page: React.FC = () => {
                 if (session?.user.id) {
                     const response = await fetch(`/api/quizUser?userId=${session.user.id}`);
                     const data = await response.json();
-                    setUserQuizzesCompleted(data.quizUserData.length); // Adjust this based on your API response structure
+                    setUserQuizzesCompleted(data.quizUserData.length);
                 }
             } catch (error) {
                 console.error('Error fetching quiz data:', error);
@@ -206,7 +206,6 @@ const Page: React.FC = () => {
     };
 
     const handleAnswerClick = (userAnswer: string) => {
-        // Ensure selectedAnswer is initialized with an empty array if it's null
         const currentAnswers = selectedAnswer ? [...selectedAnswer.answers] : [];
 
         const answerExists = currentAnswers.some((answer) => answer.id === currentQuestion);
