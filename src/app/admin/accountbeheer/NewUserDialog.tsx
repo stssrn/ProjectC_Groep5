@@ -14,6 +14,15 @@ import { useRef } from "react";
 type UserWithoutIDandDate = Omit<Omit<users, "id">, "registationDate">;
 
 const createUser = async (user: UserWithoutIDandDate) => {
+  // NOTE: NEEDS PROPER FIX
+  if (typeof user.isAdmin === "string") {
+    if (user.isAdmin === "false") {
+      user.isAdmin = false;
+    } else {
+      user.isAdmin = true;
+    }
+  }
+
   const response = await fetch(`/api/user`, {
     method: "POST",
     body: JSON.stringify(user),
@@ -44,13 +53,11 @@ const NewUserDialog: React.FC<{
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    //console.log("USEEFFECT");
     setClickedSubmit(false);
     if (!clickedSubmit || !formRef?.current?.reportValidity()) return;
     userInfo.points = Number(userInfo.points);
     createUser(userInfo as UserWithoutIDandDate)
       .then(() => {
-        //console.log("SUBMITTING");
         setShowDialog(false);
       })
       .catch(console.error);
