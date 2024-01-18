@@ -5,5 +5,5 @@ test("Fetching a non-existant post", async () => {
 });
 
 test("Fetching an existing post", async () => {
-    await expect(getPost(0, 1)).resolves.toHaveProperty("content");
+    await expect(getPost(0, 2)).resolves.toHaveProperty("content");
 });
