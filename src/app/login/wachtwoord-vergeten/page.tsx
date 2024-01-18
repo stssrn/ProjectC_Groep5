@@ -123,98 +123,106 @@ const Page = () => {
     }
   };
 
+  const goBackToLogin = () => {
+    router.push('/login');
+  };
+
   return (
     <main className={styles.forgotPassword}>
+      <div className={styles.backButton}>
+        <button className={styles.backButton} onClick={goBackToLogin}>
+          <i className="symbol">arrow_back</i></button></div>
       <form onSubmit={handleSubmit}>
-      {currentStep === 1 && (
-        <div className={styles.stepOne}>
-          <div className={styles.left}>
-            <h1 className={styles.loginTitle}>Wachtwoord Vergeten</h1>
-            <div className={styles.form}>
-              <input
-                className={styles.textbox}
-                placeholder="Email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <button
-                className={styles.continuePasswordChange}
-                onClick={handleRequestReset}
-                disabled={loading}
-              >
-                {loading ? 'Verzenden...' : 'Verzend'}
-              </button>
+        {currentStep === 1 && (
+          <div className={styles.stepOne}>
+            <div className={styles.left}>
+              <h1 className={styles.loginTitle}>Wachtwoord Vergeten</h1>
+              <div className={styles.form}>
+                <input
+                  className={styles.textbox}
+                  placeholder="Email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <button
+                  className={styles.continuePasswordChange}
+                  onClick={handleRequestReset}
+                  disabled={loading}
+                >
+                  {loading ? 'Verzenden...' : 'Verzend'}
+                </button>
+                {error && <p style={{ color: "red" }}>{error}</p>}
+              </div>
+            </div>
+            <div className={styles.right}>
+              <Image className={styles.image} src={image} alt="" />
             </div>
           </div>
-          <div className={styles.right}>
-            <Image className={styles.image} src={image} alt="" />
-          </div>
-        </div>
-      )}
+        )}
 
-      {currentStep === 2 && (
-        <div className={styles.stepTwo}>
-          <div className={styles.left}>
-            <h1 className={styles.loginTitle}>Code invoeren</h1>
-            <div className={styles.form}>
-              <input
-                className={styles.textbox}
-                placeholder="Reset Code"
-                type="text"
-                value={resetToken}
-                onChange={(e) => setResetToken(e.target.value)}
-              />
-              <button
-                className={styles.continuePasswordChange}
-                onClick={validateResetToken}
-                disabled={loading}
-              >
-                {loading ? 'Validating...' : 'Validate'}
-              </button>
+        {currentStep === 2 && (
+          <div className={styles.stepTwo}>
+            <div className={styles.left}>
+              <h1 className={styles.loginTitle}>Code invoeren</h1>
+              <div className={styles.form}>
+                <input
+                  className={styles.textbox}
+                  placeholder="Reset Code"
+                  type="text"
+                  value={resetToken}
+                  onChange={(e) => setResetToken(e.target.value)}
+                />
+                <button
+                  className={styles.continuePasswordChange}
+                  onClick={validateResetToken}
+                  disabled={loading}
+                >
+                  {loading ? 'Validating...' : 'Validate'}
+                </button>
+                {error && <p style={{ color: "red" }}>{error}</p>}
+              </div>
+            </div>
+            <div className={styles.right}>
+              <Image className={styles.image} src={image} alt="" />
             </div>
           </div>
-          <div className={styles.right}>
-            <Image className={styles.image} src={image} alt="" />
-          </div>
-        </div>
-      )}
+        )}
 
-      {currentStep === 3 && (
-        <div className={styles.stepThree}>
-          <div className={styles.left}>
-            <h1 className={styles.loginTitle}>Nieuw wachtwoord</h1>
-            <div className={styles.form}>
-              <input
-                className={styles.textbox}
-                placeholder="New Password"
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-              />
-              <input
-                className={styles.textbox}
-                placeholder="Confirm New Password"
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-              <button
-                className={styles.continuePasswordChange}
-                onClick={handleResetPassword}
-                disabled={loading}
-              >
-                {loading ? 'Resetting...' : 'Reset Password'}
-              </button>
+        {currentStep === 3 && (
+          <div className={styles.stepThree}>
+            <div className={styles.left}>
+              <h1 className={styles.loginTitle}>Nieuw wachtwoord</h1>
+              <div className={styles.form}>
+                <input
+                  className={styles.textbox}
+                  placeholder="New Password"
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                />
+                <input
+                  className={styles.textbox}
+                  placeholder="Confirm New Password"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+                <button
+                  className={styles.continuePasswordChange}
+                  onClick={handleResetPassword}
+                  disabled={loading}
+                >
+                  {loading ? 'Resetting...' : 'Reset Password'}
+                </button>
+                {error && <p style={{ color: "red" }}>{error}</p>}
+              </div>
+            </div>
+            <div className={styles.right}>
+              <Image className={styles.image} src={image} alt="" />
             </div>
           </div>
-          <div className={styles.right}>
-            <Image className={styles.image} src={image} alt="" />
-          </div>
-        </div>
-      )}
-
-      {error && <p style={{ color: "red" }}>{error}</p>}
+        )}
       </form>
     </main>
   );
