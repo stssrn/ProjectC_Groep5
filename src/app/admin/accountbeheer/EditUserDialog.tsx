@@ -88,12 +88,7 @@ const EditUserDialog: React.FC<{
       { label: "Gebruikersnaam", field: "username", type: "text", id: useId() },
       { label: "Punten", field: "points", type: "number", id: useId() },
       { label: "Admin", field: "isAdmin", type: "checkbox", id: useId() },
-      {
-        label: "Forum Moderator",
-        field: "isForumMod",
-        type: "checkbox",
-        id: useId(),
-      },
+
     ];
 
   return (

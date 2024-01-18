@@ -125,14 +125,7 @@ const NewUserDialog: React.FC<{
         defaultValue: "false",
         id: useId(),
       },
-      {
-        label: "Forum Moderator",
-        field: "isForumMod",
-        type: "checkbox",
-        isRequired: false,
-        defaultValue: "false",
-        id: useId(),
-      },
+
       {
         label: "Profielfoto URL",
         field: "profilePhotoUrl",
