@@ -72,11 +72,17 @@
 }
 
 .loginButton {
-  display: block;
-  color: var(--g100);
-  background-color: var(--p500);
+  background: #AC3B61;
+  color: white;
+  padding: 10px;
+  border: none;
+  margin-top: 10px;
+  cursor: pointer;
   text-align: center;
-  padding: 8px;
+}
+
+.loginButton:hover {
+  background: #C5557B;
 }
 
 .popupContainer {
