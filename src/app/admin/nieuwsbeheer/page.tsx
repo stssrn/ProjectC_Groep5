@@ -2,6 +2,9 @@
 import styles from "../educatiemodules/page.module.css";
 import Container from "@/app/components/Container";
 import { useState, useEffect, useId } from "react";
+import addArticle from "./addArticle";
+import fetchNewsArticles from "./fetchArticles";
+import deleteArticle from "./deleteArticle";
 
 
 interface newsArticle {
@@ -33,24 +36,7 @@ const Page = () => {
     const dialogUrl = useId();
 
 
-    const fetchNewsArticles = async () => {
-        try {
-            const response = await fetch(`/api/newsArticles?id=${0}`, {
-                method: "GET"
-            });
 
-            if (!response.ok) {
-                throw new Error("Failed to fetch newsArticles data");
-            }
-
-            const data = await response.json();
-            return data.newsArticles;
-
-        } catch (error) {
-            console.error("Error fetching newsArticles data:", error);
-
-        }
-    };
 
     const saveEditedArticle = async (title: any, content: any, url: any) => {
         try {
@@ -75,39 +61,9 @@ const Page = () => {
         }
     };
 
-    const addArticle = async (title: any, content: any, url: any) => {
-        try {
-            const response = await fetch(`/api/newsArticles`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    title: title,
-                    content: content,
-                    url: url
-                }),
-            });
-            if (!response.ok) {
-                throw new Error("Failed to add newsArticle data");
-            }
-        } catch (error) {
-            console.error("Error adding newsArticle data:", error);
-        }
-    };
 
-    const deleteArticle = async (articleID: any) => {
-        try {
-            const response = await fetch(`/api/newsArticles?id=${articleID}`, {
-                method: "DELETE",
-            });
-            if (!response.ok) {
-                throw new Error("Failed to delete newsArticles data");
-            }
-        } catch (error) {
-            console.error("Error deleting newsArticles data:", error);
-        }
-    };
+
+
 
     const sortData = () => {
         const sortedData = [...articlesFiltered];

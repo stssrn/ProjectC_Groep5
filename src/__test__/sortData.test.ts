@@ -1,4 +1,4 @@
-import sortData from "../app/admin/bugmeldingenbeheer/sortData";
+import sortData from "@/app/admin/bugmeldingenbeheer/sortData";
 
 const date1 = new Date();
 const date2 = new Date();

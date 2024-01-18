@@ -159,7 +159,7 @@ const SignUserIn: React.FC<{ event: EventData; setSignUserIn: React.Dispatch<Rea
                             onClick={filterData}
                         />
                     </div>
-                    <div className={styles.content}>
+                    <div className={styles.contentUsers}>
                         <table className={styles.table}>
                             <tbody>
                                 <tr>
@@ -207,7 +207,7 @@ const SignUserIn: React.FC<{ event: EventData; setSignUserIn: React.Dispatch<Rea
             {editUserSignIn && (
                 <div className={styles.createPopUp}>
                     <div className={styles.dialog}>
-                        <div className={styles.content}>
+                        <div className={styles.contentSignIn}>
                             <br></br><br></br><label htmlFor={dialogInfo}>Gebruiker</label>
                             <input
                                 type="text"
@@ -217,18 +217,21 @@ const SignUserIn: React.FC<{ event: EventData; setSignUserIn: React.Dispatch<Rea
                                 className={styles.textBox}
                                 readOnly
                             /><br></br>
+                            <label htmlFor={dialogSignIn} style={{ marginLeft: '8px' }}>Inschrijven</label>
                             <input
                                 type="radio"
                                 name="Inschrijven"
                                 value="option 1"
                                 onChange={() => setSignIn(true)}
                                 checked={signIn === true}
+                                className={styles.radio}
                             />
-                            <label htmlFor={dialogSignIn} style={{ marginLeft: '8px' }}>Inschrijven</label><br></br>
+                            <br></br>
                             <input
                                 type="radio"
                                 name="Inschrijven"
                                 value="option 2"
+                                className={styles.radio}
                                 onChange={() => setSignIn(false)}
                             /><label htmlFor={dialogSignOut} style={{ marginLeft: '8px' }}>Uitschrijven</label>
                         </div>

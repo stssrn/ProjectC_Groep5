@@ -84,10 +84,33 @@
   background-color: var(--p600);
 }
 
-.content {
+.content,
+.contentUsers {
   overflow: auto;
-  align-items: left;
+  align-items: center;
+  justify-content: center;
 }
+
+.contentSignIn {
+  align-items: left;
+  overflow: auto;
+}
+
+.dateDiv {
+  display: flex;
+  justify-content: center;
+}
+
+.contentUsers {
+  display: flex;
+}
+
+.radio {
+  position: absolute;
+  left: 0%;
+}
+
+
 
 .button,
 .secondaryButton {
@@ -256,7 +279,8 @@
 
 .dateBox {
   display: flex;
-  align-items: center;
+
+  justify-content: center;
   left: 0%;
   min-height: 32px;
   padding: 0 12px;
@@ -329,7 +353,8 @@
     width: 90%;
   }
 
-  .content {
+  .content,
+  .contentUsers {
     overflow-y: auto;
     zoom: 75%;
   }
@@ -360,10 +385,47 @@
 
   }
 
+  @media (max-width: 550px) {
+    .plusMinusButton {
+      margin-left: 300px;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .plusMinusButton {
+      margin-left: 250px;
+    }
+  }
+
+  @media (max-width: 450px) {
+    .plusMinusButton {
+      margin-left: 200px;
+    }
+  }
+
+  @media (max-width: 400px) {
+    .plusMinusButton {
+      margin-left: 175px;
+    }
+
+    .eventName {
+      word-break: break-all;
+    }
+  }
+
+  @media (max-width: 375px) {
+    .plusMinusButton {
+      margin-left: 150px;
+    }
+  }
+
   .eventName {
     flex-direction: column;
     align-items: center;
+    overflow: auto;
   }
+
+
 
 
 

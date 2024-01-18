@@ -159,15 +159,16 @@ const UsersComponent: React.FC<{ event: EventData; setShowUsers: React.Dispatch<
         <main>
             <div className={styles.createPopUp}>
                 <div className={styles.dialog}>
-                    <div className={styles.content}>
-                        <div className={styles.addDiv}>
-                            <button
-                                className={styles.add}
-                                onClick={() => setSignUserIn(true)}
-                            >
-                                <i className="symbol">add</i>
-                            </button>
-                        </div><br></br>
+                    <div className={styles.addDiv}>
+                        <button
+                            className={styles.add}
+                            onClick={() => setSignUserIn(true)}
+                        >
+                            <i className="symbol">add</i>
+                        </button>
+                    </div><br></br>
+                    <div className={styles.contentUsers}>
+
                         <table className={styles.table}>
                             <tbody>
                                 <tr>
@@ -217,7 +218,7 @@ const UsersComponent: React.FC<{ event: EventData; setShowUsers: React.Dispatch<
             {editUserSignIn && (
                 <div className={styles.createPopUp}>
                     <div className={styles.dialog}>
-                        <div className={styles.content}>
+                        <div className={styles.contentSignIn}>
                             <br></br><br></br><label htmlFor={dialogInfo}>Gebruiker</label>
                             <input
                                 type="text"
@@ -233,6 +234,7 @@ const UsersComponent: React.FC<{ event: EventData; setShowUsers: React.Dispatch<
                                 value="option 1"
                                 onChange={() => setSignIn(true)}
                                 checked={signIn === true}
+                                className={styles.radio}
                             />
                             <label htmlFor={dialogSignIn} style={{ marginLeft: '8px' }}>Inschrijven</label><br></br>
                             <input
@@ -240,6 +242,7 @@ const UsersComponent: React.FC<{ event: EventData; setShowUsers: React.Dispatch<
                                 name="Inschrijven"
                                 value="option 2"
                                 onChange={() => setSignIn(false)}
+                                className={styles.radio}
                             /><label htmlFor={dialogSignOut} style={{ marginLeft: '8px' }}>Uitschrijven</label>
                         </div>
                         <div className={styles.adminDialogButtons}>
