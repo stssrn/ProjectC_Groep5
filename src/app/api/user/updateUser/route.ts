@@ -3,12 +3,12 @@ import prisma from "../../../../lib/prisma";
 
 export async function PUT(request: Request): Promise<NextResponse> {
   const body = await request.json();
-  const { id, email, bio } = body;
+  console.log(body);
 
   try {
     const updatedUser = await prisma.users.update({
-      where: { id },
-      data: { email, bio },
+      where: { id: body.id },
+      data: body,
     });
 
     return NextResponse.json(JSON.stringify(updatedUser), {

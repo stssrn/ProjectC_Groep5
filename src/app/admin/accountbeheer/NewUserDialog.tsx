@@ -14,14 +14,15 @@ import { useRef } from "react";
 type UserWithoutIDandDate = Omit<Omit<users, "id">, "registationDate">;
 
 const createUser = async (user: UserWithoutIDandDate) => {
-  // NOTE: NEEDS PROPER FIX
   if (typeof user.isAdmin === "string") {
-    if (user.isAdmin === "false") {
-      user.isAdmin = false;
-    } else {
-      user.isAdmin = true;
-    }
+    user.isAdmin = user.isAdmin === "true";
   }
+
+  if (typeof user.isForumMod === "string") {
+    user.isForumMod = user.isForumMod === "true";
+  }
+
+  user.points = Number(user.points);
 
   const response = await fetch(`/api/user`, {
     method: "POST",
@@ -55,7 +56,6 @@ const NewUserDialog: React.FC<{
   useEffect(() => {
     setClickedSubmit(false);
     if (!clickedSubmit || !formRef?.current?.reportValidity()) return;
-    userInfo.points = Number(userInfo.points);
     createUser(userInfo as UserWithoutIDandDate)
       .then(() => {
         setShowDialog(false);
@@ -73,74 +73,75 @@ const NewUserDialog: React.FC<{
     defaultValue?: InputHTMLAttributes<HTMLInputElement>["value"];
     id: string;
   }[] = [
-      {
-        label: "Voornaam",
-        field: "firstName",
-        type: "text",
-        isRequired: true,
-        id: useId(),
-      },
-      {
-        label: "Achternaam",
-        field: "lastName",
-        type: "text",
-        isRequired: true,
-        id: useId(),
-      },
-      {
-        label: "E-mail",
-        field: "email",
-        type: "email",
-        isRequired: true,
-        id: useId(),
-      },
-      {
-        label: "Gebruikersnaam",
-        field: "username",
-        type: "text",
-        isRequired: true,
-        id: useId(),
-      },
-      {
-        label: "Wachtwoord",
-        field: "password",
-        type: "password",
-        isRequired: true,
-        id: useId(),
-      },
-      {
-        label: "Punten",
-        field: "points",
-        type: "number",
-        isRequired: false,
-        defaultValue: 0,
-        id: useId(),
-      },
-      { label: "Bio", field: "bio", type: "text", isRequired: true, id: useId() },
-      {
-        label: "Admin",
-        field: "isAdmin",
-        type: "checkbox",
-        isRequired: false,
-        defaultValue: "false",
-        id: useId(),
-      },
+    {
+      label: "Voornaam",
+      field: "firstName",
+      type: "text",
+      isRequired: true,
+      id: useId(),
+    },
+    {
+      label: "Achternaam",
+      field: "lastName",
+      type: "text",
+      isRequired: true,
+      id: useId(),
+    },
+    {
+      label: "E-mail",
+      field: "email",
+      type: "email",
+      isRequired: true,
+      id: useId(),
+    },
+    {
+      label: "Gebruikersnaam",
+      field: "username",
+      type: "text",
+      isRequired: true,
+      id: useId(),
+    },
+    {
+      label: "Wachtwoord",
+      field: "password",
+      type: "password",
+      isRequired: true,
+      id: useId(),
+    },
+    {
+      label: "Punten",
+      field: "points",
+      type: "number",
+      isRequired: false,
+      defaultValue: 0,
+      id: useId(),
+    },
+    { label: "Bio", field: "bio", type: "text", isRequired: true, id: useId() },
+    {
+      label: "Admin",
+      field: "isAdmin",
+      type: "checkbox",
+      isRequired: false,
+      defaultValue: "false",
+      id: useId(),
+    },
 
-      {
-        label: "Profielfoto URL",
-        field: "profilePhotoUrl",
-        type: "url",
-        isRequired: false,
-        id: useId(),
-      },
-    ];
+    {
+      label: "Profielfoto URL",
+      field: "profilePhotoUrl",
+      type: "url",
+      isRequired: false,
+      id: useId(),
+    },
+  ];
 
   return (
     <form ref={formRef} className={styles.dialog}>
       {fields.map((field) => (
         <div key={field.field}>
-          <label htmlFor={field.id}>{`${field.label} ${!field.isRequired ? "(optioneel)" : ""
-            }`}</label>
+          <label htmlFor={field.id}>{`${field.label} ${
+            !field.isRequired ? "(optioneel)" : ""
+          }`}</label>
           <input
             type={field.type}
             name="Voornaam"
@@ -185,11 +186,7 @@ const NewUserDialog: React.FC<{
         className={styles.button}
         onClick={(e) => {
           e.preventDefault();
-          //console.log(formRef?.current?.reportValidity())
-          console.log(clickedSubmit);
-          //createUser(userInfo as UserWithoutIDandDate);
           setClickedSubmit(true);
-          //setShowDialog(false);
         }}
       />
       <input

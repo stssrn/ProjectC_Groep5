@@ -43,10 +43,3 @@ To run the tests, run the dev server on port 3000 and then run:
 ```sh
 pnpm test
 ```
-
-To run tests in watch mode run:
-
-```sh
-pnpm test:watch
-```
-
